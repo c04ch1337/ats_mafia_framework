@@ -109,96 +109,290 @@ Docker is the **recommended deployment method** as it handles all system depende
 - [Docker](https://docs.docker.com/get-docker/) (20.10 or higher)
 - [Docker Compose](https://docs.docker.com/compose/install/) (2.0 or higher)
 
-### Step-by-Step Docker Setup
+### Deployment Options
 
-1. **Clone the repository**
+The framework provides three Docker Compose configurations:
+
+1. **Full Framework Deployment** ([`docker-compose.yml`](docker-compose.yml)) - Complete deployment with all services
+2. **Personal Assistant Only** ([`docker-compose.personal-assistant.yml`](docker-compose.personal-assistant.yml)) - Standalone Personal Assistant feature
+3. **Development Environment** ([`docker-compose.dev.yml`](docker-compose.dev.yml)) - Hot reload and debugging tools
+
+---
+
+## 📦 Full Framework Deployment
+
+Deploy the complete ATS MAFIA Framework with all services including API, UI, database, Redis, WebSocket server, and optional Kali sandbox.
+
+### Services Included
+
+| Service | Port | Description |
+|---------|------|-------------|
+| **ats-mafia-api** | 8000 | Main FastAPI server with container orchestration |
+| **ats-mafia-websocket** | 8080 | WebSocket server for real-time communication |
+| **ats-mafia-ui** | 8501 | Streamlit web dashboard |
+| **postgres** | 5432 | PostgreSQL database for persistent data |
+| **redis** | 6379 | Redis cache and message broker |
+| **personal-assistant** | 5000 | Personal Assistant webhook server |
+| **kali-sandbox** | - | Kali Linux container for security tools (optional) |
+
+### Quick Start - Full Framework
+
+1. **Clone and configure**
    ```bash
    git clone https://github.com/atsmafia/framework.git
    cd ats_mafia_framework
-   ```
-
-2. **Configure environment variables**
-   ```bash
-   # Copy the example environment file
+   
+   # Copy and edit environment file
    cp .env.example .env
-   
-   # Edit .env with your preferred settings
-   # At minimum, configure:
-   # - FRAMEWORK_ENV (development/production)
-   # - LOG_LEVEL (INFO/DEBUG)
-   # - PHONE_PROVIDER (mock/twilio/plivo)
+   # Edit .env: Set DATABASE_PASSWORD, REDIS_PASSWORD, FRAMEWORK_ENV
    ```
-   
-   See the [`.env.example`](.env.example) file for all available configuration options.
 
-3. **Build the Docker image**
+2. **Start all services**
    ```bash
-   docker-compose -f docker-compose.personal-assistant.yml build
-   ```
-
-4. **Start the services**
-   ```bash
-   # Start in detached mode (background)
-   docker-compose -f docker-compose.personal-assistant.yml up -d
+   # Start with all services (including Kali sandbox)
+   docker-compose up -d
    
-   # Or start with logs visible (foreground)
-   docker-compose -f docker-compose.personal-assistant.yml up
+   # Or start without Kali sandbox
+   docker-compose up -d --scale kali-sandbox=0
    ```
 
-5. **Verify the services are running**
+3. **Access services**
+   - **Main API**: http://localhost:8000 - API documentation at `/docs`
+   - **Web UI Dashboard**: http://localhost:8501 - Streamlit interface
+   - **WebSocket**: ws://localhost:8080 - Real-time communication
+   - **Personal Assistant**: http://localhost:5000 - Phone webhook server
+   - **PostgreSQL**: localhost:5432 (user: `ats_user`, db: `ats_mafia`)
+   - **Redis**: localhost:6379
+
+4. **View logs and status**
    ```bash
-   docker-compose -f docker-compose.personal-assistant.yml ps
+   # View all services
+   docker-compose ps
+   
+   # View logs
+   docker-compose logs -f
+   
+   # View specific service logs
+   docker-compose logs -f ats-mafia-api
    ```
 
-### Accessing Services
+5. **Stop services**
+   ```bash
+   # Stop all services
+   docker-compose down
+   
+   # Stop and remove volumes (deletes all data)
+   docker-compose down -v
+   ```
 
-Once Docker containers are running, you can access:
+### Scaling Services
 
-- **API Server**: http://localhost:5000
-- **WebSocket Server**: ws://localhost:8080
-- **UI Dashboard**: http://localhost:8501
+Scale specific services for higher load:
 
-### Managing Docker Containers
-
-**View logs:**
 ```bash
-# View all logs
-docker-compose -f docker-compose.personal-assistant.yml logs
+# Scale API servers
+docker-compose up -d --scale ats-mafia-api=3
 
-# View logs for specific service
-docker logs ats-mafia-personal-assistant
-
-# Follow logs in real-time
-docker logs -f ats-mafia-personal-assistant
+# Scale WebSocket servers
+docker-compose up -d --scale ats-mafia-websocket=2
 ```
 
-**Stop containers:**
+---
+
+## 🎯 Personal Assistant Only Deployment
+
+Deploy just the Personal Assistant feature for phone integration without the full framework.
+
+### Quick Start - Personal Assistant
+
 ```bash
-docker-compose -f docker-compose.personal-assistant.yml down
+# 1. Configure environment
+cp .env.personal-assistant.example .env
+
+# 2. Edit .env with your phone provider settings
+# - Set PHONE_PROVIDER (mock/twilio/plivo)
+# - Add provider credentials if using Twilio or Plivo
+
+# 3. Start Personal Assistant
+docker-compose -f docker-compose.personal-assistant.yml up -d
+
+# 4. Access at http://localhost:5000
+# 5. View logs
+docker-compose -f docker-compose.personal-assistant.yml logs -f
 ```
 
-**Restart containers:**
+**Services**: Single container with API server, webhook handler, and voice processing.
+
+**Use Case**: Ideal for users who only need the Personal Assistant phone integration feature.
+
+---
+
+## 🛠️ Development Environment
+
+Development deployment with hot reload, debug features, and development tools.
+
+### Features
+
+- ✅ Hot reload for code changes
+- ✅ Debug ports exposed (port 5678 for debugpy)
+- ✅ Verbose logging (DEBUG level)
+- ✅ Code mounted as volumes for live editing
+- ✅ Separate dev database and Redis instances
+- ✅ Mock phone provider for testing
+- ✅ Reduced resource limits
+- ✅ Optional dev-tools container
+
+### Quick Start - Development
+
 ```bash
-docker-compose -f docker-compose.personal-assistant.yml restart
+# 1. Start development environment
+docker-compose -f docker-compose.dev.yml up
+
+# 2. Code changes will auto-reload
+# 3. Access services:
+#    - API: http://localhost:8000
+#    - UI: http://localhost:8501
+#    - WebSocket: ws://localhost:8080
+#    - PostgreSQL: localhost:5433
+#    - Redis: localhost:6380
+
+# 4. Stop with Ctrl+C or:
+docker-compose -f docker-compose.dev.yml down
 ```
 
-**Stop and remove all data:**
+### Development with Tools Container
+
 ```bash
-docker-compose -f docker-compose.personal-assistant.yml down -v
+# Start with dev-tools container
+docker-compose -f docker-compose.dev.yml --profile tools up -d
+
+# Access dev-tools container
+docker exec -it ats-mafia-dev-tools bash
+
+# Run tests, linting, etc. from within the container
+cd /workspace
+pytest
 ```
 
-**Rebuild after code changes:**
+---
+
+## 🔧 Docker Management Commands
+
+### Common Operations
+
 ```bash
-docker-compose -f docker-compose.personal-assistant.yml up -d --build
+# View running containers
+docker-compose ps
+
+# View logs
+docker-compose logs -f [service_name]
+
+# Restart specific service
+docker-compose restart ats-mafia-api
+
+# Rebuild after code changes
+docker-compose up -d --build
+
+# Execute commands in container
+docker-compose exec ats-mafia-api bash
+
+# View resource usage
+docker stats
+
+# Clean up unused resources
+docker system prune -a
 ```
 
-### Docker Advantages
+### Health Checks
+
+```bash
+# Check service health
+docker-compose ps
+
+# Check specific service health
+docker inspect --format='{{.State.Health.Status}}' ats-mafia-api
+
+# View health check logs
+docker inspect ats-mafia-api | grep -A 10 Health
+```
+
+### Database Operations
+
+```bash
+# Access PostgreSQL
+docker-compose exec postgres psql -U ats_user -d ats_mafia
+
+# Backup database
+docker-compose exec postgres pg_dump -U ats_user ats_mafia > backup.sql
+
+# Restore database
+docker-compose exec -T postgres psql -U ats_user ats_mafia < backup.sql
+
+# Access Redis CLI
+docker-compose exec redis redis-cli -a your_redis_password
+```
+
+---
+
+## 🏗️ Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     ATS MAFIA FRAMEWORK                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐      │
+│  │   Web UI     │    │  WebSocket   │    │ Personal     │      │
+│  │  Dashboard   │───▶│   Server     │◀───│ Assistant    │      │
+│  │  (Port 8501) │    │ (Port 8080)  │    │ (Port 5000)  │      │
+│  └──────────────┘    └──────────────┘    └──────────────┘      │
+│         │                    │                    │              │
+│         └────────────────────┼────────────────────┘              │
+│                              ▼                                   │
+│                    ┌──────────────────┐                          │
+│                    │   Main API       │                          │
+│                    │   Server         │                          │
+│                    │  (Port 8000)     │                          │
+│                    └──────────────────┘                          │
+│                         │         │                              │
+│              ┌──────────┘         └──────────┐                  │
+│              ▼                                ▼                  │
+│     ┌─────────────────┐              ┌─────────────┐            │
+│     │   PostgreSQL    │              │    Redis    │            │
+│     │   Database      │              │    Cache    │            │
+│     │  (Port 5432)    │              │ (Port 6379) │            │
+│     └─────────────────┘              └─────────────┘            │
+│                                                                   │
+│     ┌────────────────────────────────────────────┐              │
+│     │         Kali Sandbox (Optional)            │              │
+│     │         Security Tools Container           │              │
+│     └────────────────────────────────────────────┘              │
+│                                                                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Data Flow
+
+1. **Users** access the Web UI Dashboard (port 8501)
+2. **UI** communicates with API Server (port 8000) for data operations
+3. **WebSocket Server** (port 8080) provides real-time updates to UI
+4. **Personal Assistant** (port 5000) handles phone calls via webhooks
+5. **PostgreSQL** stores persistent data (sessions, profiles, analytics)
+6. **Redis** provides caching and pub/sub messaging
+7. **Kali Sandbox** executes security tools in isolated environment
+
+---
+
+## 🚀 Docker Advantages
 
 ✅ **No manual system dependency installation** - Docker image includes portaudio19-dev, espeak, and all required libraries
 ✅ **Consistent environment** - Same setup across development, staging, and production
 ✅ **Easy updates** - Simply rebuild the image to apply changes
 ✅ **Isolated execution** - Framework runs in its own container environment
 ✅ **Resource management** - Built-in resource limits and monitoring
+✅ **Microservices architecture** - Each component runs independently
+✅ **Easy scaling** - Scale individual services as needed
+✅ **Data persistence** - Volumes preserve data across restarts
 
 ## 🚀 Quick Start
 
@@ -206,24 +400,45 @@ docker-compose -f docker-compose.personal-assistant.yml up -d --build
 
 The fastest way to get started with the ATS MAFIA Framework:
 
+**Option 1: Full Framework (All Services)**
 ```bash
-# 1. Copy and configure environment file
+# 1. Clone and configure
+git clone https://github.com/atsmafia/framework.git
+cd ats_mafia_framework
 cp .env.example .env
-# Edit .env with your settings (at minimum: FRAMEWORK_ENV, PHONE_PROVIDER)
+# Edit .env: Set DATABASE_PASSWORD, REDIS_PASSWORD
 
-# 2. Build and start services
+# 2. Start all services
+docker-compose up -d
+
+# 3. Access services
+# - Main API: http://localhost:8000/docs
+# - Web UI: http://localhost:8501
+# - WebSocket: ws://localhost:8080
+# - Personal Assistant: http://localhost:5000
+```
+
+**Option 2: Personal Assistant Only**
+```bash
+# 1. Configure
+cp .env.personal-assistant.example .env
+# Edit .env with phone provider settings
+
+# 2. Start Personal Assistant
 docker-compose -f docker-compose.personal-assistant.yml up -d
 
-# 3. View logs to confirm startup
-docker logs -f ats-mafia-personal-assistant
+# 3. Access at http://localhost:5000
+```
 
-# 4. Access the services
-# - API: http://localhost:5000
-# - WebSocket: ws://localhost:8080
-# - UI: http://localhost:8501
+**Option 3: Development Environment**
+```bash
+# Start with hot reload and debugging
+docker-compose -f docker-compose.dev.yml up
 ```
 
 That's it! The framework is now running with all dependencies configured.
+
+For more detailed instructions, see the [Docker Setup](#-docker-setup) section above.
 
 ### Basic Usage
 

@@ -1,0 +1,563 @@
+# ============================================================================
+# ATS MAFIA FRAMEWORK - COMPLETE DEPLOYMENT
+# ============================================================================
+# Full framework deployment with all services
+#
+# Services:
+# - ats-mafia-api: Main API server (FastAPI/uvicorn)
+# - ats-mafia-ui: Web UI dashboard (Streamlit)
+# - ats-mafia-websocket: WebSocket server for real-time communication
+# - postgres: PostgreSQL database for persistent data
+# - redis: Redis cache and message broker
+# - kali-sandbox: Kali Linux container for security tools (optional)
+# - personal-assistant: Personal Assistant service for phone integration
+#
+# Usage:
+#   docker-compose up -d              # Start all services
+#   docker-compose up -d --scale kali-sandbox=0  # Start without Kali
+#   docker-compose logs -f            # View logs
+#   docker-compose down               # Stop all services
+#   docker-compose down -v            # Stop and remove volumes
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # POSTGRESQL DATABASE
+  # ==========================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: ats-mafia-postgres
+    hostname: postgres
+    
+    environment:
+      - POSTGRES_DB=ats_mafia
+      - POSTGRES_USER=ats_user
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8 --lc-collate=C --lc-ctype=C
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    
+    networks:
+      - ats-network
+    
+    ports:
+      - "5432:5432"
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ats_user -d ats_mafia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    
+    labels:
+      - "com.atsmafia.service=database"
+      - "com.atsmafia.component=postgres"
+
+  # ==========================================================================
+  # REDIS CACHE & MESSAGE BROKER
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: ats-mafia-redis
+    hostname: redis
+    
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-redis_secure_password_change_me}
+    
+    volumes:
+      - redis_data:/data
+    
+    networks:
+      - ats-network
+    
+    ports:
+      - "6379:6379"
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    
+    labels:
+      - "com.atsmafia.service=cache"
+      - "com.atsmafia.component=redis"
+
+  # ==========================================================================
+  # MAIN API SERVER
+  # ==========================================================================
+  ats-mafia-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-api
+    hostname: ats-api
+    
+    command: uvicorn ats_mafia_framework.api.container_app_example:app --host 0.0.0.0 --port 8000 --reload
+    
+    ports:
+      - "8000:8000"  # Main API server
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=${FRAMEWORK_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEBUG=${DEBUG:-false}
+      - PYTHONUNBUFFERED=1
+      
+      # API Settings
+      - API_ENABLED=true
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_CORS_ENABLED=true
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia
+      - DATABASE_USER=ats_user
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
+      - DATABASE_SSL_MODE=prefer
+      
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
+      - REDIS_DB=0
+      
+      # Container Orchestration
+      - MAX_PARALLEL_STARTS=3
+      - CONTAINER_STARTUP_TIMEOUT=120
+      - HOT_POOL_AUTO_START=true
+      
+      # Analytics
+      - ANALYTICS_ENABLED=true
+      - ATTACK_NAVIGATOR_ENABLED=true
+      - TECHNIQUE_TRACKER_ENABLED=true
+      
+      # Monitoring
+      - MONITORING_ENABLED=true
+      - METRICS_COLLECTION=true
+    
+    volumes:
+      - ./config:/app/config:ro
+      - ./profiles:/app/profiles:ro
+      - ./scenarios:/app/scenarios:ro
+      - ./tools:/app/tools:ro
+      - logs:/app/logs
+      - api_data:/app/data
+    
+    networks:
+      - ats-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 3G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    
+    labels:
+      - "com.atsmafia.service=api"
+      - "com.atsmafia.component=main-api"
+      - "com.atsmafia.version=1.0.0"
+
+  # ==========================================================================
+  # WEBSOCKET SERVER
+  # ==========================================================================
+  ats-mafia-websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-websocket
+    hostname: ats-websocket
+    
+    command: python -m ats_mafia_framework.api.websocket_server
+    
+    ports:
+      - "8080:8080"  # WebSocket server
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=${FRAMEWORK_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEBUG=${DEBUG:-false}
+      - PYTHONUNBUFFERED=1
+      
+      # Communication Settings
+      - COMMUNICATION_PROTOCOL=websocket
+      - COMMUNICATION_HOST=0.0.0.0
+      - COMMUNICATION_PORT=8080
+      - MAX_CONNECTIONS=100
+      - HEARTBEAT_INTERVAL=30
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia
+      - DATABASE_USER=ats_user
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
+      
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
+    
+    volumes:
+      - logs:/app/logs
+    
+    networks:
+      - ats-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    
+    labels:
+      - "com.atsmafia.service=communication"
+      - "com.atsmafia.component=websocket"
+
+  # ==========================================================================
+  # WEB UI DASHBOARD
+  # ==========================================================================
+  ats-mafia-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-ui
+    hostname: ats-ui
+    
+    command: streamlit run /app/ats_mafia_framework/ui/personal_assistant_ui.py --server.port 8501 --server.address 0.0.0.0
+    
+    ports:
+      - "8501:8501"  # Streamlit UI
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=${FRAMEWORK_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - PYTHONUNBUFFERED=1
+      
+      # UI Settings
+      - UI_ENABLED=true
+      - UI_THEME=dark
+      - UI_PORT=8501
+      - UI_DEBUG=false
+      - UI_AUTO_REFRESH=true
+      
+      # API Connection
+      - API_HOST=ats-mafia-api
+      - API_PORT=8000
+      - WEBSOCKET_HOST=ats-mafia-websocket
+      - WEBSOCKET_PORT=8080
+      
+      # Database Configuration (for direct queries)
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia
+      - DATABASE_USER=ats_user
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
+    
+    volumes:
+      - ./ui:/app/ats_mafia_framework/ui:ro
+      - logs:/app/logs
+    
+    networks:
+      - ats-network
+    
+    depends_on:
+      - ats-mafia-api
+      - ats-mafia-websocket
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+        reservations:
+          cpus: '0.25'
+          memory: 512M
+    
+    labels:
+      - "com.atsmafia.service=ui"
+      - "com.atsmafia.component=dashboard"
+
+  # ==========================================================================
+  # PERSONAL ASSISTANT SERVICE
+  # ==========================================================================
+  personal-assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-personal-assistant
+    hostname: personal-assistant
+    
+    command: uvicorn ats_mafia_framework.api.container_app_example:app --host 0.0.0.0 --port 5000
+    
+    ports:
+      - "5000:5000"  # Webhook server for phone integration
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=${FRAMEWORK_ENV:-production}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - DEBUG=${DEBUG:-false}
+      - PYTHONUNBUFFERED=1
+      
+      # Personal Assistant Feature
+      - PERSONAL_ASSISTANT_ENABLED=true
+      - PERSONAL_ASSISTANT_PHONE_PROVIDER=${PHONE_PROVIDER:-mock}
+      - PERSONAL_ASSISTANT_DEFAULT_PERSONA=professional_assistant
+      - PERSONAL_ASSISTANT_AUTO_RECORD=true
+      - PERSONAL_ASSISTANT_MAX_CALL_DURATION=10
+      
+      # Twilio Configuration
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER:-}
+      
+      # Plivo Configuration
+      - PLIVO_AUTH_ID=${PLIVO_AUTH_ID:-}
+      - PLIVO_AUTH_TOKEN=${PLIVO_AUTH_TOKEN:-}
+      - PLIVO_PHONE_NUMBER=${PLIVO_PHONE_NUMBER:-}
+      
+      # Storage Paths
+      - RECORDING_PATH=/app/recordings/personal_assistant/
+      - TRANSCRIPT_PATH=/app/transcripts/personal_assistant/
+      - TASK_HISTORY_PATH=/app/data/personal_assistant/tasks/
+      
+      # Webhook Configuration
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5000/voice/twiml}
+      - WEBHOOK_HOST=0.0.0.0
+      - WEBHOOK_PORT=5000
+      
+      # Ethical Safeguards
+      - PERSONAL_ASSISTANT_ALWAYS_IDENTIFY=true
+      - PERSONAL_ASSISTANT_DISCLOSE_AI=true
+      - PERSONAL_ASSISTANT_NO_IMPERSONATION=true
+      - PERSONAL_ASSISTANT_REQUIRE_APPROVAL_SENSITIVE=true
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia
+      - DATABASE_USER=ats_user
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
+      
+      # Redis Configuration
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
+    
+    volumes:
+      - recordings:/app/recordings
+      - transcripts:/app/transcripts
+      - task_data:/app/data
+      - logs:/app/logs
+      - ./config:/app/config:ro
+    
+    networks:
+      - ats-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    labels:
+      - "com.atsmafia.service=assistant"
+      - "com.atsmafia.component=personal-assistant"
+
+  # ==========================================================================
+  # KALI LINUX SANDBOX (Optional)
+  # ==========================================================================
+  kali-sandbox:
+    image: kalilinux/kali-rolling:latest
+    container_name: ats-mafia-kali-sandbox
+    hostname: kali-sandbox
+    
+    command: /bin/bash -c "apt-get update && apt-get install -y nmap metasploit-framework sqlmap hydra nikto && tail -f /dev/null"
+    
+    environment:
+      - SANDBOX_SECURITY_MONITOR_ENABLED=true
+      - SANDBOX_TOOL_WHITELIST_ENABLED=true
+    
+    volumes:
+      - kali_data:/root
+      - ./tools:/opt/ats_tools:ro
+    
+    networks:
+      - ats-network
+      - sandbox-isolated
+    
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    
+    security_opt:
+      - no-new-privileges:true
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    
+    labels:
+      - "com.atsmafia.service=sandbox"
+      - "com.atsmafia.component=kali-linux"
+    
+    profiles:
+      - full
+      - sandbox
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  ats-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+  
+  sandbox-isolated:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+volumes:
+  # Database volumes
+  postgres_data:
+    driver: local
+  
+  redis_data:
+    driver: local
+  
+  # Application data volumes
+  api_data:
+    driver: local
+  
+  recordings:
+    driver: local
+  
+  transcripts:
+    driver: local
+  
+  task_data:
+    driver: local
+  
+  logs:
+    driver: local
+  
+  kali_data:
+    driver: local

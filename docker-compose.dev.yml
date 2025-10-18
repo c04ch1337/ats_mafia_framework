@@ -1,0 +1,460 @@
+# ============================================================================
+# ATS MAFIA FRAMEWORK - DEVELOPMENT ENVIRONMENT
+# ============================================================================
+# Development deployment with hot reload, debug features, and development tools
+#
+# Features:
+# - Hot reload for code changes
+# - Debug ports exposed
+# - Verbose logging
+# - Code mounted as volumes for live editing
+# - Reduced resource limits for local development
+# - Mock services enabled for testing
+#
+# Usage:
+#   docker-compose -f docker-compose.dev.yml up          # Start dev environment
+#   docker-compose -f docker-compose.dev.yml up --build  # Rebuild and start
+#   docker-compose -f docker-compose.dev.yml logs -f     # Follow logs
+#   docker-compose -f docker-compose.dev.yml down        # Stop services
+# ============================================================================
+
+version: '3.8'
+
+services:
+  # ==========================================================================
+  # POSTGRESQL DATABASE (Development)
+  # ==========================================================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: ats-mafia-postgres-dev
+    hostname: postgres-dev
+    
+    environment:
+      - POSTGRES_DB=ats_mafia_dev
+      - POSTGRES_USER=ats_dev
+      - POSTGRES_PASSWORD=dev_password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    
+    networks:
+      - ats-dev-network
+    
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ats_dev -d ats_mafia_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=database"
+
+  # ==========================================================================
+  # REDIS CACHE (Development)
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: ats-mafia-redis-dev
+    hostname: redis-dev
+    
+    command: redis-server --appendonly yes --requirepass dev_redis_password
+    
+    volumes:
+      - redis_dev_data:/data
+    
+    networks:
+      - ats-dev-network
+    
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=cache"
+
+  # ==========================================================================
+  # MAIN API SERVER (Development)
+  # ==========================================================================
+  ats-mafia-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: ats-mafia-api-dev
+    hostname: ats-api-dev
+    
+    command: uvicorn ats_mafia_framework.api.container_app_example:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+    
+    ports:
+      - "8000:8000"  # Main API
+      - "5678:5678"  # Debug port for debugpy
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - DEBUG=true
+      - VERBOSE_LOGGING=true
+      - PYTHONUNBUFFERED=1
+      
+      # Development Features
+      - HOT_RELOAD=true
+      - TEST_MODE=false
+      - MOCK_SERVICES=false
+      
+      # API Settings
+      - API_ENABLED=true
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_CORS_ENABLED=true
+      - API_DEBUG=true
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres-dev
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia_dev
+      - DATABASE_USER=ats_dev
+      - DATABASE_PASSWORD=dev_password
+      
+      # Redis Configuration
+      - REDIS_HOST=redis-dev
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=dev_redis_password
+      - REDIS_DB=0
+      
+      # Container Orchestration
+      - MAX_PARALLEL_STARTS=2
+      - CONTAINER_STARTUP_TIMEOUT=60
+      - HOT_POOL_AUTO_START=false
+      
+      # Analytics
+      - ANALYTICS_ENABLED=true
+      - ATTACK_NAVIGATOR_ENABLED=true
+      
+      # Monitoring
+      - MONITORING_ENABLED=true
+      - METRICS_COLLECTION=true
+      - PROFILING_ENABLED=true
+    
+    volumes:
+      # Mount source code for hot reload
+      - .:/app/ats_mafia_framework:rw
+      - ./config:/app/config:rw
+      - ./profiles:/app/profiles:rw
+      - ./scenarios:/app/scenarios:rw
+      - ./tools:/app/tools:rw
+      - dev_logs:/app/logs
+      - dev_data:/app/data
+    
+    networks:
+      - ats-dev-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    
+    restart: unless-stopped
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=api"
+
+  # ==========================================================================
+  # WEBSOCKET SERVER (Development)
+  # ==========================================================================
+  ats-mafia-websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-websocket-dev
+    hostname: ats-websocket-dev
+    
+    command: python -m ats_mafia_framework.api.websocket_server
+    
+    ports:
+      - "8080:8080"  # WebSocket
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - DEBUG=true
+      - PYTHONUNBUFFERED=1
+      
+      # Communication Settings
+      - COMMUNICATION_PROTOCOL=websocket
+      - COMMUNICATION_HOST=0.0.0.0
+      - COMMUNICATION_PORT=8080
+      - MAX_CONNECTIONS=50
+      - HEARTBEAT_INTERVAL=15
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres-dev
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia_dev
+      - DATABASE_USER=ats_dev
+      - DATABASE_PASSWORD=dev_password
+      
+      # Redis Configuration
+      - REDIS_HOST=redis-dev
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=dev_redis_password
+    
+    volumes:
+      - .:/app/ats_mafia_framework:rw
+      - dev_logs:/app/logs
+    
+    networks:
+      - ats-dev-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=websocket"
+
+  # ==========================================================================
+  # WEB UI DASHBOARD (Development)
+  # ==========================================================================
+  ats-mafia-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-ui-dev
+    hostname: ats-ui-dev
+    
+    command: streamlit run /app/ats_mafia_framework/ui/personal_assistant_ui.py --server.port 8501 --server.address 0.0.0.0 --server.runOnSave true
+    
+    ports:
+      - "8501:8501"  # Streamlit UI
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - PYTHONUNBUFFERED=1
+      
+      # UI Settings
+      - UI_ENABLED=true
+      - UI_THEME=dark
+      - UI_PORT=8501
+      - UI_DEBUG=true
+      - UI_AUTO_REFRESH=true
+      
+      # API Connection
+      - API_HOST=ats-mafia-api-dev
+      - API_PORT=8000
+      - WEBSOCKET_HOST=ats-mafia-websocket-dev
+      - WEBSOCKET_PORT=8080
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres-dev
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia_dev
+      - DATABASE_USER=ats_dev
+      - DATABASE_PASSWORD=dev_password
+    
+    volumes:
+      - ./ui:/app/ats_mafia_framework/ui:rw
+      - dev_logs:/app/logs
+    
+    networks:
+      - ats-dev-network
+    
+    depends_on:
+      - ats-mafia-api
+      - ats-mafia-websocket
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=ui"
+
+  # ==========================================================================
+  # PERSONAL ASSISTANT (Development)
+  # ==========================================================================
+  personal-assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-personal-assistant-dev
+    hostname: personal-assistant-dev
+    
+    command: uvicorn ats_mafia_framework.api.container_app_example:app --host 0.0.0.0 --port 5000 --reload --log-level debug
+    
+    ports:
+      - "5000:5000"  # Webhook server
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=development
+      - LOG_LEVEL=DEBUG
+      - DEBUG=true
+      - PYTHONUNBUFFERED=1
+      
+      # Personal Assistant Feature
+      - PERSONAL_ASSISTANT_ENABLED=true
+      - PERSONAL_ASSISTANT_PHONE_PROVIDER=mock  # Use mock provider for dev
+      - PERSONAL_ASSISTANT_DEFAULT_PERSONA=professional_assistant
+      - PERSONAL_ASSISTANT_AUTO_RECORD=true
+      - PERSONAL_ASSISTANT_MAX_CALL_DURATION=5  # Shorter for dev
+      
+      # Webhook Configuration
+      - WEBHOOK_URL=http://localhost:5000/voice/twiml
+      - WEBHOOK_HOST=0.0.0.0
+      - WEBHOOK_PORT=5000
+      
+      # Storage Paths
+      - RECORDING_PATH=/app/recordings/personal_assistant/
+      - TRANSCRIPT_PATH=/app/transcripts/personal_assistant/
+      - TASK_HISTORY_PATH=/app/data/personal_assistant/tasks/
+      
+      # Database Configuration
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOST=postgres-dev
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=ats_mafia_dev
+      - DATABASE_USER=ats_dev
+      - DATABASE_PASSWORD=dev_password
+      
+      # Redis Configuration
+      - REDIS_HOST=redis-dev
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=dev_redis_password
+    
+    volumes:
+      - .:/app/ats_mafia_framework:rw
+      - ./config:/app/config:rw
+      - dev_recordings:/app/recordings
+      - dev_transcripts:/app/transcripts
+      - dev_task_data:/app/data
+      - dev_logs:/app/logs
+    
+    networks:
+      - ats-dev-network
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=personal-assistant"
+
+  # ==========================================================================
+  # DEVELOPMENT TOOLS CONTAINER (Optional)
+  # ==========================================================================
+  dev-tools:
+    image: python:3.10-slim
+    container_name: ats-mafia-dev-tools
+    hostname: dev-tools
+    
+    command: tail -f /dev/null
+    
+    environment:
+      - PYTHONUNBUFFERED=1
+    
+    volumes:
+      - .:/workspace:rw
+      - dev_logs:/logs
+    
+    networks:
+      - ats-dev-network
+    
+    working_dir: /workspace
+    
+    restart: unless-stopped
+    
+    labels:
+      - "com.atsmafia.env=development"
+      - "com.atsmafia.service=dev-tools"
+    
+    profiles:
+      - tools
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  ats-dev-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+volumes:
+  postgres_dev_data:
+    driver: local
+  
+  redis_dev_data:
+    driver: local
+  
+  dev_data:
+    driver: local
+  
+  dev_recordings:
+    driver: local
+  
+  dev_transcripts:
+    driver: local
+  
+  dev_task_data:
+    driver: local
+  
+  dev_logs:
+    driver: local
