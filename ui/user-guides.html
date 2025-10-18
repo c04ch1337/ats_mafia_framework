@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guides - ATS MAFIA Framework</title>
+    <link rel="stylesheet" href="css/ats-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .user-guides-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent-red));
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .page-header h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .page-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .guide-navigation {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-tab {
+            padding: 12px 24px;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-tab.active {
+            background: var(--color-accent-red);
+            color: white;
+            border-color: var(--color-accent-red);
+        }
+        
+        .guide-content {
+            display: none;
+        }
+        
+        .guide-content.active {
+            display: block;
+        }
+        
+        .guide-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .guide-section h2 {
+            color: var(--color-accent-gold);
+            margin-bottom: 24px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .guide-section h3 {
+            color: var(--color-text-primary);
+            margin: 24px 0 16px 0;
+            font-size: 20px;
+        }
+        
+        .guide-section p {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin: 24px 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .feature-card h4 {
+            color: var(--color-accent-gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-card p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+            margin: 24px 0;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            background: var(--color-accent-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+        
+        .screenshot-placeholder {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed var(--color-border);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin: 24px 0;
+            color: var(--color-text-secondary);
+        }
+        
+        .tip-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--color-accent-gold);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .tip-box i {
+            color: var(--color-accent-gold);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .warning-box {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid #f44336;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .warning-box i {
+            color: #f44336;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+        
+        .info-box i {
+            color: #2196f3;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            margin: 24px 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            background: var(--color-accent-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+            text-decoration: none;
+        }
+        
+        .action-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .action-btn.secondary {
+            background: var(--color-primary-dark);
+        }
+        
+        .action-btn.secondary:hover {
+            background: #2a2a2a;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 24px 0;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+        
+        .data-table th {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-accent-gold);
+            font-weight: 600;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        @media (max-width: 768px) {
+            .guide-navigation {
+                flex-direction: column;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="docs.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Documentation</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="ats-main">
+        <div class="user-guides-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-users"></i> User Guides</h1>
+                <nav aria-label="Breadcrumb" class="breadcrumbs">
+                  <a href="docs.html">Docs Home</a>
+                  <span class="sep">›</span>
+                  <span>User Guides</span>
+                </nav>
+                <p>Master the ATS MAFIA Framework with comprehensive user documentation</p>
+            </div>
+
+            <!-- Guide Navigation -->
+            <div class="guide-navigation">
+                <div class="nav-tab active" data-target="#profiles-guide">
+                    <i class="fas fa-user-circle"></i>
+                    Profiles
+                </div>
+                <div class="nav-tab" data-target="#scenarios-guide">
+                    <i class="fas fa-book"></i>
+                    Scenarios
+                </div>
+                <div class="nav-tab" data-target="#training-guide">
+                    <i class="fas fa-play-circle"></i>
+                    Training Sessions
+                </div>
+                <div class="nav-tab" data-target="#monitoring-guide">
+                    <i class="fas fa-eye"></i>
+                    Monitoring
+                </div>
+                <div class="nav-tab" data-target="#reports-guide">
+                    <i class="fas fa-chart-line"></i>
+                    Reports & Analytics
+                </div>
+                <div class="nav-tab" data-target="#cost-guide">
+                    <i class="fas fa-dollar-sign"></i>
+                    Cost Management
+                </div>
+            </div>
+
+            <!-- Profiles Guide -->
+            <div id="profiles-guide" class="guide-content active">
+                <div class="guide-section">
+                    <h2><i class="fas fa-user-circle"></i> Managing Profiles</h2>
+                    <p>Profiles define the persona, skills, and capabilities of your training agents. Each profile represents a different role in cybersecurity training.</p>
+
+                    <h3>Understanding Profile Types</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-user-ninja"></i> Red Team Operator</h4>
+                            <p>Specializes in offensive security techniques including penetration testing, vulnerability assessment, and exploitation.</p>
+                            <ul style="color: var(--color-text-secondary); font-size: 14px;">
+                                <li>Network reconnaissance</li>
+                                <li>Vulnerability scanning</li>
+                                <li>Exploitation techniques</li>
+                                <li>Post-exploitation activities</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-shield-alt"></i> Blue Team Defender</h4>
+                            <p>Focuses on defensive security operations including incident response, threat hunting, and security monitoring.</p>
+                            <ul style="color: var(--color-text-secondary); font-size: 14px;">
+                                <li>Incident detection</li>
+                                <li>Threat analysis</li>
+                                <li>Security monitoring</li>
+                                <li>Forensic analysis</li>
+                            </ul>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-user-tie"></i> Social Engineer</h4>
+                            <p>Expert in social engineering tactics including phishing, pretexting, and human intelligence gathering.</p>
+                            <ul style="color: var(--color-text-secondary); font-size: 14px;">
+                                <li>Phishing campaigns</li>
+                                <li>Pretext development</li>
+                                <li>Human psychology</li>
+                                <li>OSINT gathering</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3>Creating a New Profile</h3>
+                    <ol class="step-list">
+                        <li>
+                            <div>
+                                <strong>Navigate to Profiles</strong>
+                                <p>Click on the "Profiles" link in the main navigation to access the profile management interface.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Click "Add Profile"</strong>
+                                <p>Locate the "Add Profile" button in the top-right corner of the profiles page.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Choose Profile Type</strong>
+                                <p>Select from Red Team, Blue Team, or Social Engineer based on your training goals.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Configure Basic Settings</strong>
+                                <p>Set the profile name, description, and basic personality traits.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Set Skill Levels</strong>
+                                <p>Adjust skill levels for various capabilities (1-10 scale) to match your expertise.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Save Profile</strong>
+                                <p>Review your settings and click "Save" to create the profile.</p>
+                            </div>
+                        </li>
+                    </ol>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Pro Tip:</strong> Start with lower skill levels (3-5) if you're new to cybersecurity training. You can always increase the difficulty later as you gain experience.
+                        </div>
+                    </div>
+
+                    <h3>Profile Configuration Options</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Setting</th>
+                                    <th>Description</th>
+                                    <th>Recommended Range</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Skill Level</td>
+                                    <td>Overall expertise in the profile domain</td>
+                                    <td>1-10 (Beginner to Expert)</td>
+                                </tr>
+                                <tr>
+                                    <td>Aggressiveness</td>
+                                    <td>How bold the agent is in taking actions</td>
+                                    <td>1-10 (Cautious to Aggressive)</td>
+                                </tr>
+                                <tr>
+                                    <td>Creativity</td>
+                                    <td>Ability to think outside standard procedures</td>
+                                    <td>1-10 (Methodical to Creative)</td>
+                                </tr>
+                                <tr>
+                                    <td>Stealth</td>
+                                    <td>Preference for covert vs overt actions</td>
+                                    <td>1-10 (Loud to Stealthy)</td>
+                                </tr>
+                                <tr>
+                                    <td>Persistence</td>
+                                    <td>How determined the agent is when facing obstacles</td>
+                                    <td>1-10 (Quick to Give Up to Persistent)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            Conceptual reference:
+                            <a href="../profiles/__init__.py" target="_blank" rel="noopener">profiles/__init__.py</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenarios Guide -->
+            <div id="scenarios-guide" class="guide-content">
+                <div class="guide-section">
+                    <h2><i class="fas fa-book"></i> Creating and Managing Scenarios</h2>
+                    <p>Scenarios are the training exercises that define objectives, constraints, and success criteria for your training sessions.</p>
+
+                    <h3>Built-in Scenario Categories</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-network-wired"></i> Network Penetration Testing</h4>
+                            <p>Comprehensive network security assessments including reconnaissance, scanning, and exploitation.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-user-secret"></i> Social Engineering</h4>
+                            <p>Human-focused security testing including phishing, pretexting, and influence techniques.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-shield-virus"></i> Incident Response</h4>
+                            <p>Blue Team scenarios focusing on detection, analysis, and response to security incidents.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-search"></i> Threat Hunting</h4>
+                            <p>Proactive threat detection and analysis scenarios for advanced security teams.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-bug"></i> Vulnerability Assessment</h4>
+                            <p>Systematic identification and evaluation of security vulnerabilities.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-microscope"></i> Digital Forensics</h4>
+                            <p>Evidence collection and analysis scenarios for incident investigation.</p>
+                        </div>
+                    </div>
+
+                    <h3>Creating Custom Scenarios</h3>
+                    <ol class="step-list">
+                        <li>
+                            <div>
+                                <strong>Define Objectives</strong>
+                                <p>Clearly outline what the trainee should accomplish. Be specific about success criteria.</p>
+                                <div class="info-box">
+                                    <i class="fas fa-info-circle"></i>
+                                    <div>
+                                        <strong>Example Objective:</strong> "Gain administrative access to the target web server and exfiltrate the configuration file without triggering the intrusion detection system."
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Set Difficulty Level</strong>
+                                <p>Choose from Beginner, Intermediate, Advanced, or Expert based on the target audience.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Configure Environment</strong>
+                                <p>Define the target systems, network topology, and available tools.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Add Constraints</strong>
+                                <p>Set time limits, budget constraints, and rules of engagement.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Test and Validate</strong>
+                                <p>Run through the scenario yourself to ensure it's solvable and properly configured.</p>
+                            </div>
+                        </li>
+                    </ol>
+
+                    <h3>Scenario Best Practices</h3>
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Start Simple:</strong> Begin with straightforward objectives and gradually increase complexity as trainees progress.
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Provide Clear Success Criteria:</strong> Trainees should know exactly what constitutes successful completion.
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Avoid Ambiguity:</strong> Unclear objectives lead to frustration and reduced learning effectiveness.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Sessions Guide -->
+            <span id="sessions-guide" style="display:block;height:0;margin:0;padding:0;"></span>
+            <div id="training-guide" class="guide-content">
+                <div class="guide-section">
+                    <h2><i class="fas fa-play-circle"></i> Training Sessions</h2>
+                    <p>Training sessions are live exercises where profiles execute scenarios in real-time with cost tracking and performance monitoring.</p>
+
+                    <h3>Launching a Training Session</h3>
+                    <ol class="step-list">
+                        <li>
+                            <div>
+                                <strong>Select Scenario</strong>
+                                <p>Browse the available scenarios and select one that matches your training objectives.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Choose Profile</strong>
+                                <p>Select the profile that will execute the scenario. Ensure the profile type matches the scenario requirements.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Set Budget</strong>
+                                <p>Define a cost limit for the session. This helps control LLM API costs and encourages efficiency.</p>
+                                <div class="info-box">
+                                    <i class="fas fa-info-circle"></i>
+                                    <div>
+                                        <strong>Recommended Budgets:</strong><br>
+                                        • Beginner scenarios: $5-10<br>
+                                        • Intermediate scenarios: $10-25<br>
+                                        • Advanced scenarios: $25-50<br>
+                                        • Expert scenarios: $50+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Configure Session</strong>
+                                <p>Set session name, description, and any additional parameters.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Launch Session</strong>
+                                <p>Click "Launch Session" to start the training exercise.</p>
+                            </div>
+                        </li>
+                    </ol>
+
+                    <h3>Monitoring Live Sessions</h3>
+                    <p>Once a session is launched, you can monitor it in real-time through the Situation Room:</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-chart-line"></i> Real-time Metrics</h4>
+                            <p>Watch progress indicators, success rates, and performance metrics update live.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-comments"></i> Agent Communication</h4>
+                            <p>View the agent's thought process and decision-making in real-time.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-dollar-sign"></i> Cost Tracking</h4>
+                            <p>Monitor session costs and get alerts when approaching budget limits.</p>
+                        </div>
+                    </div>
+
+                    <h3>Session Controls</h3>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Control</th>
+                                    <th>Function</th>
+                                    <th>When to Use</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pause</td>
+                                    <td>Temporarily halt the session</td>
+                                    <td>To analyze progress or intervene</td>
+                                </tr>
+                                <tr>
+                                    <td>Resume</td>
+                                    <td>Continue a paused session</td>
+                                    <td>Ready to proceed after analysis</td>
+                                </tr>
+                                <tr>
+                                    <td>Stop</td>
+                                    <td>Terminate the session</td>
+                                    <td>Emergency stop or completion</td>
+                                </tr>
+                                <tr>
+                                    <td>Intervene</td>
+                                    <td>Provide guidance to the agent</td>
+                                    <td>Agent is stuck or off-track</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Session Persistence:</strong> Stopped sessions cannot be resumed. Use Pause if you plan to continue later.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoring Guide -->
+            <div id="monitoring-guide" class="guide-content">
+                <div class="guide-section">
+                    <h2><i class="fas fa-eye"></i> Monitoring Training Sessions</h2>
+                    <p>Effective monitoring is crucial for understanding agent behavior and optimizing training outcomes.</p>
+
+                    <h3>The Situation Room</h3>
+                    <p>The Situation Room is your command center for monitoring active training sessions. It provides real-time visibility into agent activities and system performance.</p>
+
+                    <h3>Key Monitoring Components</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-tachometer-alt"></i> Performance Dashboard</h4>
+                            <p>Real-time display of success rates, completion percentages, and efficiency metrics.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-stream"></i> Activity Feed</h4>
+                            <p>Chronological log of all agent actions, decisions, and system events.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-brain"></i> Agent Thoughts</h4>
+                            <p>Insight into the agent's reasoning process and decision-making logic.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-coins"></i> Cost Monitor</h4>
+                            <p>Live cost tracking with budget alerts and spending analysis.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-clock"></i> Time Tracking</h4>
+                            <p>Session duration, task completion times, and efficiency metrics.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-bell"></i> Alert System</h4>
+                            <p>Notifications for important events, budget warnings, and system issues.</p>
+                        </div>
+                    </div>
+
+                    <h3>Understanding Agent Behavior</h3>
+                    <p>When monitoring sessions, pay attention to these behavioral indicators:</p>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Decision Patterns:</strong> How the agent approaches problems and makes choices under different conditions.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Adaptability:</strong> How well the agent adjusts when faced with unexpected obstacles or failures.
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>Efficiency:</strong> The ratio of successful actions to total attempts, indicating resource optimization.
+                        </div>
+                    </div>
+
+                    <h3>Intervention Guidelines</h3>
+                    <p>Knowing when to intervene is key to effective training:</p>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Intervene When:</strong> The agent is stuck in a loop, making clearly incorrect decisions, or has been inactive for an extended period.
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Observe When:</strong> The agent is learning from mistakes, trying different approaches, or making reasonable progress.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Guide -->
+            <div id="reports-guide" class="guide-content">
+                <div class="guide-section">
+                    <h2><i class="fas fa-chart-line"></i> Reports & Analytics</h2>
+                    <p>Comprehensive reporting and analytics help you understand training effectiveness and identify areas for improvement.</p>
+
+                    <h3>After-Action Reports</h3>
+                    <p>After each training session, the system generates a detailed after-action report (AAR) that includes:</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-trophy"></i> Performance Summary</h4>
+                            <p>Overall success rate, completion time, and score compared to benchmarks.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-list-check"></i> Objective Analysis</h4>
+                            <p>Breakdown of completed vs. incomplete objectives with success factors.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-dollar-sign"></i> Cost Analysis</h4>
+                            <p>Detailed cost breakdown with efficiency metrics and optimization opportunities.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-brain"></i> Decision Review</h4>
+                            <p>Analysis of key decision points and their impact on mission success.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-chart-pie"></i> Skill Assessment</h4>
+                            <p>Evaluation of demonstrated skills and areas for improvement.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-lightbulb"></i> Learning Insights</h4>
+                            <p>AI-generated insights and recommendations for future training.</p>
+                        </div>
+                    </div>
+
+                    <h3>Analytics Dashboard</h3>
+                    <p>The analytics dashboard provides aggregated insights across multiple sessions:</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Description</th>
+                                    <th>Why It Matters</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Learning Velocity</td>
+                                    <td>Rate of skill improvement over time</td>
+                                    <td>Measures training effectiveness</td>
+                                </tr>
+                                <tr>
+                                    <td>Cost Efficiency</td>
+                                    <td>Results achieved per dollar spent</td>
+                                    <td>Optimizes training budget</td>
+                                </tr>
+                                <tr>
+                                    <td>Skill Retention</td>
+                                    <td>Long-term retention of learned skills</td>
+                                    <td>Indicates lasting knowledge transfer</td>
+                                </tr>
+                                <tr>
+                                    <td>Adaptability Score</td>
+                                    <td>Ability to handle novel situations</td>
+                                    <td>Measures flexible thinking</td>
+                                </tr>
+                                <tr>
+                                    <td>Success Consistency</td>
+                                    <td>Variability in performance across sessions</td>
+                                    <td>Indicates reliability and mastery</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Exporting Reports</h3>
+                    <p>Reports can be exported in multiple formats for sharing and analysis:</p>
+
+                    <div class="action-buttons">
+                        <button class="action-btn">
+                            <i class="fas fa-file-pdf"></i>
+                            Export as PDF
+                        </button>
+                        <button class="action-btn secondary">
+                            <i class="fas fa-file-excel"></i>
+                            Export to Excel
+                        </button>
+                        <button class="action-btn secondary">
+                            <i class="fas fa-file-code"></i>
+                            Export as JSON
+                        </button>
+                        <button class="action-btn secondary">
+                            <i class="fas fa-file-alt"></i>
+                            Export as Markdown
+                        </button>
+                    </div>
+    
+                    <h3>Learn more</h3>
+                    <div class="action-buttons">
+                        <a class="action-btn secondary" href="../docs/PHASE4_ANALYTICS_README.md" target="_blank" rel="noopener">
+                            <i class="fas fa-book-open"></i>
+                            docs/PHASE4_ANALYTICS_README.md
+                        </a>
+                        <a class="action-btn secondary" href="../PHASE4_QUICK_START.md" target="_blank" rel="noopener">
+                            <i class="fas fa-bolt"></i>
+                            PHASE4_QUICK_START.md
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Management Guide -->
+            <span id="costs-guide" style="display:block;height:0;margin:0;padding:0;"></span>
+            <div id="cost-guide" class="guide-content">
+                <div class="guide-section">
+                    <h2><i class="fas fa-dollar-sign"></i> Cost Management</h2>
+                    <p>Effective cost management ensures you get maximum training value while controlling expenses.</p>
+
+                    <h3>Understanding Cost Components</h3>
+                    <p>Training session costs primarily come from LLM API usage:</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h4><i class="fas fa-robot"></i> LLM Processing</h4>
+                            <p>Cost of AI model inference for agent decision-making and analysis.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-comments"></i> Token Usage</h4>
+                            <p>Cost based on input/output tokens processed by language models.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h4><i class="fas fa-clock"></i> Session Duration</h4>
+                            <p>Longer sessions generally incur higher costs due to more AI interactions.</p>
+                        </div>
+                    </div>
+
+                    <h3>Cost Optimization Strategies</h3>
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Set Appropriate Budgets:</strong> Start with smaller budgets ($5-10) and increase as you understand cost patterns.
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Choose Efficient Models:</strong> Use cost-effective models for routine tasks and premium models only when necessary.
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Monitor in Real-Time:</strong> Keep an eye on the cost monitor during sessions to prevent overspending.
+                        </div>
+                    </div>
+
+                    <div class="tip-box">
+                        <i class="fas fa-lightbulb"></i>
+                        <div>
+                            <strong>Use Budget Alerts:</strong> Set alerts at 75% and 90% of your budget to get warnings before hitting limits.
+                        </div>
+                    </div>
+
+                    <h3>Budget Planning</h3>
+                    <p>Plan your training budget based on these factors:</p>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Training Level</th>
+                                    <th>Recommended Budget/Session</th>
+                                    <th>Weekly Budget</th>
+                                    <th>Monthly Budget</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Beginner</td>
+                                    <td>$5-10</td>
+                                    <td>$20-40</td>
+                                    <td>$80-160</td>
+                                </tr>
+                                <tr>
+                                    <td>Intermediate</td>
+                                    <td>$10-25</td>
+                                    <td>$40-100</td>
+                                    <td>$160-400</td>
+                                </tr>
+                                <tr>
+                                    <td>Advanced</td>
+                                    <td>$25-50</td>
+                                    <td>$100-200</td>
+                                    <td>$400-800</td>
+                                </tr>
+                                <tr>
+                                    <td>Expert</td>
+                                    <td>$50-100</td>
+                                    <td>$200-400</td>
+                                    <td>$800-1600</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Cost Monitoring Tools</h3>
+                    <p>The system provides several tools to help you manage costs:</p>
+
+                    <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                        <li><strong>Real-time Cost Tracker:</strong> Live cost display during sessions</li>
+                        <li><strong>Budget Alerts:</strong> Automatic notifications at predefined thresholds</li>
+                        <li><strong>Cost Analytics:</strong> Historical cost analysis and trends</li>
+                        <li><strong>ROI Calculator:</strong> Measure training value against costs</li>
+                        <li><strong>Optimization Recommendations:</strong> AI-powered cost-saving suggestions</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Cost Awareness:</strong> Always monitor costs during sessions, especially when using advanced AI models or running complex scenarios.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+        </div>
+    </footer>
+
+    <script>
+        (function() {
+            const canonicalIds = [
+                'profiles-guide',
+                'scenarios-guide',
+                'training-guide',
+                'monitoring-guide',
+                'reports-guide',
+                'cost-guide'
+            ];
+            const aliasMap = {
+                'sessions-guide': 'training-guide',
+                'costs-guide': 'cost-guide'
+            };
+            const validSet = new Set(canonicalIds);
+    
+            function canonicalize(hash) {
+                let id = (hash || '').replace(/^#/, '');
+                if (aliasMap[id]) id = aliasMap[id];
+                if (!validSet.has(id)) id = 'profiles-guide';
+                return id;
+            }
+    
+            function setActive(id) {
+                // content panels
+                document.querySelectorAll('.guide-content').forEach(el => {
+                    el.classList.toggle('active', el.id === id);
+                });
+                // nav tabs
+                document.querySelectorAll('.guide-navigation .nav-tab').forEach(tab => {
+                    const target = tab.getAttribute('data-target');
+                    tab.classList.toggle('active', target === `#${id}`);
+                });
+            }
+    
+            function activateFromHash() {
+                const id = canonicalize(window.location.hash);
+                setActive(id);
+            }
+    
+            function initNav() {
+                document.querySelectorAll('.guide-navigation .nav-tab').forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const target = this.getAttribute('data-target') || '#profiles-guide';
+                        const id = target.replace(/^#/, '');
+                        // Always set canonical hash to enable deep-linking and history nav
+                        if (window.location.hash !== `#${id}`) {
+                            window.location.hash = `#${id}`;
+                        } else {
+                            // If hash is the same, still ensure correct activation
+                            setActive(id);
+                        }
+                    });
+                });
+            }
+    
+            document.addEventListener('DOMContentLoaded', function() {
+                initNav();
+                if (!window.location.hash) {
+                    window.location.hash = '#profiles-guide';
+                } else {
+                    activateFromHash();
+                }
+            });
+    
+            window.addEventListener('hashchange', activateFromHash);
+    
+            // Preserve smooth scroll for in-page anchors
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

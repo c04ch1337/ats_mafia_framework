@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - ATS MAFIA Framework</title>
+    <link rel="stylesheet" href="css/ats-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent-red));
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .docs-header h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .docs-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 16px 50px 16px 20px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            font-size: 16px;
+            background: var(--color-surface);
+            color: var(--color-text-primary);
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-secondary);
+        }
+        
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .doc-category {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .doc-category:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .doc-category h3 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            color: var(--color-accent-gold);
+            font-size: 20px;
+        }
+        
+        .doc-category h3 i {
+            font-size: 24px;
+        }
+        
+        .doc-category p {
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .doc-links {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .doc-links li {
+            margin-bottom: 12px;
+        }
+        
+        .doc-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+        
+        .doc-links a:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .doc-links a i {
+            width: 20px;
+            color: var(--color-accent-red);
+        }
+        
+        .quick-actions {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .quick-actions h3 {
+            margin-bottom: 20px;
+            color: var(--color-accent-gold);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 12px 24px;
+            background: var(--color-accent-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .action-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .action-btn.secondary {
+            background: var(--color-primary-dark);
+        }
+        
+        .action-btn.secondary:hover {
+            background: #2a2a2a;
+        }
+        
+        .external-link {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--color-text-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .docs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .docs-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="docs.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Documentation</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="ats-main">
+        <div class="docs-container">
+            <!-- Documentation Header -->
+            <div class="docs-header">
+                <h1><i class="fas fa-book-open"></i> Documentation Center</h1>
+                <nav aria-label="Breadcrumb" class="breadcrumbs">
+                  <span>Docs Home</span>
+                </nav>
+                <p>Comprehensive guides and references for mastering the ATS MAFIA Framework</p>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" placeholder="Search documentation..." id="docSearch">
+                <i class="fas fa-search"></i>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3><i class="fas fa-rocket"></i> Quick Start</h3>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="window.location.href='quick-start.html'">
+                        <i class="fas fa-play"></i>
+                        5-Minute Quick Start
+                    </button>
+                    <a class="action-btn secondary" href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-code"></i>
+                        API Reference
+                        <i class="fas fa-external-link-alt external-link"></i>
+                    </a>
+                    <button class="action-btn secondary" onclick="window.location.href='faq-support.html#troubleshooting'">
+                        <i class="fas fa-tools"></i>
+                        Troubleshooting
+                    </button>
+                </div>
+            </div>
+
+            <!-- Documentation Categories -->
+            <div class="docs-grid">
+                <!-- Getting Started -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+                    <p>New to ATS MAFIA? Start here to get up and running quickly.</p>
+                    <ul class="doc-links">
+                        <li><a href="quick-start.html#prerequisites"><i class="fas fa-bolt"></i> Quick Start Guide</a></li>
+                        <li><a href="user-guides.html#training-guide"><i class="fas fa-play"></i> First Training Session</a></li>
+                        <li><a href="index.html"><i class="fas fa-dashboard"></i> Understanding the Dashboard</a></li>
+                        <li><a href="quick-start.html#launch-services"><i class="fab fa-docker"></i> Docker Setup Guide</a></li>
+                        <li><a href="quick-start.html#configure-env"><i class="fas fa-cog"></i> Basic Configuration</a></li>
+                    </ul>
+                </div>
+
+                <!-- User Guides -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-user"></i> User Guides</h3>
+                    <p>Learn how to use ATS MAFIA features effectively.</p>
+                    <ul class="doc-links">
+                        <li><a href="user-guides.html#scenarios-guide"><i class="fas fa-file-alt"></i> Creating Scenarios</a></li>
+                        <li><a href="user-guides.html#profiles-guide"><i class="fas fa-users"></i> Managing Profiles</a></li>
+                        <li><a href="user-guides.html#training-guide"><i class="fas fa-play-circle"></i> Launching Sessions</a></li>
+                        <li><a href="user-guides.html#monitoring-guide"><i class="fas fa-eye"></i> Monitoring Training Sessions</a></li>
+                        <li><a href="user-guides.html#reports-guide"><i class="fas fa-chart-line"></i> Understanding Reports</a></li>
+                        <li><a href="user-guides.html#cost-guide"><i class="fas fa-dollar-sign"></i> Cost Management</a></li>
+                    </ul>
+                </div>
+
+                <!-- Admin Guides -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-shield-alt"></i> Admin Guides</h3>
+                    <p>System administration and advanced configuration.</p>
+                    <ul class="doc-links">
+                        <li><a href="../config/default.yaml"><i class="fas fa-cogs"></i> System Configuration</a></li>
+                        <li><a href="profiles.html"><i class="fas fa-user-shield"></i> User Management</a></li>
+                        <li><a href="user-guides.html#monitoring-guide"><i class="fas fa-heartbeat"></i> System Monitoring</a></li>
+                        <li><a href="../sandbox/SECURITY_MODEL.md"><i class="fas fa-lock"></i> Security Settings</a></li>
+                        <li><a href="../README.md"><i class="fas fa-database"></i> Backup & Recovery</a></li>
+                        <li><a href="faq-support.html#troubleshooting"><i class="fas fa-tools"></i> Troubleshooting</a></li>
+                    </ul>
+                </div>
+
+                <!-- Technical Reference -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-code"></i> Technical Reference</h3>
+                    <p>Technical documentation for developers and advanced users.</p>
+                    <ul class="doc-links">
+                        <li><a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer"><i class="fas fa-api"></i> API Documentation <i class="fas fa-external-link-alt external-link"></i></a></li>
+                        <li><a href="../api/websocket_server.py"><i class="fas fa-plug"></i> WebSocket Protocol</a></li>
+                        <li><a href="../docs/PHASE4_ANALYTICS_README.md"><i class="fas fa-shield-virus"></i> MITRE ATT&CK Integration</a></li>
+                        <li><a href="../tools/README.md"><i class="fas fa-wrench"></i> Custom Tool Development</a></li>
+                        <li><a href="../README.md"><i class="fas fa-sitemap"></i> System Architecture</a></li>
+                        <li><a href="../api/CONTAINER_ENDPOINTS_README.md"><i class="fas fa-puzzle-piece"></i> Third-party Integration</a></li>
+                    </ul>
+                </div>
+
+                <!-- Personal Assistant -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-user-astronaut"></i> Personal Assistant</h3>
+                    <p>Deploy and integrate the phone-based Personal Assistant feature.</p>
+                    <ul class="doc-links">
+                        <li><a href="../docs/PERSONAL_ASSISTANT_DOCKER_GUIDE.md"><i class="fab fa-docker"></i> Personal Assistant Docker Guide</a></li>
+                        <li><a href="../docs/PERSONAL_ASSISTANT_PHONE_PROVIDER_GUIDE.md"><i class="fas fa-phone"></i> Phone Provider Integration Guide</a></li>
+                    </ul>
+                </div>
+
+                <!-- Analytics & Performance -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-chart-bar"></i> Analytics & Performance</h3>
+                    <p>Understanding and optimizing training performance.</p>
+                    <ul class="doc-links">
+                        <li><a href="../core/performance_metrics.py"><i class="fas fa-tachometer-alt"></i> Performance Metrics</a></li>
+                        <li><a href="../core/training_effectiveness.py"><i class="fas fa-graduation-cap"></i> Training Effectiveness</a></li>
+                        <li><a href="../core/cost_tracker.py"><i class="fas fa-coins"></i> Cost Analytics</a></li>
+                        <li><a href="../core/progress_tracker.py"><i class="fas fa-trophy"></i> Progress & Achievements</a></li>
+                        <li><a href="../core/reporting_engine.py"><i class="fas fa-file-chart"></i> Custom Reports</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support & Community -->
+                <div class="doc-category">
+                    <h3><i class="fas fa-life-ring"></i> Support & Community</h3>
+                    <p>Get help and connect with the ATS MAFIA community.</p>
+                    <ul class="doc-links">
+                        <li><a href="faq-support.html#faq"><i class="fas fa-question-circle"></i> Frequently Asked Questions</a></li>
+                        <li><a href="faq-support.html#troubleshooting"><i class="fas fa-exclamation-triangle"></i> Troubleshooting</a></li>
+                        <li><a href="https://github.com/atsmafia/framework/issues" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub Issues <i class="fas fa-external-link-alt external-link"></i></a></li>
+                        <li><a href="https://github.com/atsmafia/framework/discussions" target="_blank" rel="noopener noreferrer"><i class="fas fa-comments"></i> Community Forum <i class="fas fa-external-link-alt external-link"></i></a></li>
+                        <li><a href="https://github.com/atsmafia/framework?tab=readme-ov-file" target="_blank" rel="noopener noreferrer"><i class="fas fa-hands-helping"></i> Contributing <i class="fas fa-external-link-alt external-link"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+        </div>
+    </footer>
+
+    <script>
+        // Search functionality
+        document.getElementById('docSearch').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const categories = document.querySelectorAll('.doc-category');
+            
+            categories.forEach(category => {
+                const links = category.querySelectorAll('.doc-links a');
+                let hasVisibleLinks = false;
+                
+                links.forEach(link => {
+                    const text = link.textContent.toLowerCase();
+                    if (text.includes(query) || query === '') {
+                        link.style.display = 'flex';
+                        hasVisibleLinks = true;
+                    } else {
+                        link.style.display = 'none';
+                    }
+                });
+                
+                category.style.display = hasVisibleLinks || query === '' ? 'block' : 'none';
+            });
+        });
+
+        // Removed smooth scroll for same-page anchors (no in-page anchors remain)
+    </script>
+</body>
+</html>

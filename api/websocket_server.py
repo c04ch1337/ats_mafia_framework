@@ -6,10 +6,12 @@ Handles real-time communication for training sessions, system updates, and notif
 import asyncio
 import json
 import logging
+import uvicorn
 from typing import Dict, Set, Optional
 from datetime import datetime
-from fastapi import WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.websockets import WebSocketState
+from fastapi.responses import HTMLResponse
 
 logger = logging.getLogger(__name__)
 
@@ -330,8 +332,54 @@ async def periodic_system_status_update(interval: int = 30):
             await asyncio.sleep(interval)
 
 
+# Create FastAPI application for WebSocket server
+app = FastAPI(
+    title="ATS MAFIA WebSocket Server",
+    description="Real-time communication server for training sessions",
+    version="1.0.0"
+)
+
+
+@app.get("/")
+async def root():
+    """Root endpoint"""
+    return {"message": "ATS MAFIA WebSocket Server", "status": "running"}
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "connections": len(manager.active_connections)}
+
+
+@app.websocket("/ws")
+async def websocket_endpoint_route(websocket: WebSocket, client_id: str = Query(...)):
+    """WebSocket endpoint with client_id query parameter"""
+    await websocket_endpoint(websocket, client_id)
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Start background tasks"""
+    logger.info("WebSocket server starting up...")
+    
+    # Start periodic system status updates
+    asyncio.create_task(periodic_system_status_update())
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown"""
+    logger.info("WebSocket server shutting down...")
+    
+    # Disconnect all clients
+    for client_id in list(manager.active_connections.keys()):
+        manager.disconnect(client_id)
+
+
 # Export connection manager and key functions
 __all__ = [
+    'app',
     'manager',
     'websocket_endpoint',
     'broadcast_training_update',
@@ -342,3 +390,20 @@ __all__ = [
     'broadcast_cost_alert',
     'periodic_system_status_update'
 ]
+
+
+if __name__ == "__main__":
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+    
+    # Run the WebSocket server
+    uvicorn.run(
+        "websocket_server:app",
+        host="0.0.0.0",
+        port=8080,
+        reload=False,
+        log_level="info"
+    )

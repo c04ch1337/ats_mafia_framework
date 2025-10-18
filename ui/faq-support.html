@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ & Support - ATS MAFIA Framework</title>
+    <link rel="stylesheet" href="css/ats-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .faq-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent-red));
+            border-radius: 12px;
+            color: white;
+        }
+        
+        .page-header h1 {
+            font-size: 42px;
+            margin-bottom: 16px;
+            font-family: 'Cinzel', serif;
+        }
+        
+        .page-header p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .support-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .support-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .support-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .support-card i {
+            font-size: 48px;
+            color: var(--color-accent-gold);
+            margin-bottom: 16px;
+        }
+        
+        .support-card h3 {
+            color: var(--color-text-primary);
+            margin-bottom: 12px;
+        }
+        
+        .support-card p {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .faq-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .faq-section h2 {
+            color: var(--color-accent-gold);
+            margin-bottom: 24px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .faq-category {
+            margin-bottom: 32px;
+        }
+        
+        .faq-category h3 {
+            color: var(--color-text-primary);
+            margin-bottom: 16px;
+            font-size: 20px;
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: 8px;
+        }
+        
+        .faq-item {
+            margin-bottom: 16px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+        
+        .faq-question:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .faq-question h4 {
+            color: var(--color-text-primary);
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .faq-question i {
+            color: var(--color-text-secondary);
+            transition: transform 0.2s ease;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+        }
+        
+        .faq-answer p {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            margin: 0 0 12px 0;
+        }
+        
+        .faq-answer p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .faq-answer ul {
+            color: var(--color-text-secondary);
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+        
+        .faq-answer li {
+            margin-bottom: 8px;
+        }
+        
+        .faq-answer code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .contact-form {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        .contact-form h2 {
+            color: var(--color-accent-gold);
+            margin-bottom: 24px;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: var(--color-text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text-primary);
+            font-size: 14px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: var(--color-accent-red);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-secondary {
+            background: var(--color-primary-dark);
+            color: var(--color-text-primary);
+        }
+        
+        .btn-secondary:hover {
+            background: #2a2a2a;
+        }
+        
+        .troubleshooting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .trouble-card {
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .trouble-card h4 {
+            color: var(--color-accent-gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .trouble-card ol {
+            color: var(--color-text-secondary);
+            padding-left: 20px;
+        }
+        
+        .trouble-card li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-operational {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        .status-degraded {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .status-down {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+        
+        @media (max-width: 768px) {
+            .support-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .troubleshooting-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="docs.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Documentation</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="ats-main">
+        <div class="faq-container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-life-ring"></i> FAQ & Support</h1>
+                <nav aria-label="Breadcrumb" class="breadcrumbs">
+                  <a href="docs.html">Docs Home</a>
+                  <span class="sep">›</span>
+                  <span>FAQ and Support</span>
+                </nav>
+                <p>Get help with common questions, troubleshooting, and community support</p>
+            </div>
+
+            <!-- Support Options -->
+            <div class="support-options">
+                <div class="support-card" onclick="scrollToSection('faq')">
+                    <i class="fas fa-question-circle"></i>
+                    <h3>Frequently Asked Questions</h3>
+                    <p>Find answers to common questions about ATS MAFIA</p>
+                </div>
+                <div class="support-card" onclick="scrollToSection('troubleshooting')">
+                    <i class="fas fa-tools"></i>
+                    <h3>Troubleshooting</h3>
+                    <p>Step-by-step solutions to common issues</p>
+                </div>
+                <div class="support-card" onclick="scrollToSection('contact')">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Contact Support</h3>
+                    <p>Get help from our support team</p>
+                </div>
+                <div class="support-card" onclick="window.open('https://github.com/atsmafia/framework/issues', '_blank')">
+                    <i class="fab fa-github"></i>
+                    <h3>GitHub Issues</h3>
+                    <p>Report bugs and request features</p>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="faq-section">
+                <h2><i class="fas fa-heartbeat"></i> System Status</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                        <span>API Server</span>
+                        <span class="status-indicator status-operational">
+                            <i class="fas fa-circle"></i> Operational
+                        </span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                        <span>WebSocket Server</span>
+                        <span class="status-indicator status-operational">
+                            <i class="fas fa-circle"></i> Operational
+                        </span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                        <span>Database</span>
+                        <span class="status-indicator status-operational">
+                            <i class="fas fa-circle"></i> Operational
+                        </span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                        <span>LLM Services</span>
+                        <span class="status-indicator status-degraded">
+                            <i class="fas fa-exclamation-triangle"></i> Degraded
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div id="faq" class="faq-section">
+                <h2><i class="fas fa-question-circle"></i> Frequently Asked Questions</h2>
+
+                <!-- Getting Started -->
+                <div class="faq-category">
+                    <h3>Getting Started</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What are the system requirements for ATS MAFIA?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>ATS MAFIA requires:</p>
+                            <ul>
+                                <li><strong>Hardware:</strong> 8GB RAM minimum (16GB recommended), 2 CPU cores minimum</li>
+                                <li><strong>Software:</strong> Docker and Docker Compose, modern web browser</li>
+                                <li><strong>API Keys:</strong> At least one LLM provider API key (OpenAI, Anthropic, or Google)</li>
+                                <li><strong>Storage:</strong> 10GB free disk space</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I get started with my first training session?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Follow these steps:</p>
+                            <ol>
+                                <li>Complete the 5-minute Quick Start Guide</li>
+                                <li>Create your first profile (Red Team Operator recommended)</li>
+                                <li>Choose a beginner scenario like "Basic Penetration Test"</li>
+                                <li>Set a small budget ($5-10) for your first session</li>
+                                <li>Launch the session and monitor progress in the Situation Room</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Which LLM provider should I use?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Each provider has different strengths:</p>
+                            <ul>
+                                <li><strong>OpenAI GPT-4:</strong> Best overall performance, higher cost</li>
+                                <li><strong>Anthropic Claude:</strong> Excellent for reasoning, moderate cost</li>
+                                <li><strong>Google Gemini:</strong> Good value, cost-effective option</li>
+                            </ul>
+                            <p>We recommend starting with Google Gemini for cost efficiency, then upgrading to GPT-4 for advanced scenarios.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Management -->
+                <div class="faq-category">
+                    <h3>Cost Management</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How much does a typical training session cost?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Costs vary by complexity:</p>
+                            <ul>
+                                <li><strong>Beginner scenarios:</strong> $5-15 per session</li>
+                                <li><strong>Intermediate scenarios:</strong> $15-30 per session</li>
+                                <li><strong>Advanced scenarios:</strong> $30-60 per session</li>
+                                <li><strong>Expert scenarios:</strong> $60-100+ per session</li>
+                            </ul>
+                            <p>Always set budget limits to control costs!</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How can I reduce training costs?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Several strategies to optimize costs:</p>
+                            <ul>
+                                <li>Use cost-effective models for routine tasks</li>
+                                <li>Set appropriate session budgets</li>
+                                <li>Monitor costs in real-time during sessions</li>
+                                <li>Use the cost optimization recommendations</li>
+                                <li>Start with simpler scenarios and progress gradually</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What happens if I exceed my budget?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>The system provides multiple safeguards:</p>
+                            <ul>
+                                <li>Alerts at 75% and 90% of budget</li>
+                                <li>Automatic session pause at 100% budget</li>
+                                <li>Option to continue with additional budget approval</li>
+                                <li>Detailed cost breakdown for analysis</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Issues -->
+                <div class="faq-category">
+                    <h3>Technical Issues</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Why is my WebSocket connection failing?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Common WebSocket issues and solutions:</p>
+                            <ul>
+                                <li><strong>Port blocked:</strong> Ensure port 8080 is accessible</li>
+                                <li><strong>Firewall:</strong> Check firewall settings</li>
+                                <li><strong>Container not running:</strong> Verify with <code>docker-compose ps</code></li>
+                                <li><strong>Network issues:</strong> Try refreshing the page</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>Why are containers restarting repeatedly?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Container restart loops usually indicate:</p>
+                            <ul>
+                                <li><strong>Configuration errors:</strong> Check .env file settings</li>
+                                <li><strong>Missing dependencies:</strong> Verify Docker image build</li>
+                                <li><strong>Port conflicts:</strong> Check for port conflicts</li>
+                                <li><strong>Resource limits:</strong> Monitor system resources</li>
+                            </ul>
+                            <p>Use <code>docker logs [container-name]</code> to diagnose specific issues.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I reset my system configuration?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>To reset configuration:</p>
+                            <ol>
+                                <li>Stop all containers: <code>docker-compose down</code></li>
+                                <li>Remove volumes (WARNING: deletes all data): <code>docker-compose down -v</code></li>
+                                <li>Recreate .env from template: <code>cp .env.example .env</code></li>
+                                <li>Restart: <code>docker-compose up -d</code></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Training & Performance -->
+                <div class="faq-category">
+                    <h3>Training & Performance</h3>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I improve my training scores?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Tips for better performance:</p>
+                            <ul>
+                                <li>Start with appropriate difficulty levels</li>
+                                <li>Review after-action reports carefully</li>
+                                <li>Focus on learning objectives, not just completion</li>
+                                <li>Practice consistently to build skills</li>
+                                <li>Use the analytics dashboard to identify weak areas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>What do the performance metrics mean?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Key metrics explained:</p>
+                            <ul>
+                                <li><strong>Success Rate:</strong> Percentage of objectives completed</li>
+                                <li><strong>Efficiency:</strong> Cost-to-results ratio</li>
+                                <li><strong>Learning Velocity:</strong> Rate of skill improvement</li>
+                                <li><strong>Adaptability:</strong> Performance in novel situations</li>
+                                <li><strong>Consistency:</strong> Performance variance across sessions</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <h4>How do I create custom scenarios?</h4>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Creating custom scenarios:</p>
+                            <ol>
+                                <li>Define clear objectives and success criteria</li>
+                                <li>Set appropriate difficulty level</li>
+                                <li>Configure environment and constraints</li>
+                                <li>Test the scenario yourself</li>
+                                <li>Publish for team use</li>
+                            </ol>
+                            <p>See the User Guide for detailed scenario creation instructions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting Section -->
+            <div id="troubleshooting" class="faq-section">
+                <h2><i class="fas fa-tools"></i> Common Troubleshooting</h2>
+                
+                <div class="troubleshooting-grid">
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-docker"></i> Docker Issues</h4>
+                        <ol>
+                            <li>Check Docker is running: <code>docker --version</code></li>
+                            <li>Verify Docker Compose: <code>docker-compose --version</code></li>
+                            <li>Check container status: <code>docker-compose ps</code></li>
+                            <li>View logs: <code>docker-compose logs [service]</code></li>
+                            <li>Restart services: <code>docker-compose restart</code></li>
+                        </ol>
+                    </div>
+
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-network-wired"></i> Network Issues</h4>
+                        <ol>
+                            <li>Check port availability: <code>netstat -an | grep :8000</code></li>
+                            <li>Verify firewall settings</li>
+                            <li>Test API connectivity: <code>curl http://localhost:8000/health</code></li>
+                            <li>Check WebSocket: <code>wscat -c ws://localhost:8080</code></li>
+                            <li>Verify DNS resolution</li>
+                        </ol>
+                    </div>
+
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-database"></i> Database Issues</h4>
+                        <ol>
+                            <li>Check PostgreSQL status: <code>docker-compose exec postgres pg_isready</code></li>
+                            <li>Verify connection string in .env</li>
+                            <li>Check database logs: <code>docker-compose logs postgres</code></li>
+                            <li>Test connection: <code>docker-compose exec postgres psql -U ats_user -d ats_mafia</code></li>
+                            <li>Restart database: <code>docker-compose restart postgres</code></li>
+                        </ol>
+                    </div>
+
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-robot"></i> LLM API Issues</h4>
+                        <ol>
+                            <li>Verify API key in .env file</li>
+                            <li>Test API key with curl</li>
+                            <li>Check API service status</li>
+                            <li>Verify rate limits and quotas</li>
+                            <li>Check billing status</li>
+                        </ol>
+                    </div>
+
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-memory"></i> Performance Issues</h4>
+                        <ol>
+                            <li>Check system resources: <code>docker stats</code></li>
+                            <li>Monitor memory usage</li>
+                            <li>Check CPU utilization</li>
+                            <li>Review disk space: <code>df -h</code></li>
+                            <li>Optimize container resource limits</li>
+                        </ol>
+                    </div>
+
+                    <div class="trouble-card">
+                        <h4><i class="fas fa-user"></i> Authentication Issues</h4>
+                        <ol>
+                            <li>Clear browser cache and cookies</li>
+                            <li>Check token expiration</li>
+                            <li>Reset user credentials</li>
+                            <li>Restart authentication service</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <ul style="margin: 12px 0 20px 0; padding-left: 20px;">
+                    <li><a href="#windows-tools">Windows Tools</a></li>
+                    <li><a href="#linux-tools">Linux/macOS Tools</a></li>
+                </ul>
+
+                <h3 id="windows-tools">Windows Tools</h3>
+                <pre><code>netstat -ano | findstr :8000
+netstat -ano | findstr :8080
+PowerShell: Test-NetConnection -ComputerName localhost -Port 8080
+Docker: docker compose ps
+Docker logs (example): docker compose logs -f</code></pre>
+
+                <h3 id="linux-tools">Linux/macOS Tools</h3>
+                <pre><code>lsof -i :8000
+netstat -an | grep :8080
+curl -sSf http://localhost:8000/docs | head -n 1
+Docker: docker compose ps
+Docker logs (example): docker compose logs -f</code></pre>
+
+                <p style="color: var(--color-text-secondary); margin-top: 12px;">
+                    References:
+                    <a href="../.env.example">.env.example</a> ·
+                    <a href="../docker-compose.yml">docker-compose.yml</a> ·
+                    <a href="../docker-compose.dev.yml">docker-compose.dev.yml</a>
+                </p>
+            </div>
+
+            <!-- Contact Form -->
+            <div id="contact" class="contact-form">
+                <h2><i class="fas fa-envelope"></i> Contact Support</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 24px;">Can't find what you're looking for? Our support team is here to help.</p>
+                
+                <form onsubmit="handleSupportSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Category *</label>
+                        <select id="category" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="billing">Billing/Cost Question</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="documentation">Documentation Feedback</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" name="message" required placeholder="Please describe your issue or question in detail..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleFAQ(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+        
+        function handleSupportSubmit(event) {
+            event.preventDefault();
+            
+            // Get form data
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+            
+            // Here you would normally send the data to your support system
+            console.log('Support request:', data);
+            
+            // Show success message
+            alert('Thank you for contacting support. We will respond within 24 hours.');
+            
+            // Reset form
+            resetForm();
+        }
+        
+        function resetForm() {
+            document.querySelector('.contact-form form').reset();
+        }
+        
+        // Auto-open first FAQ item
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstFAQ = document.querySelector('.faq-item');
+            if (firstFAQ) {
+                firstFAQ.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
