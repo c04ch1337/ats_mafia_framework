@@ -149,11 +149,13 @@ Deploy the complete ATS MAFIA Framework with all services including API, UI, dat
 
 2. **Start all services**
    ```bash
-   # Start with all services (including Kali sandbox)
+   # Start core services (default - WITHOUT Kali sandbox)
    docker-compose up -d
    
-   # Or start without Kali sandbox
-   docker-compose up -d --scale kali-sandbox=0
+   # Start with Kali sandbox included
+   docker-compose --profile full up -d
+   # OR
+   docker-compose --profile sandbox up -d
    ```
 
 3. **Access services**
@@ -303,6 +305,52 @@ docker stats
 docker system prune -a
 ```
 
+### Kali Sandbox Management
+
+The Kali Linux sandbox is **optional** and uses Docker profiles to prevent automatic startup (it's a large image with security tools). By default, `docker-compose up -d` starts all services **except** Kali.
+
+**Starting Services with Kali Sandbox:**
+
+```bash
+# Start ALL services including Kali sandbox (full profile)
+docker-compose --profile full up -d
+
+# Start with sandbox profile (includes Kali)
+docker-compose --profile sandbox up -d
+
+# Start Kali sandbox only (after other services are running)
+docker-compose up -d kali-sandbox
+```
+
+**Why is Kali Optional?**
+- Large Docker image (2GB+) with pre-installed security tools
+- Resource-intensive (4GB RAM limit)
+- Only needed for advanced penetration testing scenarios
+- Contains tools like nmap, Metasploit, sqlmap, hydra, nikto
+
+**Managing Kali Sandbox:**
+
+```bash
+# Check if Kali is running
+docker-compose ps kali-sandbox
+
+# View Kali sandbox logs
+docker-compose logs -f kali-sandbox
+
+# Access Kali sandbox shell
+docker-compose exec kali-sandbox bash
+
+# Stop Kali sandbox only
+docker-compose stop kali-sandbox
+
+# Remove Kali sandbox
+docker-compose rm -f kali-sandbox
+
+# Restart all services WITHOUT Kali
+docker-compose down
+docker-compose up -d
+```
+
 ### Health Checks
 
 ```bash
@@ -408,8 +456,11 @@ cd ats_mafia_framework
 cp .env.example .env
 # Edit .env: Set DATABASE_PASSWORD, REDIS_PASSWORD
 
-# 2. Start all services
+# 2. Start core services (WITHOUT Kali sandbox)
 docker-compose up -d
+
+# 2a. OR start with Kali sandbox
+docker-compose --profile full up -d
 
 # 3. Access services
 # - Main API: http://localhost:8000/docs

@@ -153,6 +153,9 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
       - REDIS_DB=0
       
+      # Docker Configuration
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      
       # Container Orchestration
       - MAX_PARALLEL_STARTS=3
       - CONTAINER_STARTUP_TIMEOUT=120
@@ -168,6 +171,7 @@ services:
       - METRICS_COLLECTION=true
     
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./config:/app/config:ro
       - ./profiles:/app/profiles:ro
       - ./scenarios:/app/scenarios:ro
@@ -236,6 +240,9 @@ services:
       - MAX_CONNECTIONS=100
       - HEARTBEAT_INTERVAL=30
       
+      # Docker Configuration
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      
       # Database Configuration
       - DATABASE_TYPE=postgresql
       - DATABASE_HOST=postgres
@@ -250,6 +257,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
     
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - logs:/app/logs
     
     networks:
@@ -407,6 +415,9 @@ services:
       - WEBHOOK_HOST=0.0.0.0
       - WEBHOOK_PORT=5000
       
+      # Docker Configuration
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      
       # Ethical Safeguards
       - PERSONAL_ASSISTANT_ALWAYS_IDENTIFY=true
       - PERSONAL_ASSISTANT_DISCLOSE_AI=true
@@ -427,6 +438,7 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD:-redis_secure_password_change_me}
     
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - recordings:/app/recordings
       - transcripts:/app/transcripts
       - task_data:/app/data
