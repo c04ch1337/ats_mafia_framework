@@ -1,0 +1,391 @@
+{
+  "id": "corporate_network_breach",
+  "name": "Corporate Network Breach - Multi-Stage Infiltration",
+  "description": "A comprehensive multi-stage corporate network infiltration exercise. Progress from external reconnaissance to internal network compromise, privilege escalation, lateral movement, and data exfiltration while maintaining stealth.",
+  "type": "red_team",
+  "difficulty": "advanced",
+  "estimated_duration_minutes": 180,
+  "required_profiles": ["phantom", "red_team_operator"],
+  "required_tools": ["network_scanner", "vulnerability_scanner", "exploitation_framework"],
+  "optional_profiles": ["social_engineer"],
+  "optional_tools": ["password_cracker", "packet_analyzer"],
+  "prerequisites": ["basic_penetration_test"],
+  "learning_objectives": [
+    "Execute systematic external reconnaissance",
+    "Identify and exploit web application vulnerabilities",
+    "Perform network pivoting and lateral movement",
+    "Escalate privileges through credential harvesting",
+    "Maintain persistence in enterprise environments",
+    "Exfiltrate data while evading detection systems"
+  ],
+  "tags": ["red_team", "network_penetration", "corporate", "multi_stage", "advanced"],
+  "phases": [
+    {
+      "id": "phase-1-recon",
+      "name": "External Reconnaissance",
+      "description": "Gather intelligence on the target organization from external sources without direct interaction with target systems",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Identify public-facing IP addresses and domains",
+          "success_criteria": {
+            "type": "tool_execution",
+            "parameters": {
+              "tool": "network_scanner",
+              "required_findings": ["external_ips", "domain_names"]
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Enumerate subdomains and identify potential entry points",
+          "success_criteria": {
+            "type": "tool_execution",
+            "parameters": {
+              "tool": "subdomain_enumeration",
+              "minimum_findings": 5
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Gather employee information from public sources (OSINT)",
+          "success_criteria": {
+            "type": "manual_verification",
+            "parameters": {
+              "verification_type": "mentor_review",
+              "required_data": ["employee_names", "email_format", "organizational_structure"]
+            }
+          },
+          "points": 100,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Consider using passive DNS enumeration and certificate transparency logs",
+          "penalty_points": 20
+        },
+        {
+          "trigger_after_minutes": 25,
+          "hint": "LinkedIn and company websites often reveal organizational structure and employee information",
+          "penalty_points": 30
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-2-scanning",
+      "name": "Active Scanning and Enumeration",
+      "description": "Perform active scanning of identified targets to discover services, vulnerabilities, and attack vectors",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Scan target IP ranges and identify open ports and services",
+          "success_criteria": {
+            "type": "tool_execution",
+            "parameters": {
+              "tool": "network_scanner",
+              "required_findings": ["open_ports", "service_versions"]
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Identify web applications and enumerate technologies",
+          "success_criteria": {
+            "type": "tool_execution",
+            "parameters": {
+              "tool": "web_scanner",
+              "required_data": ["web_technologies", "cms_versions", "frameworks"]
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Discover at least 3 potential vulnerabilities",
+          "success_criteria": {
+            "type": "tool_execution",
+            "parameters": {
+              "tool": "vulnerability_scanner",
+              "minimum_findings": 3
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Focus on web applications first - they often have the largest attack surface",
+          "penalty_points": 25
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Look for outdated software versions and known CVEs",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-3-initial-access",
+      "name": "Initial Access",
+      "description": "Exploit identified vulnerabilities to gain initial foothold in the target network",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Successfully exploit a web application vulnerability",
+          "success_criteria": {
+            "type": "exploitation_success",
+            "parameters": {
+              "target_type": "web_application",
+              "required_access": "shell"
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Establish a reverse shell connection",
+          "success_criteria": {
+            "type": "connection_established",
+            "parameters": {
+              "connection_type": "reverse_shell",
+              "stable": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Gather system information and user context",
+          "success_criteria": {
+            "type": "data_collection",
+            "parameters": {
+              "required_data": ["hostname", "username", "os_version", "network_config"]
+            }
+          },
+          "points": 100,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "SQL injection and file upload vulnerabilities are common initial access vectors",
+          "penalty_points": 40
+        },
+        {
+          "trigger_after_minutes": 40,
+          "hint": "Consider using a staged payload for better reliability",
+          "penalty_points": 50
+        }
+      ],
+      "time_limit_minutes": 60
+    },
+    {
+      "id": "phase-4-privilege-escalation",
+      "name": "Privilege Escalation",
+      "description": "Escalate privileges from initial access to administrator/system level",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Enumerate local privilege escalation vectors",
+          "success_criteria": {
+            "type": "enumeration_complete",
+            "parameters": {
+              "vectors_identified": ["kernel_exploits", "misconfigurations", "credential_files"]
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Successfully escalate to administrator/root privileges",
+          "success_criteria": {
+            "type": "privilege_check",
+            "parameters": {
+              "required_level": "administrator"
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Harvest credentials from compromised system",
+          "success_criteria": {
+            "type": "data_collection",
+            "parameters": {
+              "data_type": "credentials",
+              "minimum_count": 3
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Check for sudo misconfigurations and SUID binaries on Linux systems",
+          "penalty_points": 45
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "On Windows, look for unquoted service paths and scheduled tasks",
+          "penalty_points": 55
+        }
+      ],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-5-lateral-movement",
+      "name": "Lateral Movement",
+      "description": "Move laterally through the network to compromise additional systems and reach high-value targets",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Enumerate internal network and identify targets",
+          "success_criteria": {
+            "type": "network_enumeration",
+            "parameters": {
+              "minimum_hosts_discovered": 5,
+              "services_identified": true
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Compromise at least 2 additional systems",
+          "success_criteria": {
+            "type": "system_compromise",
+            "parameters": {
+              "minimum_systems": 2,
+              "access_level": "user_or_higher"
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Locate and access file server or database",
+          "success_criteria": {
+            "type": "target_accessed",
+            "parameters": {
+              "target_type": ["file_server", "database_server"]
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Use harvested credentials with pass-the-hash or credential spraying techniques",
+          "penalty_points": 50
+        },
+        {
+          "trigger_after_minutes": 45,
+          "hint": "Look for shared folders and sensitive data in common locations",
+          "penalty_points": 60
+        }
+      ],
+      "time_limit_minutes": 60
+    },
+    {
+      "id": "phase-6-data-exfiltration",
+      "name": "Data Exfiltration and Persistence",
+      "description": "Exfiltrate sensitive data and establish persistence mechanisms while maintaining stealth",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Identify and collect sensitive data",
+          "success_criteria": {
+            "type": "data_collection",
+            "parameters": {
+              "data_types": ["financial", "pii", "intellectual_property"],
+              "minimum_files": 5
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Exfiltrate data using covert channels",
+          "success_criteria": {
+            "type": "data_exfiltration",
+            "parameters": {
+              "method": "covert",
+              "detection_avoided": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Establish at least 2 persistence mechanisms",
+          "success_criteria": {
+            "type": "persistence_established",
+            "parameters": {
+              "minimum_mechanisms": 2,
+              "stealth_rating": "high"
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Consider DNS tunneling or HTTPS for covert exfiltration",
+          "penalty_points": 55
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Registry keys and scheduled tasks provide good persistence on Windows",
+          "penalty_points": 65
+        }
+      ],
+      "time_limit_minutes": 45
+    }
+  ],
+  "scoring": {
+    "max_points": 3850,
+    "time_bonus_multiplier": 1.8,
+    "stealth_bonus": 500,
+    "deductions_per_mistake": 75,
+    "deductions_per_hint": 30,
+    "completion_bonus": 1000
+  },
+  "metadata": {
+    "target_environment": "corporate_network",
+    "network_size": "medium",
+    "defense_level": "moderate",
+    "blue_team_active": false,
+    "detection_difficulty": "medium"
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

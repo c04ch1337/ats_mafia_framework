@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Situation Room - ATS MAFIA Training</title>
+    <link rel="stylesheet" href="../css/ats-theme.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/mafia_theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+                <span class="brand-subtitle">Situation Room</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../profiles.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Profiles</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../scenarios.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Scenarios</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="situation_room.html" class="nav-link">
+                        <i class="fas fa-chess"></i>
+                        <span>Situation Room</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="after_action_report.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="ats-main situation-room">
+        <!-- Session Header -->
+        <div class="session-header" id="sessionHeader">
+            <div class="session-info-panel">
+                <h1 class="session-title" id="sessionTitle">No Active Session</h1>
+                <div class="session-meta">
+                    <span class="meta-item">
+                        <i class="fas fa-book"></i>
+                        <span id="scenarioName">-</span>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-signal"></i>
+                        <span id="difficultyLevel">-</span>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="elapsedTime">00:00:00</span>
+                    </span>
+                    <span class="meta-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        <span id="sessionCost">$0.00</span>
+                    </span>
+                </div>
+            </div>
+            <div class="session-controls">
+                <button class="btn btn-sm btn-secondary" id="pauseSessionBtn" disabled>
+                    <i class="fas fa-pause"></i>
+                    Pause
+                </button>
+                <button class="btn btn-sm btn-secondary" id="resumeSessionBtn" style="display: none;">
+                    <i class="fas fa-play"></i>
+                    Resume
+                </button>
+                <button class="btn btn-sm btn-danger" id="cancelSessionBtn" disabled>
+                    <i class="fas fa-stop"></i>
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <!-- Session Selector (when no active session) -->
+        <div class="session-selector-panel" id="sessionSelector">
+            <div class="selector-container">
+                <h2>
+                    <i class="fas fa-chess"></i>
+                    Select Training Session to Monitor
+                </h2>
+                <select class="ats-form-select session-select" id="sessionSelect">
+                    <option value="">Choose an active session...</option>
+                </select>
+                <button class="btn btn-primary" id="loadSessionBtn" disabled>
+                    <i class="fas fa-eye"></i>
+                    Monitor Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Session View -->
+        <div class="session-active-view" id="sessionActiveView" style="display: none;">
+            <!-- Phase Progress Timeline -->
+            <div class="phase-timeline-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-tasks"></i>
+                        Phase Progress
+                    </h2>
+                    <div class="phase-indicator">
+                        <span>Phase <strong id="currentPhase">1</strong> of <strong id="totalPhases">5</strong></span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="phase-timeline" id="phaseTimeline">
+                        <!-- Phases will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="situation-grid">
+                <!-- Objective Tracker -->
+                <div class="card objectives-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-bullseye"></i>
+                            Mission Objectives
+                        </h2>
+                        <div class="objectives-summary">
+                            <span id="completedObjectives">0</span>/<span id="totalObjectives">0</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="objectives-list" id="objectivesList">
+                            <!-- Objectives will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Activity Feed -->
+                <div class="card agent-activity-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-user-secret"></i>
+                            Agent Activity
+                        </h2>
+                        <div class="widget-controls">
+                            <button class="widget-control" id="pauseActivityBtn" title="Pause Updates">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <button class="widget-control" id="clearActivityBtn" title="Clear">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="activity-stream" id="activityStream">
+                            <!-- Agent actions will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="card metrics-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Performance Metrics
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="metrics-grid">
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="metric-value" id="scoreValue">0</div>
+                                    <div class="metric-label">Score</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="metric-value" id="timeRemainingValue">--:--</div>
+                                    <div class="metric-label">Time Remaining</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="metric-value" id="mistakesValue">0</div>
+                                    <div class="metric-label">Mistakes</div>
+                                </div>
+                            </div>
+                            <div class="metric-item">
+                                <div class="metric-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="metric-details">
+                                    <div class="metric-value" id="hintsUsedValue">0</div>
+                                    <div class="metric-label">Hints Used</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="performance-chart-mini">
+                            <canvas id="performanceMiniChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tool Usage Monitor -->
+                <div class="card tools-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-toolbox"></i>
+                            Tool Executions
+                        </h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="tools-list" id="toolsList">
+                            <!-- Tool usage will be shown here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hint System -->
+                <div class="card hints-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Available Hints
+                        </h2>
+                        <div class="hints-remaining">
+                            <span id="hintsRemaining">3</span> remaining
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="hints-container" id="hintsContainer">
+                            <p class="hints-info">Hints are available when the agent is struggling with an objective.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Logs -->
+                <div class="card logs-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-terminal"></i>
+                            Live Logs
+                        </h2>
+                        <div class="widget-controls">
+                            <button class="widget-control" id="scrollLockBtn" title="Lock Scroll">
+                                <i class="fas fa-lock-open"></i>
+                            </button>
+                            <button class="widget-control" id="clearLogsBtn" title="Clear">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="widget-control" id="downloadLogsBtn" title="Download">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="logs-viewer" id="logsViewer">
+                            <!-- Logs will stream here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Live Session Monitoring</p>
+            <div class="footer-stats">
+                <span>Latency: <strong id="wsLatency">--</strong>ms</span>
+                <span>Updates: <strong id="updateCount">0</strong></span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hint Modal -->
+    <div id="hintModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Request Hint
+                </h3>
+                <button class="modal-close" data-modal="hintModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="hint-request-form">
+                    <p>Requesting a hint will deduct points from the session score.</p>
+                    <div class="hint-cost">
+                        <i class="fas fa-coins"></i>
+                        Cost: <strong>50 points</strong>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close" data-modal="hintModal">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="requestHintBtn">
+                            <i class="fas fa-lightbulb"></i>
+                            Request Hint
+                        </button>
+                    </div>
+                </div>
+                <div class="hint-display" id="hintDisplay" style="display: none;">
+                    <div class="hint-content" id="hintContent"></div>
+                    <button class="btn btn-secondary modal-close" data-modal="hintModal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../js/api-client.js"></script>
+    <script src="../js/websocket-client.js"></script>
+    <script src="../js/realtime.js"></script>
+    <script src="../js/charts.js"></script>
+    <script src="../js/situation_room_controller.js"></script>
+    <script src="../js/components.js"></script>
+</body>
+</html>

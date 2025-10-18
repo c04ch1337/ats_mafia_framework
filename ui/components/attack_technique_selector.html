@@ -1,0 +1,399 @@
+<!-- ATT&CK Technique Selector Component -->
+<div class="attack-technique-selector" x-data="attackTechniqueSelector()">
+    <style>
+        .attack-technique-selector {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+        
+        .technique-search {
+            margin-bottom: 15px;
+        }
+        
+        .technique-search input {
+            width: 100%;
+            padding: 10px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .tactic-filter {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .tactic-badge {
+            padding: 6px 12px;
+            background: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .tactic-badge:hover {
+            background: #3d3d3d;
+            border-color: #666;
+        }
+        
+        .tactic-badge.active {
+            background: #4361ee;
+            border-color: #4361ee;
+            color: white;
+        }
+        
+        .techniques-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background: #2d2d2d;
+        }
+        
+        .technique-item {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .technique-item:hover {
+            background: #3d3d3d;
+        }
+        
+        .technique-item.selected {
+            background: #4361ee;
+            color: white;
+        }
+        
+        .technique-id {
+            font-weight: bold;
+            color: #4361ee;
+            margin-right: 8px;
+        }
+        
+        .technique-item.selected .technique-id {
+            color: white;
+        }
+        
+        .technique-name {
+            flex: 1;
+        }
+        
+        .technique-tactics {
+            display: flex;
+            gap: 4px;
+            font-size: 10px;
+        }
+        
+        .technique-tactic-tag {
+            padding: 2px 6px;
+            background: #444;
+            border-radius: 4px;
+        }
+        
+        .selected-techniques {
+            margin-top: 15px;
+            padding: 12px;
+            background: #2d2d2d;
+            border: 1px solid #333;
+            border-radius: 4px;
+        }
+        
+        .selected-technique-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: #4361ee;
+            border-radius: 16px;
+            margin: 4px;
+            font-size: 12px;
+        }
+        
+        .remove-technique {
+            cursor: pointer;
+            color: white;
+            opacity: 0.7;
+        }
+        
+        .remove-technique:hover {
+            opacity: 1;
+        }
+        
+        .technique-details {
+            margin-top: 15px;
+            padding: 15px;
+            background: #2d2d2d;
+            border: 1px solid #333;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .technique-details h4 {
+            margin: 0 0 10px 0;
+            color: #4361ee;
+        }
+        
+        .technique-details p {
+            margin: 8px 0;
+            line-height: 1.5;
+            font-size: 13px;
+        }
+        
+        .loading-spinner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+    
+    <div class="attack-technique-selector-content">
+        <!-- Search -->
+        <div class="technique-search">
+            <input 
+                type="text" 
+                x-model="searchQuery" 
+                @input.debounce.300ms="searchTechniques()"
+                placeholder="🔍 Search ATT&CK techniques (e.g., 'phishing', 'T1055')..."
+            />
+        </div>
+        
+        <!-- Tactic Filter -->
+        <div class="tactic-filter">
+            <span style="font-size: 12px; color: #999; align-self: center; margin-right: 8px;">Filter by tactic:</span>
+            <div class="tactic-badge" 
+                 :class="{ 'active': selectedTactic === null }"
+                 @click="selectTactic(null)">
+                All
+            </div>
+            <template x-for="tactic in tactics" :key="tactic.id">
+                <div class="tactic-badge" 
+                     :class="{ 'active': selectedTactic === tactic.shortname }"
+                     @click="selectTactic(tactic.shortname)">
+                    <span x-text="tactic.name"></span>
+                </div>
+            </template>
+        </div>
+        
+        <!-- Techniques List -->
+        <div x-show="loading" class="loading-spinner">
+            <span>Loading ATT&CK techniques...</span>
+        </div>
+        
+        <div x-show="!loading" class="techniques-list">
+            <template x-for="technique in filteredTechniques" :key="technique.id">
+                <div class="technique-item" 
+                     :class="{ 'selected': isSelected(technique.id) }"
+                     @click="toggleTechnique(technique)">
+                    <div style="flex: 1; display: flex; align-items: center;">
+                        <span class="technique-id" x-text="technique.id"></span>
+                        <span class="technique-name" x-text="technique.name"></span>
+                    </div>
+                    <div class="technique-tactics">
+                        <template x-for="tactic in technique.tactics.slice(0, 2)" :key="tactic">
+                            <span class="technique-tactic-tag" x-text="tactic"></span>
+                        </template>
+                    </div>
+                </div>
+            </template>
+            
+            <div x-show="filteredTechniques.length === 0" style="padding: 40px; text-align: center; color: #666;">
+                <span x-show="searchQuery">No techniques found matching "<span x-text="searchQuery"></span>"</span>
+                <span x-show="!searchQuery && selectedTactic">No techniques found for this tactic</span>
+                <span x-show="!searchQuery && !selectedTactic">No techniques available</span>
+            </div>
+        </div>
+        
+        <!-- Selected Techniques -->
+        <div class="selected-techniques" x-show="selectedTechniques.length > 0">
+            <div style="margin-bottom: 8px; font-weight: bold; font-size: 12px; color: #999;">
+                Selected Techniques (<span x-text="selectedTechniques.length"></span>):
+            </div>
+            <div>
+                <template x-for="technique in selectedTechniques" :key="technique.id">
+                    <span class="selected-technique-badge">
+                        <span x-text="technique.id + ': ' + technique.name"></span>
+                        <span class="remove-technique" @click="removeTechnique(technique.id)">✕</span>
+                    </span>
+                </template>
+            </div>
+        </div>
+        
+        <!-- Technique Details (for hovered/focused technique) -->
+        <div class="technique-details" x-show="hoveredTechnique">
+            <h4 x-text="hoveredTechnique?.id + ': ' + hoveredTechnique?.name"></h4>
+            <p x-text="hoveredTechnique?.description?.substring(0, 200) + '...'"></p>
+            <div style="margin-top: 8px; display: flex; gap: 12px; font-size: 12px;">
+                <div>
+                    <strong>Tactics:</strong> 
+                    <span x-text="hoveredTechnique?.tactics?.join(', ')"></span>
+                </div>
+                <div>
+                    <strong>Platforms:</strong> 
+                    <span x-text="hoveredTechnique?.platforms?.slice(0, 3).join(', ')"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function attackTechniqueSelector() {
+    return {
+        // State
+        loading: true,
+        searchQuery: '',
+        selectedTactic: null,
+        tactics: [],
+        allTechniques: [],
+        filteredTechniques: [],
+        selectedTechniques: [],
+        hoveredTechnique: null,
+        
+        // Initialize
+        async init() {
+            await this.loadTactics();
+            await this.loadTechniques();
+            this.loading = false;
+        },
+        
+        // Load tactics from API
+        async loadTactics() {
+            try {
+                const response = await fetch('/api/v1/attack/tactics');
+                const data = await response.json();
+                this.tactics = data.tactics || [];
+            } catch (error) {
+                console.error('Failed to load tactics:', error);
+                // Fallback tactics
+                this.tactics = [
+                    { id: 'TA0043', name: 'Reconnaissance', shortname: 'reconnaissance' },
+                    { id: 'TA0042', name: 'Resource Development', shortname: 'resource-development' },
+                    { id: 'TA0001', name: 'Initial Access', shortname: 'initial-access' },
+                    { id: 'TA0002', name: 'Execution', shortname: 'execution' },
+                    { id: 'TA0003', name: 'Persistence', shortname: 'persistence' },
+                    { id: 'TA0004', name: 'Privilege Escalation', shortname: 'privilege-escalation' },
+                    { id: 'TA0005', name: 'Defense Evasion', shortname: 'defense-evasion' },
+                    { id: 'TA0006', name: 'Credential Access', shortname: 'credential-access' },
+                    { id: 'TA0007', name: 'Discovery', shortname: 'discovery' },
+                    { id: 'TA0008', name: 'Lateral Movement', shortname: 'lateral-movement' },
+                    { id: 'TA0009', name: 'Collection', shortname: 'collection' },
+                    { id: 'TA0011', name: 'Command and Control', shortname: 'command-and-control' },
+                    { id: 'TA0010', name: 'Exfiltration', shortname: 'exfiltration' },
+                    { id: 'TA0040', name: 'Impact', shortname: 'impact' }
+                ];
+            }
+        },
+        
+        // Load techniques from API
+        async loadTechniques() {
+            try {
+                const response = await fetch('/api/v1/attack/techniques');
+                const data = await response.json();
+                this.allTechniques = data.techniques || [];
+                this.filteredTechniques = this.allTechniques;
+            } catch (error) {
+                console.error('Failed to load techniques:', error);
+                this.allTechniques = [];
+                this.filteredTechniques = [];
+            }
+        },
+        
+        // Select tactic filter
+        selectTactic(tactic) {
+            this.selectedTactic = tactic;
+            this.filterTechniques();
+        },
+        
+        // Search techniques
+        async searchTechniques() {
+            if (!this.searchQuery) {
+                this.filterTechniques();
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/v1/attack/search?q=${encodeURIComponent(this.searchQuery)}`);
+                const data = await response.json();
+                this.filteredTechniques = data.results || [];
+                
+                // Apply tactic filter if selected
+                if (this.selectedTactic) {
+                    this.filteredTechniques = this.filteredTechniques.filter(t => 
+                        t.tactics.includes(this.selectedTactic)
+                    );
+                }
+            } catch (error) {
+                console.error('Search failed:', error);
+                this.filterTechniques();
+            }
+        },
+        
+        // Filter techniques by tactic
+        filterTechniques() {
+            if (!this.selectedTactic) {
+                this.filteredTechniques = this.allTechniques;
+            } else {
+                this.filteredTechniques = this.allTechniques.filter(t => 
+                    t.tactics.includes(this.selectedTactic)
+                );
+            }
+        },
+        
+        // Toggle technique selection
+        toggleTechnique(technique) {
+            const index = this.selectedTechniques.findIndex(t => t.id === technique.id);
+            if (index >= 0) {
+                this.selectedTechniques.splice(index, 1);
+            } else {
+                this.selectedTechniques.push(technique);
+            }
+            
+            // Emit event for parent components
+            this.$dispatch('techniques-changed', { techniques: this.selectedTechniques });
+        },
+        
+        // Remove technique
+        removeTechnique(techniqueId) {
+            const index = this.selectedTechniques.findIndex(t => t.id === techniqueId);
+            if (index >= 0) {
+                this.selectedTechniques.splice(index, 1);
+                this.$dispatch('techniques-changed', { techniques: this.selectedTechniques });
+            }
+        },
+        
+        // Check if technique is selected
+        isSelected(techniqueId) {
+            return this.selectedTechniques.some(t => t.id === techniqueId);
+        },
+        
+        // Get selected technique IDs
+        getSelectedIds() {
+            return this.selectedTechniques.map(t => t.id);
+        },
+        
+        // Set selected techniques (for external initialization)
+        setSelected(techniqueIds) {
+            this.selectedTechniques = this.allTechniques.filter(t => 
+                techniqueIds.includes(t.id)
+            );
+        }
+    }
+}
+</script>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools - ATS MAFIA Framework</title>
+    <link rel="stylesheet" href="../css/mafia_theme.css">
+    <link rel="stylesheet" href="../css/tools.css">
+</head>
+<body class="mafia-theme">
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="framework-title">ATS MAFIA</h1>
+                <p class="framework-subtitle">Tools Arsenal</p>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="../templates/dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../templates/scenarios.html" class="nav-link">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">Scenarios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="../templates/tools.html" class="nav-link">
+                            <span class="nav-icon">🔧</span>
+                            <span class="nav-text">Tools</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../templates/llm_management.html" class="nav-link">
+                            <span class="nav-icon">🧠</span>
+                            <span class="nav-text">LLM Models</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../templates/analytics.html" class="nav-link">
+                            <span class="nav-icon">📈</span>
+                            <span class="nav-text">Analytics</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h2 class="page-title">Tools Arsenal</h2>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="refreshToolsBtn">
+                        <span>🔄</span> Refresh
+                    </button>
+                    <button class="btn btn-primary" id="validateAllToolsBtn">
+                        <span>✓</span> Validate All
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label for="categoryFilter">Category:</label>
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="all">All Categories</option>
+                        <option value="reconnaissance">Reconnaissance</option>
+                        <option value="scanning">Scanning</option>
+                        <option value="exploitation">Exploitation</option>
+                        <option value="post-exploitation">Post-Exploitation</option>
+                        <option value="social-engineering">Social Engineering</option>
+                        <option value="wireless">Wireless</option>
+                        <option value="web">Web Application</option>
+                        <option value="forensics">Forensics</option>
+                        <option value="utility">Utility</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="searchTools">Search:</label>
+                    <input type="text" id="searchTools" class="filter-input" placeholder="Search tools...">
+                </div>
+
+                <div class="filter-group">
+                    <label for="statusFilter">Status:</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="available">Available</option>
+                        <option value="in-use">In Use</option>
+                        <option value="error">Error</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Tools Grid -->
+            <div class="tools-section">
+                <div class="section-header">
+                    <h3>Available Tools</h3>
+                    <span class="tool-count" id="toolCount">Loading...</span>
+                </div>
+
+                <div class="tools-grid" id="toolsGrid">
+                    <!-- Tools will be dynamically loaded here -->
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading tools...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Execution History -->
+            <div class="execution-history-section">
+                <div class="section-header">
+                    <h3>Recent Executions</h3>
+                    <button class="btn btn-sm btn-secondary" id="clearHistoryBtn">Clear History</button>
+                </div>
+
+                <div class="execution-history" id="executionHistory">
+                    <!-- Execution history will be loaded here -->
+                    <p class="empty-state">No recent executions</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tool Details Modal -->
+    <div class="modal-overlay" id="toolDetailsModal">
+        <div class="modal-container modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="toolDetailTitle">Tool Details</h3>
+                <button class="modal-close" id="closeToolDetailsModal">&times;</button>
+            </div>
+            <div class="modal-body" id="toolDetailContent">
+                <!-- Tool details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="closeToolDetailsBtn">Close</button>
+                <button class="btn btn-primary" id="executeToolBtn">Execute Tool</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tool Execution Modal -->
+    <div class="modal-overlay" id="toolExecutionModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="executionModalTitle">Execute Tool</h3>
+                <button class="modal-close" id="closeExecutionModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="toolExecutionForm">
+                    <div id="toolParametersContainer">
+                        <!-- Parameters will be dynamically generated -->
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="saveExecutionLog">
+                            Save execution log
+                        </label>
+                    </div>
+                </form>
+
+                <div id="executionOutput" class="execution-output" style="display: none;">
+                    <h4>Execution Output:</h4>
+                    <pre id="executionOutputContent"></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelExecutionBtn">Cancel</button>
+                <button class="btn btn-primary" id="runToolBtn">Run Tool</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api-client.js"></script>
+    <script src="../js/tools_controller.js"></script>
+    <script>
+        // Initialize tools controller when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            window.toolsController = new ToolsController();
+        });
+    </script>
+</body>
+</html>

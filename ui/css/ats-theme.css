@@ -1,0 +1,452 @@
+/* ATS MAFIA Theme - Core Styling */
+
+/* CSS Variables for ATS Theme */
+:root {
+    /* Primary Colors - Mafia Theme */
+    --color-primary-dark: #1a1a1a;        /* Charcoal black */
+    --color-primary-medium: #2d2d2d;      /* Dark charcoal */
+    --color-primary-light: #404040;       /* Medium charcoal */
+    
+    /* Accent Colors */
+    --color-accent-red: #b71c1c;          /* Deep red */
+    --color-accent-red-light: #ef5350;    /* Light red */
+    --color-accent-gold: #ffd700;         /* Gold */
+    --color-accent-gold-dark: #b8860b;    /* Dark gold */
+    
+    /* Neutral Colors */
+    --color-neutral-light: #f5f5f5;       /* Light gray */
+    --color-neutral-medium: #9e9e9e;      /* Medium gray */
+    --color-neutral-dark: #616161;        /* Dark gray */
+    
+    /* Status Colors */
+    --color-success: #4caf50;             /* Green */
+    --color-warning: #ff9800;             /* Orange */
+    --color-error: #f44336;               /* Red */
+    --color-info: #2196f3;                /* Blue */
+    
+    /* Typography */
+    --font-family-primary: 'Cinzel', serif;        /* Mafia-style headings */
+    --font-family-secondary: 'Crimson Text', serif; /* Body text */
+    --font-family-ui: 'Roboto', sans-serif;        /* UI elements */
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body.ats-theme {
+    font-family: var(--font-family-secondary);
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 100%);
+    color: var(--color-neutral-light);
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-primary);
+    font-weight: 600;
+    color: var(--color-accent-gold);
+    margin-bottom: var(--spacing-md);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+    color: var(--color-neutral-light);
+}
+
+a {
+    color: var(--color-accent-gold);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-accent-gold-dark);
+}
+
+/* Layout */
+.ats-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.ats-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
+.ats-grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ats-grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.ats-grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* Cards */
+.ats-card {
+    background: rgba(45, 45, 45, 0.9);
+    border: 1px solid var(--color-accent-gold);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(10px);
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+
+.ats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.ats-card-header {
+    border-bottom: 1px solid var(--color-accent-gold);
+    padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.ats-card-title {
+    font-family: var(--font-family-primary);
+    color: var(--color-accent-gold);
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Buttons */
+.ats-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-family: var(--font-family-ui);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ats-btn-primary {
+    background: linear-gradient(135deg, var(--color-accent-red), var(--color-accent-red-light));
+    color: white;
+    border: 1px solid var(--color-accent-red);
+}
+
+.ats-btn-primary:hover {
+    background: linear-gradient(135deg, var(--color-accent-red-light), var(--color-accent-red));
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.ats-btn-secondary {
+    background: transparent;
+    color: var(--color-accent-gold);
+    border: 1px solid var(--color-accent-gold);
+}
+
+.ats-btn-secondary:hover {
+    background: var(--color-accent-gold);
+    color: var(--color-primary-dark);
+}
+
+.ats-btn-danger {
+    background: var(--color-error);
+    color: white;
+    border: 1px solid var(--color-error);
+}
+
+.ats-btn-danger:hover {
+    background: #d32f2f;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.ats-btn-sm {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.875rem;
+}
+
+.ats-btn-lg {
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1.125rem;
+}
+
+/* Forms */
+.ats-form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.ats-form-label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-family-ui);
+    font-weight: 500;
+    color: var(--color-accent-gold);
+}
+
+.ats-form-input,
+.ats-form-select,
+.ats-form-textarea {
+    width: 100%;
+    padding: var(--spacing-sm);
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid var(--color-neutral-dark);
+    border-radius: var(--border-radius-md);
+    color: var(--color-neutral-light);
+    font-family: var(--font-family-ui);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.ats-form-input:focus,
+.ats-form-select:focus,
+.ats-form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent-gold);
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+}
+
+/* Status Badges */
+.ats-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ats-badge-success {
+    background: var(--color-success);
+    color: white;
+}
+
+.ats-badge-warning {
+    background: var(--color-warning);
+    color: white;
+}
+
+.ats-badge-error {
+    background: var(--color-error);
+    color: white;
+}
+
+.ats-badge-info {
+    background: var(--color-info);
+    color: white;
+}
+
+.ats-badge-active {
+    background: var(--color-accent-red);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.ats-badge-completed {
+    background: var(--color-success);
+    color: white;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+.ats-fade-in {
+    animation: fadeIn var(--transition-medium) ease-out;
+}
+
+.ats-slide-in {
+    animation: slideIn var(--transition-medium) ease-out;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-primary-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent-gold);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-gold-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 1rem;
+        --spacing-xl: 1.5rem;
+        --spacing-xxl: 2rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .ats-container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .ats-grid-2,
+    .ats-grid-3,
+    .ats-grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .ats-card {
+        padding: var(--spacing-md);
+    }
+    
+    .ats-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.875rem;
+    }
+}
+
+/* Utility Classes */
+.ats-text-center {
+    text-align: center;
+}
+
+.ats-text-left {
+    text-align: left;
+}
+
+.ats-text-right {
+    text-align: right;
+}
+
+.ats-hidden {
+    display: none;
+}
+
+.ats-visible {
+    display: block;
+}
+
+.ats-flex {
+    display: flex;
+}
+
+.ats-flex-column {
+    flex-direction: column;
+}
+
+.ats-flex-center {
+    align-items: center;
+    justify-content: center;
+}
+
+.ats-flex-between {
+    justify-content: space-between;
+}
+
+.ats-flex-wrap {
+    flex-wrap: wrap;
+}
+
+.ats-gap-sm {
+    gap: var(--spacing-sm);
+}
+
+.ats-gap-md {
+    gap: var(--spacing-md);
+}
+
+.ats-gap-lg {
+    gap: var(--spacing-lg);
+}

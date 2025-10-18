@@ -1,0 +1,97 @@
+# ATS MAFIA Framework Default Configuration
+
+framework:
+  name: "ATS MAFIA Framework"
+  version: "1.0.0"
+  description: "Advanced Training System for Multi-Agent Interactive Framework"
+
+core:
+  max_concurrent_agents: 10
+  session_timeout: 3600
+  checkpoint_interval: 300
+  recovery_enabled: true
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: "logs/ats_mafia.log"
+  max_file_size: "10MB"
+  backup_count: 5
+  audit_enabled: true
+  audit_file_path: "logs/audit.log"
+
+profiles:
+  default_profile_path: "profiles/"
+  cache_enabled: true
+  cache_size: 100
+  validation_enabled: true
+  auto_reload: false
+
+tools:
+  enabled_tools: []
+  tool_paths: ["tools/"]
+  timeout: 30
+  max_memory: "512MB"
+  sandbox_enabled: true
+
+communication:
+  protocol: "websocket"
+  host: "localhost"
+  port: 8080
+  ssl_enabled: false
+  max_connections: 100
+  heartbeat_interval: 30
+  message_queue_size: 1000
+
+orchestrator:
+  max_concurrent_sessions: 5
+  session_timeout: 7200
+  auto_save_interval: 600
+  scenario_timeout: 1800
+  progress_tracking: true
+
+voice:
+  enabled: false
+  engine: "pyttsx3"
+  speech_recognition_engine: "speechrecognition"
+  language: "en-US"
+  rate: 200
+  volume: 0.9
+
+ui:
+  enabled: true
+  theme: "dark"
+  port: 8501
+  debug: false
+  auto_refresh: true
+
+api:
+  enabled: true
+  host: "localhost"
+  port: 5000
+  rate_limit: 100
+  authentication_required: false
+  cors_enabled: true
+
+security:
+  encryption_enabled: true
+  encryption_key_rotation: true
+  session_encryption: true
+  audit_logging: true
+  access_control: false
+
+performance:
+  monitoring_enabled: true
+  metrics_collection: true
+  profiling_enabled: false
+  resource_limits:
+    max_cpu_percent: 80
+    max_memory_percent: 85
+    max_disk_usage: "1GB"
+
+development:
+  debug_mode: false
+  verbose_logging: false
+  hot_reload: false
+  test_mode: false
+  mock_services: false

@@ -1,0 +1,398 @@
+{
+  "id": "vishing_campaign",
+  "name": "Vishing Campaign - Voice Phishing Operation",
+  "description": "Execute a professional voice phishing (vishing) campaign using the Puppet Master profile. Develop pretexts, conduct reconnaissance, and execute convincing phone-based social engineering attacks to extract sensitive information or gain access.",
+  "type": "social_engineering",
+  "difficulty": "advanced",
+  "estimated_duration_minutes": 100,
+  "required_profiles": ["puppet_master"],
+  "required_tools": ["voice_modulation", "pretext_generator", "osint_tools"],
+  "optional_profiles": ["phantom"],
+  "optional_tools": ["call_recording", "sentiment_analysis"],
+  "prerequisites": [],
+  "learning_objectives": [
+    "Develop convincing pretexts and cover stories",
+    "Execute reconnaissance for social engineering",
+    "Practice persuasion and psychological manipulation techniques",
+    "Extract sensitive information through vishing",
+    "Recognize and exploit psychological triggers",
+    "Understand defensive countermeasures"
+  ],
+  "tags": ["social_engineering", "vishing", "pretext", "psychological", "advanced"],
+  "phases": [
+    {
+      "id": "phase-1-reconnaissance",
+      "name": "Target Reconnaissance and Profiling",
+      "description": "Gather intelligence on target organization and individuals for effective pretexting",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Collect organizational intelligence (structure, key personnel, processes)",
+          "success_criteria": {
+            "type": "osint_collection",
+            "parameters": {
+              "org_chart_mapped": true,
+              "key_personnel_identified": 5,
+              "business_processes_documented": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Profile individual targets (roles, responsibilities, psychology)",
+          "success_criteria": {
+            "type": "target_profiling",
+            "parameters": {
+              "targets_profiled": 3,
+              "psychological_traits": "analyzed",
+              "leverage_points_identified": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Identify institutional knowledge and insider information",
+          "success_criteria": {
+            "type": "knowledge_gathering",
+            "parameters": {
+              "internal_processes": "documented",
+              "terminology_learned": true,
+              "credibility_factors": "identified"
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Use LinkedIn, company websites, and social media for organizational intelligence",
+          "penalty_points": 30
+        },
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Look for recent events, projects, or changes that can be leveraged in pretexts",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 25
+    },
+    {
+      "id": "phase-2-pretext-development",
+      "name": "Pretext and Scenario Development",
+      "description": "Develop convincing pretexts and call scenarios tailored to targets",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Create 3 distinct pretext scenarios with supporting backstories",
+          "success_criteria": {
+            "type": "pretext_creation",
+            "parameters": {
+              "pretexts_developed": 3,
+              "backstories_detailed": true,
+              "credibility_tested": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Prepare psychological triggers and persuasion techniques",
+          "success_criteria": {
+            "type": "technique_preparation",
+            "parameters": {
+              "cialdini_principles": "applied",
+              "urgency_scenarios": "prepared",
+              "authority_established": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Develop call scripts with branching dialogue paths",
+          "success_criteria": {
+            "type": "script_development",
+            "parameters": {
+              "scripts_created": 3,
+              "objection_handling": "planned",
+              "exit_strategies": "defined"
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use authority, scarcity, and urgency as primary psychological triggers",
+          "penalty_points": 45
+        },
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Impersonate IT support, vendors, or executive assistants for credibility",
+          "penalty_points": 55
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-3-preparation",
+      "name": "Technical and Environmental Preparation",
+      "description": "Prepare technical infrastructure and practice delivery",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Set up spoofed caller ID and voice modulation",
+          "success_criteria": {
+            "type": "technical_setup",
+            "parameters": {
+              "caller_id_spoofed": true,
+              "voice_modulation_tested": true,
+              "recording_enabled": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Practice pretext delivery and timing",
+          "success_criteria": {
+            "type": "rehearsal_complete",
+            "parameters": {
+              "role_plays_conducted": 3,
+              "delivery_refined": true,
+              "confidence_established": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Prepare supporting documentation and credentials",
+          "success_criteria": {
+            "type": "documentation_ready",
+            "parameters": {
+              "fake_credentials": "prepared",
+              "reference_numbers": "generated",
+              "verification_bypass": "planned"
+            }
+          },
+          "points": 150,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Use professional background noise to enhance credibility",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 20
+    },
+    {
+      "id": "phase-4-execution",
+      "name": "Vishing Campaign Execution",
+      "description": "Execute vishing calls and adapt based on target responses",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Successfully execute vishing calls to 3 targets",
+          "success_criteria": {
+            "type": "calls_executed",
+            "parameters": {
+              "calls_completed": 3,
+              "pretexts_delivered": true,
+              "targets_engaged": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Extract sensitive information or gain access credentials",
+          "success_criteria": {
+            "type": "information_extraction",
+            "parameters": {
+              "sensitive_info_obtained": true,
+              "credentials_harvested": 2,
+              "access_granted": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Maintain pretext and handle objections effectively",
+          "success_criteria": {
+            "type": "performance_quality",
+            "parameters": {
+              "objections_handled": true,
+              "suspicion_avoided": true,
+              "natural_flow": "maintained"
+            }
+          },
+          "points": 300,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Build rapport first before making requests - people help those they like",
+          "penalty_points": 60
+        },
+        {
+          "trigger_after_minutes": 30,
+          "hint": "If detected, gracefully exit and mark target as aware for future reference",
+          "penalty_points": 70
+        }
+      ],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-5-exploitation",
+      "name": "Follow-up Exploitation",
+      "description": "Leverage obtained information for further access or intelligence",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Use harvested credentials to access systems",
+          "success_criteria": {
+            "type": "access_validation",
+            "parameters": {
+              "credentials_tested": true,
+              "systems_accessed": 2,
+              "access_documented": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Conduct follow-up calls to deepen compromise",
+          "success_criteria": {
+            "type": "follow_up_success",
+            "parameters": {
+              "additional_calls": 2,
+              "trust_established": true,
+              "information_expanded": true
+            }
+          },
+          "points": 350,
+          "required": false
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Pivot to other targets using insider knowledge",
+          "success_criteria": {
+            "type": "pivoting_success",
+            "parameters": {
+              "new_targets_identified": 2,
+              "credibility_enhanced": true,
+              "access_expanded": true
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use information from one target to add credibility when calling others",
+          "penalty_points": 65
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-6-analysis",
+      "name": "Campaign Analysis and Countermeasures",
+      "description": "Analyze campaign effectiveness and document defensive recommendations",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Analyze success rates and effectiveness metrics",
+          "success_criteria": {
+            "type": "analysis_complete",
+            "parameters": {
+              "success_rate_calculated": true,
+              "techniques_evaluated": true,
+              "improvements_identified": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Document defensive countermeasures and training gaps",
+          "success_criteria": {
+            "type": "countermeasures_documented",
+            "parameters": {
+              "vulnerabilities_listed": true,
+              "training_needs": "identified",
+              "technical_controls": "recommended"
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Create awareness training materials based on campaign",
+          "success_criteria": {
+            "type": "training_created",
+            "parameters": {
+              "materials_developed": true,
+              "examples_included": true,
+              "red_flags_highlighted": true
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 10,
+          "hint": "Document psychological triggers that were most effective",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 25
+    }
+  ],
+  "scoring": {
+    "max_points": 4700,
+    "time_bonus_multiplier": 1.5,
+    "stealth_bonus": 500,
+    "deductions_per_mistake": 75,
+    "deductions_per_hint": 40,
+    "completion_bonus": 1000
+  },
+  "metadata": {
+    "attack_vector": "voice_phishing",
+    "ethical_considerations": "high",
+    "psychological_focus": true,
+    "requires_consent": true,
+    "skill_emphasis": ["social_engineering", "persuasion", "osint", "psychological_manipulation"]
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

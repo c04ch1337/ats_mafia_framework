@@ -1,0 +1,141 @@
+# Docker Compose for ATS MAFIA Framework with Personal Assistant
+version: '3.8'
+
+services:
+  ats-mafia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ats-mafia-personal-assistant
+    hostname: ats-mafia
+    
+    ports:
+      - "8080:8080"  # API server
+      - "5000:5000"  # Webhook server for phone integration
+      - "8501:8501"  # Web UI (if using Streamlit)
+    
+    environment:
+      # Framework Core
+      - FRAMEWORK_ENV=production
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      - PYTHONUNBUFFERED=1
+      
+      # Personal Assistant Feature
+      - PERSONAL_ASSISTANT_ENABLED=true
+      - PERSONAL_ASSISTANT_PHONE_PROVIDER=${PHONE_PROVIDER:-mock}
+      - PERSONAL_ASSISTANT_DEFAULT_PERSONA=professional_assistant
+      - PERSONAL_ASSISTANT_AUTO_RECORD=true
+      - PERSONAL_ASSISTANT_MAX_CALL_DURATION=10
+      
+      # Twilio Configuration (set in .env or directly)
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID:-}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN:-}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER:-}
+      
+      # Plivo Configuration (alternative to Twilio)
+      - PLIVO_AUTH_ID=${PLIVO_AUTH_ID:-}
+      - PLIVO_AUTH_TOKEN=${PLIVO_AUTH_TOKEN:-}
+      - PLIVO_PHONE_NUMBER=${PLIVO_PHONE_NUMBER:-}
+      
+      # Storage Paths
+      - RECORDING_PATH=/app/recordings/personal_assistant/
+      - TRANSCRIPT_PATH=/app/transcripts/personal_assistant/
+      - TASK_HISTORY_PATH=/app/data/personal_assistant/tasks/
+      
+      # Rate Limiting
+      - MAX_TASKS_PER_DAY=50
+      - MAX_ACTIVE_TASKS=5
+      
+      # Notifications
+      - NOTIFY_ON_TASK_AWAITING_APPROVAL=true
+      - NOTIFY_ON_CALL_STARTED=true
+      - NOTIFY_ON_CALL_COMPLETED=true
+      - NOTIFY_ON_TASK_FAILED=true
+      
+      # Webhook Configuration
+      - WEBHOOK_URL=${WEBHOOK_URL:-http://localhost:5000/voice/twiml}
+      - WEBHOOK_HOST=0.0.0.0
+      - WEBHOOK_PORT=5000
+      
+      # Ethical Safeguards
+      - PERSONAL_ASSISTANT_ALWAYS_IDENTIFY=true
+      - PERSONAL_ASSISTANT_DISCLOSE_AI=true
+      - PERSONAL_ASSISTANT_NO_IMPERSONATION=true
+      - PERSONAL_ASSISTANT_REQUIRE_APPROVAL_SENSITIVE=true
+    
+    volumes:
+      # Persistent data - IMPORTANT for preserving recordings and task history
+      - recordings:/app/recordings
+      - transcripts:/app/transcripts
+      - task_data:/app/data
+      - logs:/app/logs
+      
+      # Configuration (optional - mount custom config)
+      - ./config:/app/config:ro
+      
+      # Examples directory (optional - for easy testing)
+      - ./examples:/app/examples:ro
+    
+    networks:
+      - ats-network
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    labels:
+      - "com.atsmafia.service=main"
+      - "com.atsmafia.component=personal-assistant"
+      - "com.atsmafia.version=1.0.0"
+    
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  ats-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  recordings:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/recordings
+  
+  transcripts:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/transcripts
+  
+  task_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/data
+  
+  logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./volumes/logs

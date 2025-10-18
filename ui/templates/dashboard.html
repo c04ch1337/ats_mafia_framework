@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Don's Office - ATS MAFIA Training Dashboard</title>
+    <link rel="stylesheet" href="../css/ats-theme.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/mafia_theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+                <span class="brand-subtitle">Don's Office</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../profiles.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Profiles</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../scenarios.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Scenarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="situation_room.html" class="nav-link">
+                        <i class="fas fa-chess"></i>
+                        <span>Situation Room</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="after_action_report.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="ats-main">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <h1 class="page-title">
+                <i class="fas fa-crown"></i>
+                The Don's Office
+            </h1>
+            <p class="page-subtitle">Command Center for Advanced Training Simulation Operations</p>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-container">
+            <div class="stat-card" data-stat="sessions">
+                <div class="stat-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-value" id="activeSessions">0</h3>
+                    <p class="stat-label">Active Sessions</p>
+                </div>
+                <div class="stat-trend positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>12%</span>
+                </div>
+            </div>
+            
+            <div class="stat-card" data-stat="scenarios">
+                <div class="stat-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-value" id="completedScenarios">0</h3>
+                    <p class="stat-label">Scenarios Completed</p>
+                </div>
+                <div class="stat-trend positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>8%</span>
+                </div>
+            </div>
+            
+            <div class="stat-card" data-stat="success">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-value" id="successRate">0%</h3>
+                    <p class="stat-label">Success Rate</p>
+                </div>
+                <div class="stat-trend positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>5%</span>
+                </div>
+            </div>
+            
+            <div class="stat-card" data-stat="cost">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 class="stat-value" id="costSpent">$0.00</h3>
+                    <p class="stat-label">Total Cost Spent</p>
+                </div>
+                <div class="stat-budget">
+                    <span>Budget: <strong id="totalBudget">$1000</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- Profile Roster -->
+            <div class="card profile-roster-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-users"></i>
+                        Profile Roster
+                    </h2>
+                    <button class="btn btn-sm btn-primary" id="addProfileBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Profile
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="profile-grid" id="profileGrid">
+                        <!-- Profiles will be loaded dynamically -->
+                        <div class="profile-card loading-skeleton">
+                            <div class="profile-avatar"></div>
+                            <div class="profile-info"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Sessions Panel -->
+            <div class="card active-sessions-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-play"></i>
+                        Active Training Sessions
+                    </h2>
+                    <button class="btn btn-sm btn-primary" id="newSessionBtn">
+                        <i class="fas fa-plus"></i>
+                        New Session
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div class="session-list" id="activeSessionsList">
+                        <!-- Sessions will be loaded dynamically -->
+                    </div>
+                    <div class="empty-state" id="noSessionsState" style="display: none;">
+                        <i class="fas fa-inbox"></i>
+                        <p>No active training sessions</p>
+                        <button class="btn btn-primary" id="launchSessionBtn">
+                            <i class="fas fa-rocket"></i>
+                            Launch First Session
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scenario Selector -->
+            <div class="card scenario-selector-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-book"></i>
+                        Available Scenarios
+                    </h2>
+                    <div class="filter-controls">
+                        <select class="ats-form-select" id="scenarioFilter">
+                            <option value="all">All Types</option>
+                            <option value="red_team">Red Team</option>
+                            <option value="blue_team">Blue Team</option>
+                            <option value="social_engineering">Social Engineering</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="scenario-list" id="scenarioList">
+                        <!-- Scenarios will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Feed -->
+            <div class="card activity-feed-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-history"></i>
+                        Recent Activity
+                    </h2>
+                    <div class="widget-controls">
+                        <button class="widget-control" id="refreshActivityBtn" title="Refresh">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <button class="widget-control" id="clearActivityBtn" title="Clear">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="activity-feed" id="activityFeed">
+                        <!-- Activity items will be loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cost Monitor -->
+            <div class="card cost-monitor-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-money-bill-wave"></i>
+                        Cost Monitor
+                    </h2>
+                    <div class="cost-status" id="costStatus">
+                        <span class="status-badge success">Within Budget</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="cost-overview">
+                        <div class="cost-chart-container">
+                            <canvas id="costChart"></canvas>
+                        </div>
+                        <div class="cost-breakdown" id="costBreakdown">
+                            <div class="cost-item">
+                                <span class="cost-label">This Session:</span>
+                                <span class="cost-value">$0.00</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">Today:</span>
+                                <span class="cost-value">$0.00</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">This Week:</span>
+                                <span class="cost-value">$0.00</span>
+                            </div>
+                            <div class="cost-item">
+                                <span class="cost-label">Remaining Budget:</span>
+                                <span class="cost-value budget">$1000.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="budget-alerts" id="budgetAlerts">
+                        <!-- Budget alerts will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Chart -->
+            <div class="card performance-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-chart-area"></i>
+                        Performance Metrics
+                    </h2>
+                    <select class="ats-form-select" id="performanceTimeRange">
+                        <option value="7d">Last 7 Days</option>
+                        <option value="30d">Last 30 Days</option>
+                        <option value="90d">Last 90 Days</option>
+                    </select>
+                </div>
+                <div class="card-content">
+                    <div class="performance-chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Support</a>
+                <a href="#">About</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- New Session Modal -->
+    <div id="newSessionModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-rocket"></i>
+                    Launch New Training Session
+                </h3>
+                <button class="modal-close" data-modal="newSessionModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form class="ats-form" id="newSessionForm">
+                    <div class="form-group">
+                        <label class="ats-form-label">Session Name *</label>
+                        <input type="text" class="ats-form-input" name="name" required placeholder="Enter session name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Description</label>
+                        <textarea class="ats-form-textarea" name="description" rows="3" placeholder="Session description"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Scenario *</label>
+                        <select class="ats-form-select" name="scenario_id" required>
+                            <option value="">Select Scenario</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Profile *</label>
+                        <select class="ats-form-select" name="profile_id" required>
+                            <option value="">Select Profile</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Difficulty</label>
+                        <select class="ats-form-select" name="difficulty">
+                            <option value="">Use Scenario Default</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Budget Limit ($)</label>
+                        <input type="number" class="ats-form-input" name="budget" min="0" step="0.01" placeholder="Leave empty for no limit">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close" data-modal="newSessionModal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-rocket"></i>
+                            Launch Session
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="../js/api-client.js"></script>
+    <script src="../js/websocket-client.js"></script>
+    <script src="../js/realtime.js"></script>
+    <script src="../js/charts.js"></script>
+    <script src="../js/dashboard_controller.js"></script>
+    <script src="../js/components.js"></script>
+</body>
+</html>

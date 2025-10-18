@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After-Action Report - ATS MAFIA</title>
+    <link rel="stylesheet" href="../css/ats-theme.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/mafia_theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+                <span class="brand-subtitle">After-Action Report</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../profiles.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Profiles</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="../scenarios.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        <span>Scenarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="situation_room.html" class="nav-link">
+                        <i class="fas fa-chess"></i>
+                        <span>Situation Room</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="after_action_report.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+                <div class="user-profile">
+                    <span class="user-name">The Don</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="ats-main after-action-report">
+        <!-- Report Selector (when no report loaded) -->
+        <div class="report-selector-panel" id="reportSelector">
+            <div class="selector-container">
+                <h1>
+                    <i class="fas fa-chart-line"></i>
+                    After-Action Reports
+                </h1>
+                <p>Select a completed training session to view its detailed analysis</p>
+                <div class="report-search">
+                    <input type="text" class="ats-form-input" id="reportSearch" placeholder="Search by session name or ID...">
+                    <select class="ats-form-select" id="reportFilter">
+                        <option value="all">All Sessions</option>
+                        <option value="completed">Completed</option>
+                        <option value="failed">Failed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="report-list" id="reportList">
+                    <!-- Report list items will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Report View -->
+        <div class="report-view" id="reportView" style="display: none;">
+            <!-- Report Header -->
+            <div class="report-header">
+                <button class="btn btn-sm btn-secondary" id="backToListBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to List
+                </button>
+                <h1 class="report-title" id="reportTitle">Session Report</h1>
+                <div class="report-actions">
+                    <button class="btn btn-sm btn-secondary" id="printReportBtn">
+                        <i class="fas fa-print"></i>
+                        Print
+                    </button>
+                    <button class="btn btn-sm btn-secondary" id="exportPdfBtn">
+                        <i class="fas fa-file-pdf"></i>
+                        Export PDF
+                    </button>
+                    <button class="btn btn-sm btn-secondary" id="exportJsonBtn">
+                        <i class="fas fa-file-code"></i>
+                        Export JSON
+                    </button>
+                    <button class="btn btn-sm btn-secondary" id="exportCsvBtn">
+                        <i class="fas fa-file-csv"></i>
+                        Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <!-- Executive Summary -->
+            <div class="report-section executive-summary">
+                <h2 class="section-title">
+                    <i class="fas fa-clipboard-check"></i>
+                    Executive Summary
+                </h2>
+                <div class="summary-grid">
+                    <div class="summary-card result-card">
+                        <div class="summary-icon" id="resultIcon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 class="summary-label">Result</h3>
+                            <div class="summary-value" id="resultValue">PASSED</div>
+                        </div>
+                    </div>
+                    <div class="summary-card score-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 class="summary-label">Final Score</h3>
+                            <div class="summary-value" id="scoreValue">0</div>
+                            <div class="summary-subtext" id="scoreRating">-</div>
+                        </div>
+                    </div>
+                    <div class="summary-card time-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 class="summary-label">Completion Time</h3>
+                            <div class="summary-value" id="timeValue">00:00:00</div>
+                            <div class="summary-subtext" id="timeRating">-</div>
+                        </div>
+                    </div>
+                    <div class="summary-card difficulty-card">
+                        <div class="summary-icon">
+                            <i class="fas fa-signal"></i>
+                        </div>
+                        <div class="summary-info">
+                            <h3 class="summary-label">Difficulty</h3>
+                            <div class="summary-value" id="difficultyValue">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="summary-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Session ID:</span>
+                        <span class="detail-value" id="sessionIdValue">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Scenario:</span>
+                        <span class="detail-value" id="scenarioNameValue">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Profile:</span>
+                        <span class="detail-value" id="profileNameValue">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Start Time:</span>
+                        <span class="detail-value" id="startTimeValue">-</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">End Time:</span>
+                        <span class="detail-value" id="endTimeValue">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase Breakdown -->
+            <div class="report-section phase-breakdown">
+                <h2 class="section-title">
+                    <i class="fas fa-tasks"></i>
+                    Phase-by-Phase Breakdown
+                </h2>
+                <div class="phase-table" id="phaseTable">
+                    <!-- Phase breakdown will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Objective Analysis -->
+            <div class="report-section objective-analysis">
+                <h2 class="section-title">
+                    <i class="fas fa-bullseye"></i>
+                    Objective Analysis
+                </h2>
+                <div class="objectives-report" id="objectivesReport">
+                    <!-- Objectives analysis will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Performance Graphs -->
+            <div class="report-section performance-graphs">
+                <h2 class="section-title">
+                    <i class="fas fa-chart-area"></i>
+                    Performance Metrics
+                </h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Score Progression</h3>
+                        <canvas id="scoreProgressionChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Time Efficiency</h3>
+                        <canvas id="timeEfficiencyChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Cost Analysis</h3>
+                        <canvas id="costAnalysisChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Stealth Rating</h3>
+                        <canvas id="stealthRatingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Usage Statistics -->
+            <div class="report-section tool-usage">
+                <h2 class="section-title">
+                    <i class="fas fa-toolbox"></i>
+                    Tool Usage Statistics
+                </h2>
+                <div class="tool-stats-grid" id="toolStatsGrid">
+                    <!-- Tool usage stats will be rendered here -->
+                </div>
+            </div>
+
+            <!-- LLM Model Performance -->
+            <div class="report-section llm-performance">
+                <h2 class="section-title">
+                    <i class="fas fa-brain"></i>
+                    LLM Model Performance
+                </h2>
+                <div class="llm-stats">
+                    <div class="llm-overview">
+                        <div class="llm-stat">
+                            <span class="llm-label">Primary Model:</span>
+                            <span class="llm-value" id="primaryModelValue">-</span>
+                        </div>
+                        <div class="llm-stat">
+                            <span class="llm-label">Total Tokens:</span>
+                            <span class="llm-value" id="totalTokensValue">-</span>
+                        </div>
+                        <div class="llm-stat">
+                            <span class="llm-label">Total Cost:</span>
+                            <span class="llm-value" id="totalCostValue">$0.00</span>
+                        </div>
+                        <div class="llm-stat">
+                            <span class="llm-label">Avg Response Time:</span>
+                            <span class="llm-value" id="avgResponseTimeValue">-</span>
+                        </div>
+                    </div>
+                    <div class="llm-breakdown" id="llmBreakdown">
+                        <!-- LLM usage breakdown will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="report-section recommendations">
+                <h2 class="section-title">
+                    <i class="fas fa-lightbulb"></i>
+                    Recommendations
+                </h2>
+                <div class="recommendations-content" id="recommendationsContent">
+                    <div class="recommendation-card">
+                        <h3>
+                            <i class="fas fa-graduation-cap"></i>
+                            Next Steps
+                        </h3>
+                        <ul id="nextStepsList">
+                            <!-- Recommendations will be added here -->
+                        </ul>
+                    </div>
+                    <div class="recommendation-card">
+                        <h3>
+                            <i class="fas fa-chart-line"></i>
+                            Areas for Improvement
+                        </h3>
+                        <ul id="improvementsList">
+                            <!-- Improvement areas will be added here -->
+                        </ul>
+                    </div>
+                    <div class="recommendation-card">
+                        <h3>
+                            <i class="fas fa-star"></i>
+                            Suggested Scenarios
+                        </h3>
+                        <div id="suggestedScenarios">
+                            <!-- Scenario suggestions will be added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Logs -->
+            <div class="report-section detailed-logs">
+                <h2 class="section-title">
+                    <i class="fas fa-file-alt"></i>
+                    Detailed Logs
+                </h2>
+                <div class="logs-viewer-report" id="logsViewerReport">
+                    <!-- Logs will be rendered here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA Framework - Training Analysis & Reporting</p>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Support</a>
+                <a href="#">About</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../js/api-client.js"></script>
+    <script src="../js/websocket-client.js"></script>
+    <script src="../js/charts.js"></script>
+    <script src="../js/report_controller.js"></script>
+    <script src="../js/components.js"></script>
+</body>
+</html>

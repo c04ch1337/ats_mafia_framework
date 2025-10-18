@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS MAFIA - Situation Room</title>
+    <link rel="stylesheet" href="css/ats-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Don's Office</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profiles.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Profiles</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="scenarios.html" class="nav-link">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Scenarios</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chess"></i>
+                        <span>Situation Room</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>After-Action</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <button class="voice-control-btn" id="voiceControlBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="user-profile">
+                    <img src="assets/images/default-avatar.png" alt="User" class="user-avatar">
+                    <span class="user-name">Don Corleone</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="ats-main">
+        <div class="page-header">
+            <h1 class="page-title">Situation Room</h1>
+            <p class="page-subtitle">Live training session monitoring and control</p>
+            <div class="header-actions">
+                <button class="ats-btn btn-primary" id="startSessionBtn">
+                    <i class="fas fa-play"></i>
+                    Start Session
+                </button>
+                <button class="ats-btn btn-secondary" id="joinSessionBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Join Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Sessions Overview -->
+        <div class="sessions-overview">
+            <div class="overview-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-play-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="activeSessionsCount">0</h3>
+                        <p class="stat-label">Active Sessions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="activeUsersCount">0</h3>
+                        <p class="stat-label">Active Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="avgDuration">00:00</h3>
+                        <p class="stat-label">Avg Duration</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 class="stat-value" id="successRate">0%</h3>
+                        <p class="stat-label">Success Rate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Session Grid -->
+        <div class="training-grid">
+            <!-- Active Sessions Panel -->
+            <div class="panel active-sessions-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Active Sessions</h2>
+                    <div class="panel-controls">
+                        <button class="ats-btn btn-sm btn-secondary" id="refreshSessionsBtn">
+                            <i class="fas fa-sync"></i>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="sessions-list" id="activeSessionsList">
+                        <!-- Active sessions will be dynamically loaded here -->
+                    </div>
+                    <div class="no-sessions" id="noActiveSessions" style="display: none;">
+                        <i class="fas fa-inbox"></i>
+                        <p>No active sessions</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Monitor Panel -->
+            <div class="panel session-monitor-panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Session Monitor</h2>
+                    <div class="session-selector">
+                        <select class="ats-form-select" id="sessionSelector">
+                            <option value="">Select a session to monitor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-content">
+                    <div class="session-monitor" id="sessionMonitor">
+                        <div class="monitor-placeholder">
+                            <i class="fas fa-desktop"></i>
+                            <p>Select a session to start monitoring</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Logs -->
+        <div class="logs-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">Real-time Logs</h2>
+                <div class="panel-controls">
+                    <button class="ats-btn btn-sm btn-secondary" id="clearLogsBtn">
+                        <i class="fas fa-trash"></i>
+                        Clear
+                    </button>
+                    <button class="ats-btn btn-sm btn-secondary" id="pauseLogsBtn">
+                        <i class="fas fa-pause"></i>
+                        Pause
+                    </button>
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="logs-container" id="logsContainer">
+                    <!-- Logs will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Session Start Modal -->
+    <div id="sessionStartModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">Start Training Session</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form class="ats-form" id="sessionStartForm">
+                    <div class="form-group">
+                        <label class="ats-form-label">Session Name *</label>
+                        <input type="text" class="ats-form-input" name="session_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Profile *</label>
+                        <select class="ats-form-select" name="profile_id" required>
+                            <option value="">Select Profile</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Scenario *</label>
+                        <select class="ats-form-select" name="scenario_id" required>
+                            <option value="">Select Scenario</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Difficulty Override</label>
+                        <select class="ats-form-select" name="difficulty">
+                            <option value="">Use Scenario Default</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                            <option value="expert">Expert</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="ats-btn btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="ats-btn btn-primary">Start Session</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api-client.js"></script>
+    <script src="js/websocket-client.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/training.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+version: "1.0"
+
+pools:
+  hot:
+    description: "Always-running core containers for instant access"
+    auto_start: true
+    auto_restart: true
+    health_check_interval: 60
+    containers:
+      - name: ats-mafia-framework
+        priority: 1
+        required: true
+      - name: redis
+        priority: 1
+        required: true
+      - name: postgres
+        priority: 1
+        required: true
+      - name: kali-sandbox
+        priority: 2
+        required: true
+
+  warm:
+    description: "Frequently-used containers with intelligent caching"
+    ttl_seconds: 1800  # 30 minutes
+    health_check_interval: 30
+    auto_stop_idle: true
+    containers:
+      - name: ats_network_nmap
+        estimated_startup_time: 5
+        pool_strategy: warm
+      - name: ats_recon_amass
+        estimated_startup_time: 8
+        pool_strategy: warm
+      - name: ats_web_zap
+        estimated_startup_time: 15
+        pool_strategy: warm
+      - name: ats_exploit_metasploit
+        estimated_startup_time: 20
+        pool_strategy: warm
+      - name: ats_phishing_gophish
+        estimated_startup_time: 10
+        pool_strategy: warm
+
+  cold:
+    description: "Specialized containers started on-demand only"
+    max_startup_time: 60
+    auto_stop_after_seconds: 3600  # 1 hour
+    containers:
+      - name: ats_adversary_caldera
+        estimated_startup_time: 30
+      - name: ats_adversary_atomic
+        estimated_startup_time: 25
+      - name: ats_honeypot_cowrie
+        estimated_startup_time: 15
+      - name: ats_honeypot_dionaea
+        estimated_startup_time: 20
+      - name: ats_vuln_openvas
+        estimated_startup_time: 45
+      - name: ats_lab_parrot
+        estimated_startup_time: 20
+      - name: ats_network_masscan
+        estimated_startup_time: 10
+      - name: ats_web_nikto
+        estimated_startup_time: 8
+
+profile_mappings:
+  red_team_operator:
+    primary: ats_network_nmap
+    secondary: 
+      - ats_recon_amass
+      - ats_exploit_metasploit
+    pool_strategy: warm
+    
+  phantom:
+    primary: ats_adversary_atomic
+    secondary:
+      - ats_lab_kali_base
+    pool_strategy: cold
+    
+  demolitionist:
+    primary: ats_exploit_metasploit
+    secondary:
+      - ats_network_nmap
+    pool_strategy: warm
+    
+  watcher:
+    primary: ats_monitoring_elk
+    secondary:
+      - ats_network_nmap
+    pool_strategy: hot
+    
+  architect:
+    primary: ats_lab_kali_base
+    secondary:
+      - ats_network_nmap
+    pool_strategy: warm
+    
+  puppet_master:
+    primary: ats_phishing_gophish
+    secondary: []
+    pool_strategy: warm
+
+orchestration:
+  max_parallel_starts: 3
+  startup_timeout: 120
+  health_check_timeout: 30
+  shutdown_grace_period: 15
+  retry_attempts: 3
+  retry_delay_seconds: 5

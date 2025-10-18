@@ -1,0 +1,401 @@
+{
+  "id": "capture_the_flag",
+  "name": "Capture the Flag - Red vs Blue Competition",
+  "description": "Competitive capture the flag exercise where red team attempts to compromise systems and capture flags while blue team defends, detects, and responds in real-time. Teams compete for points through offensive and defensive actions.",
+  "type": "red_vs_blue",
+  "difficulty": "advanced",
+  "estimated_duration_minutes": 180,
+  "required_profiles": ["phantom", "watcher"],
+  "required_tools": ["network_scanner", "siem", "exploitation_framework", "forensic_tools"],
+  "optional_profiles": ["puppet_master", "threat_hunter"],
+  "optional_tools": ["edr_platform", "packet_analyzer"],
+  "prerequisites": ["basic_penetration_test"],
+  "learning_objectives": [
+    "Execute offensive operations under active defense",
+    "Defend networks against skilled adversaries",
+    "Practice real-time detection and response",
+    "Coordinate multi-agent team operations",
+    "Balance stealth with objective completion",
+    "Adapt tactics based on opponent responses"
+  ],
+  "tags": ["red_vs_blue", "competitive", "ctf", "advanced", "team_based"],
+  "phases": [
+    {
+      "id": "phase-1-setup",
+      "name": "Competition Setup and Rules Brief",
+      "description": "Teams receive briefing on rules, scoring, and prepare their strategies",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Red Team: Plan attack strategy and identify targets",
+          "success_criteria": {
+            "type": "strategy_planning",
+            "parameters": {
+              "attack_plan": "documented",
+              "targets_prioritized": true,
+              "team_roles_assigned": true
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Blue Team: Establish defensive posture and monitoring",
+          "success_criteria": {
+            "type": "defense_preparation",
+            "parameters": {
+              "monitoring_active": true,
+              "baselines_established": true,
+              "response_procedures": "ready"
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Both Teams: Understand scoring system and flag locations",
+          "success_criteria": {
+            "type": "briefing_complete",
+            "parameters": {
+              "rules_understood": true,
+              "flag_system_clear": true,
+              "scoring_mechanisms": "known"
+            }
+          },
+          "points": 50,
+          "required": true
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 20
+    },
+    {
+      "id": "phase-2-reconnaissance",
+      "name": "Red Team Reconnaissance / Blue Team Baseline",
+      "description": "Red team performs recon while blue team establishes defensive baseline",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Red Team: Map network and identify vulnerabilities (150 pts)",
+          "success_criteria": {
+            "type": "reconnaissance",
+            "parameters": {
+              "network_mapped": true,
+              "vulnerabilities_found": 5,
+              "stealth_maintained": true
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Blue Team: Detect and log red team reconnaissance (200 pts)",
+          "success_criteria": {
+            "type": "detection",
+            "parameters": {
+              "recon_detected": true,
+              "alerts_generated": true,
+              "attacker_profiled": true
+            }
+          },
+          "points": 200,
+          "required": false
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Red Team: Avoid detection during reconnaissance (+100 bonus)",
+          "success_criteria": {
+            "type": "stealth_bonus",
+            "parameters": {
+              "undetected": true,
+              "logs_clean": true,
+              "alerts_avoided": true
+            }
+          },
+          "points": 100,
+          "required": false
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-3-initial-breach",
+      "name": "Initial Compromise and Detection",
+      "description": "Red team attempts initial system compromise while blue team monitors",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Red Team: Compromise first system and establish foothold (300 pts)",
+          "success_criteria": {
+            "type": "system_compromise",
+            "parameters": {
+              "system_compromised": true,
+              "access_stable": true,
+              "flag_captured": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Blue Team: Detect compromise within 10 minutes (250 pts)",
+          "success_criteria": {
+            "type": "rapid_detection",
+            "parameters": {
+              "compromise_detected": true,
+              "detection_time_minutes": 10,
+              "alert_quality": "high"
+            }
+          },
+          "points": 250,
+          "required": false
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Blue Team: Identify attack vector and technique (150 pts)",
+          "success_criteria": {
+            "type": "attack_analysis",
+            "parameters": {
+              "vector_identified": true,
+              "mitre_attack_mapped": true,
+              "iocs_extracted": true
+            }
+          },
+          "points": 150,
+          "required": false
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-4-escalation-containment",
+      "name": "Privilege Escalation vs Containment",
+      "description": "Red team escalates privileges while blue team attempts containment",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Red Team: Escalate to admin privileges (400 pts)",
+          "success_criteria": {
+            "type": "privilege_escalation",
+            "parameters": {
+              "admin_access": true,
+              "persistence_established": true,
+              "detection_avoided": true
+            }
+          },
+          "points": 400,
+          "required": false
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Blue Team: Contain compromised system without disruption (350 pts)",
+          "success_criteria": {
+            "type": "containment",
+            "parameters": {
+              "system_isolated": true,
+              "business_continuity": true,
+              "evidence_preserved": true
+            }
+          },
+          "points": 350,
+          "required": false
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Red Team: Bypass containment attempts (+200 bonus)",
+          "success_criteria": {
+            "type": "containment_bypass",
+            "parameters": {
+              "containment_evaded": true,
+              "access_maintained": true,
+              "alternative_path": "established"
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-5-lateral-movement",
+      "name": "Lateral Movement vs Threat Hunting",
+      "description": "Red team moves laterally while blue team hunts for threat presence",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Red Team: Compromise 3 additional systems (500 pts)",
+          "success_criteria": {
+            "type": "lateral_movement",
+            "parameters": {
+              "systems_compromised": 3,
+              "flags_captured": 3,
+              "network_traversal": true
+            }
+          },
+          "points": 500,
+          "required": false
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Blue Team: Hunt and identify all compromised systems (450 pts)",
+          "success_criteria": {
+            "type": "threat_hunting",
+            "parameters": {
+              "compromised_systems_found": true,
+              "attack_path_mapped": true,
+              "persistence_discovered": true
+            }
+          },
+          "points": 450,
+          "required": false
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Blue Team: Deploy decoys and honeypots (200 pts)",
+          "success_criteria": {
+            "type": "active_defense",
+            "parameters": {
+              "decoys_deployed": true,
+              "attacker_trapped": true,
+              "intelligence_gathered": true
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-6-objectives",
+      "name": "Final Objectives and Eradication",
+      "description": "Red team attempts to complete final objectives while blue team eradicates threat",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Red Team: Capture high-value flags (crown jewels) (600 pts)",
+          "success_criteria": {
+            "type": "objective_completion",
+            "parameters": {
+              "high_value_flags": 2,
+              "data_exfiltrated": true,
+              "mission_accomplished": true
+            }
+          },
+          "points": 600,
+          "required": false
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Blue Team: Remove all attacker access and persistence (500 pts)",
+          "success_criteria": {
+            "type": "eradication",
+            "parameters": {
+              "access_removed": true,
+              "persistence_eliminated": true,
+              "clean_verification": true
+            }
+          },
+          "points": 500,
+          "required": false
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Red Team: Maintain persistence until end (+300 bonus)",
+          "success_criteria": {
+            "type": "persistence_survival",
+            "parameters": {
+              "access_maintained": true,
+              "eradication_resisted": true,
+              "redundancy_effective": true
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-7-debrief",
+      "name": "Competition Debrief and Analysis",
+      "description": "Both teams present actions, discuss tactics, and learn from competition",
+      "objectives": [
+        {
+          "id": "obj-7-1",
+          "description": "Red Team: Present attack narrative and techniques used",
+          "success_criteria": {
+            "type": "presentation_complete",
+            "parameters": {
+              "timeline_presented": true,
+              "techniques_explained": true,
+              "challenges_discussed": true
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-7-2",
+          "description": "Blue Team: Present defense actions and detection methods",
+          "success_criteria": {
+            "type": "presentation_complete",
+            "parameters": {
+              "response_timeline": "presented",
+              "detections_explained": true,
+              "improvements_identified": true
+            }
+          },
+          "points": 100,
+          "required": true
+        },
+        {
+          "id": "obj-7-3",
+          "description": "Both Teams: Exchange lessons learned and best practices",
+          "success_criteria": {
+            "type": "knowledge_sharing",
+            "parameters": {
+              "lessons_documented": true,
+              "improvements_identified": true,
+              "mutual_learning": true
+            }
+          },
+          "points": 100,
+          "required": true
+        }
+      ],
+      "hints": [],
+      "time_limit_minutes": 30
+    }
+  ],
+  "scoring": {
+    "max_points": 5000,
+    "time_bonus_multiplier": 1.3,
+    "stealth_bonus": 400,
+    "deductions_per_mistake": 50,
+    "deductions_per_hint": 0,
+    "completion_bonus": 0
+  },
+  "metadata": {
+    "team_based": true,
+    "competitive": true,
+    "real_time": true,
+    "flag_system": "multi_tier",
+    "scoring_type": "offensive_defensive",
+    "red_team_objectives": ["stealth", "compromise", "persistence", "flags"],
+    "blue_team_objectives": ["detection", "containment", "eradication", "response_time"],
+    "winner_determination": "highest_combined_score"
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

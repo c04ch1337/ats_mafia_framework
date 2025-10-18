@@ -1,0 +1,408 @@
+{
+  "id": "threat_hunting_exercise",
+  "name": "Threat Hunting Exercise - APT Detection in Compromised Network",
+  "description": "Proactively hunt for Advanced Persistent Threat (APT) activity in a potentially compromised network. Use hypothesis-driven investigation to uncover stealthy adversary presence and hidden malware.",
+  "type": "blue_team",
+  "difficulty": "expert",
+  "estimated_duration_minutes": 150,
+  "required_profiles": ["watcher", "threat_hunter"],
+  "required_tools": ["siem", "edr_platform", "network_forensics_tools", "threat_intelligence_platform"],
+  "optional_profiles": ["malware_analyst"],
+  "optional_tools": ["sandbox", "memory_forensics_tools"],
+  "prerequisites": [],
+  "learning_objectives": [
+    "Develop and test threat hunting hypotheses",
+    "Identify indicators of advanced persistent threats",
+    "Perform behavioral analysis and anomaly detection",
+    "Use threat intelligence for proactive hunting",
+    "Uncover stealthy malware and C2 communications",
+    "Document findings and create detection rules"
+  ],
+  "tags": ["blue_team", "threat_hunting", "apt", "detection", "expert"],
+  "phases": [
+    {
+      "id": "phase-1-intelligence",
+      "name": "Threat Intelligence and Hypothesis Development",
+      "description": "Gather threat intelligence and develop hunting hypotheses based on known APT TTPs",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Research relevant APT groups and their TTPs",
+          "success_criteria": {
+            "type": "intelligence_gathering",
+            "parameters": {
+              "apt_groups_researched": 3,
+              "ttps_documented": true,
+              "iocs_collected": 20
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Develop at least 5 threat hunting hypotheses",
+          "success_criteria": {
+            "type": "hypothesis_development",
+            "parameters": {
+              "hypotheses_created": 5,
+              "testable": true,
+              "ttp_based": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Map hypotheses to MITRE ATT&CK framework",
+          "success_criteria": {
+            "type": "framework_mapping",
+            "parameters": {
+              "attack_techniques_mapped": true,
+              "tactics_identified": true,
+              "coverage_analyzed": true
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Focus on common APT techniques like credential dumping and lateral movement",
+          "penalty_points": 35
+        },
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Use threat intelligence feeds and APT reports from security vendors",
+          "penalty_points": 45
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-2-baseline",
+      "name": "Environment Baseline and Anomaly Identification",
+      "description": "Establish normal behavior baselines and identify anomalies",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Establish baseline for normal network behavior",
+          "success_criteria": {
+            "type": "baseline_creation",
+            "parameters": {
+              "traffic_patterns_analyzed": true,
+              "normal_behaviors_documented": true,
+              "thresholds_established": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Identify at least 10 behavioral anomalies",
+          "success_criteria": {
+            "type": "anomaly_detection",
+            "parameters": {
+              "anomalies_found": 10,
+              "prioritized": true,
+              "context_gathered": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Create heat maps and visualizations of suspicious activity",
+          "success_criteria": {
+            "type": "visualization_created",
+            "parameters": {
+              "timeline_created": true,
+              "heat_maps_generated": true,
+              "patterns_visible": true
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Look for unusual authentication patterns and off-hours activity",
+          "penalty_points": 50
+        },
+        {
+          "trigger_after_minutes": 30,
+          "hint": "Analyze process execution trees and parent-child relationships",
+          "penalty_points": 60
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-3-hunting",
+      "name": "Active Threat Hunting",
+      "description": "Execute hunting hypotheses and investigate suspicious activity",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Hunt for credential theft and lateral movement",
+          "success_criteria": {
+            "type": "hunting_execution",
+            "parameters": {
+              "credential_dumping_detected": true,
+              "lateral_movement_identified": true,
+              "evidence_collected": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Identify command and control communications",
+          "success_criteria": {
+            "type": "c2_detection",
+            "parameters": {
+              "c2_channels_found": true,
+              "beaconing_detected": true,
+              "infrastructure_mapped": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Discover hidden persistence mechanisms",
+          "success_criteria": {
+            "type": "persistence_discovery",
+            "parameters": {
+              "mechanisms_found": 3,
+              "techniques_documented": true,
+              "removal_strategy": "planned"
+            }
+          },
+          "points": 450,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Search for suspicious PowerShell, WMI, and scheduled task activity",
+          "penalty_points": 65
+        },
+        {
+          "trigger_after_minutes": 45,
+          "hint": "Look for DNS tunneling, HTTPS beaconing, and uncommon protocols",
+          "penalty_points": 75
+        }
+      ],
+      "time_limit_minutes": 55
+    },
+    {
+      "id": "phase-4-analysis",
+      "name": "Malware Analysis and Attribution",
+      "description": "Analyze discovered malware and attempt threat actor attribution",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Extract and analyze malware samples",
+          "success_criteria": {
+            "type": "malware_analysis",
+            "parameters": {
+              "samples_analyzed": 3,
+              "behavior_documented": true,
+              "capabilities_identified": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Identify malware families and variants",
+          "success_criteria": {
+            "type": "classification",
+            "parameters": {
+              "families_identified": true,
+              "variants_detected": true,
+              "signatures_created": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Attempt threat actor attribution",
+          "success_criteria": {
+            "type": "attribution_analysis",
+            "parameters": {
+              "ttps_compared": true,
+              "infrastructure_analyzed": true,
+              "confidence_assessed": true
+            }
+          },
+          "points": 350,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Use YARA rules and memory forensics for malware identification",
+          "penalty_points": 70
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Compare TTPs against known APT groups using MITRE ATT&CK",
+          "penalty_points": 80
+        }
+      ],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-5-scope",
+      "name": "Compromise Scope Assessment",
+      "description": "Determine the full scope of the compromise across the environment",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Identify all compromised systems and accounts",
+          "success_criteria": {
+            "type": "scope_assessment",
+            "parameters": {
+              "compromised_hosts": "documented",
+              "affected_accounts": "identified",
+              "timeline_established": true
+            }
+          },
+          "points": 450,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Assess data exposure and exfiltration",
+          "success_criteria": {
+            "type": "data_assessment",
+            "parameters": {
+              "accessed_data": "cataloged",
+              "exfiltration_detected": true,
+              "impact_quantified": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Map complete attack timeline and kill chain",
+          "success_criteria": {
+            "type": "timeline_mapping",
+            "parameters": {
+              "initial_compromise": "dated",
+              "kill_chain_mapped": true,
+              "dwell_time_calculated": true
+            }
+          },
+          "points": 400,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Use host-based and network-based indicators to track lateral movement",
+          "penalty_points": 75
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Analyze file access logs and network flows for data exfiltration",
+          "penalty_points": 85
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-6-operationalization",
+      "name": "Detection Engineering and Operationalization",
+      "description": "Create detection rules and operationalize hunting findings",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Create detection rules for identified TTPs",
+          "success_criteria": {
+            "type": "detection_rules_created",
+            "parameters": {
+              "rules_developed": 10,
+              "tested": true,
+              "false_positive_rate": "acceptable"
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Develop hunting playbook for recurring use",
+          "success_criteria": {
+            "type": "playbook_created",
+            "parameters": {
+              "procedures_documented": true,
+              "queries_included": true,
+              "reusable": true
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Share intelligence with community (IOCs, TTPs)",
+          "success_criteria": {
+            "type": "intelligence_sharing",
+            "parameters": {
+              "iocs_published": true,
+              "report_written": true,
+              "stix_formatted": true
+            }
+          },
+          "points": 250,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Use Sigma or Elastic Detection Rules format for portability",
+          "penalty_points": 60
+        }
+      ],
+      "time_limit_minutes": 35
+    }
+  ],
+  "scoring": {
+    "max_points": 6350,
+    "time_bonus_multiplier": 1.8,
+    "stealth_bonus": 0,
+    "deductions_per_mistake": 90,
+    "deductions_per_hint": 50,
+    "completion_bonus": 1500
+  },
+  "metadata": {
+    "hunt_type": "hypothesis_driven",
+    "threat_level": "apt",
+    "technical_depth": "very_high",
+    "intelligence_required": "extensive",
+    "deliverables": ["hunt_report", "detection_rules", "playbook", "iocs"]
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

@@ -1,0 +1,392 @@
+{
+  "id": "security_architecture_redesign",
+  "name": "Security Architecture Redesign - Vulnerable Network Hardening",
+  "description": "Assess a vulnerable network architecture and design comprehensive security improvements. Identify weaknesses, propose defense-in-depth strategies, and implement security controls to harden the infrastructure.",
+  "type": "blue_team",
+  "difficulty": "intermediate",
+  "estimated_duration_minutes": 90,
+  "required_profiles": ["watcher", "security_architect"],
+  "required_tools": ["network_analyzer", "vulnerability_scanner", "configuration_audit_tools"],
+  "optional_profiles": ["compliance_specialist"],
+  "optional_tools": ["threat_modeling_tools"],
+  "prerequisites": [],
+  "learning_objectives": [
+    "Conduct comprehensive security architecture assessment",
+    "Identify critical security gaps and vulnerabilities",
+    "Design defense-in-depth security controls",
+    "Implement network segmentation and isolation",
+    "Deploy monitoring and detection capabilities",
+    "Create security roadmap and implementation plan"
+  ],
+  "tags": ["blue_team", "architecture", "hardening", "design", "intermediate"],
+  "phases": [
+    {
+      "id": "phase-1-assessment",
+      "name": "Security Architecture Assessment",
+      "description": "Analyze the current network architecture and identify security weaknesses",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Map current network topology and asset inventory",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "network_diagram_created": true,
+              "assets_cataloged": true,
+              "data_flows_mapped": true
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Identify at least 10 security vulnerabilities or misconfigurations",
+          "success_criteria": {
+            "type": "vulnerability_assessment",
+            "parameters": {
+              "vulnerabilities_found": 10,
+              "severity_classified": true,
+              "impact_assessed": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Analyze existing security controls and their effectiveness",
+          "success_criteria": {
+            "type": "control_analysis",
+            "parameters": {
+              "controls_inventoried": true,
+              "gaps_identified": true,
+              "effectiveness_rated": true
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Look for flat networks without segmentation and exposed management interfaces",
+          "penalty_points": 25
+        },
+        {
+          "trigger_after_minutes": 22,
+          "hint": "Check for default credentials, unpatched systems, and weak encryption",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-2-threat-modeling",
+      "name": "Threat Modeling and Risk Analysis",
+      "description": "Perform threat modeling to understand attack vectors and prioritize risks",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Identify potential attack paths and threat actors",
+          "success_criteria": {
+            "type": "threat_identification",
+            "parameters": {
+              "attack_paths_documented": 5,
+              "threat_actors_profiled": true,
+              "motivations_analyzed": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Conduct risk assessment and prioritization",
+          "success_criteria": {
+            "type": "risk_analysis",
+            "parameters": {
+              "risks_scored": true,
+              "likelihood_assessed": true,
+              "impact_quantified": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Create threat model using STRIDE or similar methodology",
+          "success_criteria": {
+            "type": "threat_model_created",
+            "parameters": {
+              "methodology_applied": ["stride", "pasta", "mitre_attack"],
+              "documented": true,
+              "actionable": true
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Focus on crown jewels and high-value assets when modeling threats",
+          "penalty_points": 30
+        }
+      ],
+      "time_limit_minutes": 25
+    },
+    {
+      "id": "phase-3-design",
+      "name": "Security Architecture Design",
+      "description": "Design comprehensive security architecture with defense-in-depth controls",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Design network segmentation and DMZ architecture",
+          "success_criteria": {
+            "type": "architecture_design",
+            "parameters": {
+              "segments_defined": 4,
+              "dmz_designed": true,
+              "access_controls_specified": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Specify security controls for each security layer",
+          "success_criteria": {
+            "type": "controls_specification",
+            "parameters": {
+              "layers_addressed": ["perimeter", "network", "host", "application", "data"],
+              "controls_detailed": true,
+              "minimum_controls": 15
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Design monitoring and detection architecture",
+          "success_criteria": {
+            "type": "monitoring_design",
+            "parameters": {
+              "siem_architecture": "designed",
+              "log_sources_identified": true,
+              "alert_workflow": "documented"
+            }
+          },
+          "points": 250,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Implement zero trust principles with micro-segmentation",
+          "penalty_points": 40
+        },
+        {
+          "trigger_after_minutes": 30,
+          "hint": "Ensure defense-in-depth with controls at multiple layers",
+          "penalty_points": 50
+        }
+      ],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-4-implementation",
+      "name": "Security Control Implementation",
+      "description": "Implement priority security controls and configurations",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Implement network segmentation and firewall rules",
+          "success_criteria": {
+            "type": "network_hardening",
+            "parameters": {
+              "vlans_created": true,
+              "firewall_rules_deployed": true,
+              "segmentation_tested": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Deploy and configure security monitoring tools",
+          "success_criteria": {
+            "type": "monitoring_deployed",
+            "parameters": {
+              "siem_configured": true,
+              "ids_ips_deployed": true,
+              "logging_centralized": true
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Harden systems and apply security baselines",
+          "success_criteria": {
+            "type": "system_hardening",
+            "parameters": {
+              "baselines_applied": true,
+              "patches_deployed": true,
+              "configurations_secured": true
+            }
+          },
+          "points": 300,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Use industry frameworks like CIS Benchmarks for hardening",
+          "penalty_points": 45
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-5-validation",
+      "name": "Security Validation and Testing",
+      "description": "Validate implemented controls and test security posture",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Perform vulnerability scanning of hardened environment",
+          "success_criteria": {
+            "type": "validation_scanning",
+            "parameters": {
+              "scan_completed": true,
+              "critical_vulns_eliminated": true,
+              "improvement_documented": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Test detection and response capabilities",
+          "success_criteria": {
+            "type": "detection_testing",
+            "parameters": {
+              "test_scenarios_executed": 5,
+              "alerts_triggered": true,
+              "response_validated": true
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Conduct tabletop exercise or red team simulation",
+          "success_criteria": {
+            "type": "exercise_completed",
+            "parameters": {
+              "scenarios_tested": true,
+              "controls_effective": true,
+              "gaps_identified": true
+            }
+          },
+          "points": 250,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use purple team exercises to validate detection capabilities",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-6-documentation",
+      "name": "Documentation and Knowledge Transfer",
+      "description": "Create comprehensive documentation and security roadmap",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Document implemented architecture and controls",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "architecture_documented": true,
+              "diagrams_created": true,
+              "procedures_written": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Create security roadmap for remaining improvements",
+          "success_criteria": {
+            "type": "roadmap_created",
+            "parameters": {
+              "priorities_defined": true,
+              "timeline_established": true,
+              "resources_estimated": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Conduct knowledge transfer and training",
+          "success_criteria": {
+            "type": "training_completed",
+            "parameters": {
+              "team_trained": true,
+              "runbooks_created": true,
+              "documentation_accessible": true
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Create visual diagrams and decision trees for operations teams",
+          "penalty_points": 30
+        }
+      ],
+      "time_limit_minutes": 25
+    }
+  ],
+  "scoring": {
+    "max_points": 4200,
+    "time_bonus_multiplier": 1.4,
+    "stealth_bonus": 0,
+    "deductions_per_mistake": 50,
+    "deductions_per_hint": 30,
+    "completion_bonus": 800
+  },
+  "metadata": {
+    "focus_area": "architecture_design",
+    "technical_depth": "high",
+    "business_alignment": "critical",
+    "deliverables": ["architecture_diagrams", "security_roadmap", "implementation_guide"]
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

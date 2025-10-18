@@ -1,0 +1,222 @@
+{
+  "id": "basic_penetration_test",
+  "name": "Basic Penetration Test Exercise",
+  "description": "A comprehensive penetration testing exercise for red team training",
+  "scenario_type": "red_team_exercise",
+  "duration": 3600,
+  "max_agents": 4,
+  "required_profiles": ["red_team_operator"],
+  "optional_profiles": ["social_engineer"],
+  "environment_config": {
+    "network": {
+      "type": "isolated",
+      "subnet": "192.168.100.0/24",
+      "domains": ["corp.local", "training.local"]
+    },
+    "targets": [
+      {
+        "name": "web_server_01",
+        "ip": "192.168.100.10",
+        "os": "Ubuntu 20.04",
+        "services": ["apache2", "mysql"],
+        "vulnerabilities": ["SQL_injection", "weak_passwords"]
+      },
+      {
+        "name": "file_server_01", 
+        "ip": "192.168.100.20",
+        "os": "Windows Server 2019",
+        "services": ["smb", "rdp"],
+        "vulnerabilities": ["smb_vulnerability", "weak_permissions"]
+      },
+      {
+        "name": "workstation_01",
+        "ip": "192.168.100.50",
+        "os": "Windows 10",
+        "services": ["rdp", "powershell"],
+        "vulnerabilities": ["outdated_software", "user_weak_password"]
+      }
+    ],
+    "infrastructure": {
+      "firewall": {
+        "enabled": true,
+        "rules": ["allow_ssh_from_management", "block_external"]
+      },
+      "ids": {
+        "enabled": true,
+        "sensitivity": "medium",
+        "logging": true
+      },
+      "siem": {
+        "enabled": true,
+        "correlation_rules": ["failed_login_attempts", "unusual_network_traffic"]
+      }
+    },
+    "tools": {
+      "available": ["nmap", "metasploit", "burp_suite", "nikto", "sqlmap", "hydra"],
+      "restricted": ["denial_of_service_tools", "data_destruction_tools"]
+    }
+  },
+  "success_criteria": {
+    "primary_objectives": [
+      {
+        "name": "gain_initial_access",
+        "description": "Gain initial access to at least one target system",
+        "required": true,
+        "weight": 0.3
+      },
+      {
+        "name": "escalate_privileges",
+        "description": "Escalate privileges to administrator/root on compromised systems",
+        "required": true,
+        "weight": 0.25
+      },
+      {
+        "name": "lateral_movement",
+        "description": "Move laterally to at least two additional systems",
+        "required": false,
+        "weight": 0.2
+      },
+      {
+        "name": "exfiltrate_data",
+        "description": "Successfully exfiltrate sensitive data",
+        "required": false,
+        "weight": 0.15
+      },
+      {
+        "name": "maintain_persistence",
+        "description": "Establish persistent access mechanisms",
+        "required": false,
+        "weight": 0.1
+      }
+    ],
+    "minimum_score": 0.7,
+    "time_bonus": {
+      "completed_early": 0.1,
+      "early_completion_threshold": 0.8
+    }
+  },
+  "evaluation_metrics": [
+    {
+      "name": "time_to_initial_access",
+      "description": "Time taken to gain initial access",
+      "type": "time",
+      "weight": 0.2,
+      "optimal_range": [900, 1800]
+    },
+    {
+      "name": "stealth_score",
+      "description": "Ability to avoid detection",
+      "type": "percentage",
+      "weight": 0.25,
+      "optimal_range": [0.7, 1.0]
+    },
+    {
+      "name": "coverage_score",
+      "description": "Percentage of network explored",
+      "type": "percentage",
+      "weight": 0.15,
+      "optimal_range": [0.8, 1.0]
+    },
+    {
+      "name": "technique_diversity",
+      "description": "Variety of techniques used",
+      "type": "count",
+      "weight": 0.15,
+      "optimal_range": [5, 10]
+    },
+    {
+      "name": "objective_completion",
+      "description": "Percentage of objectives completed",
+      "type": "percentage",
+      "weight": 0.25,
+      "optimal_range": [0.8, 1.0]
+    }
+  ],
+  "resources": {
+    "documentation": [
+      "network_diagram.pdf",
+      "target_system_docs/",
+      "vulnerability_database.json"
+    ],
+    "tools": [
+      "custom_scripts/",
+      "exploit_database/",
+      "wordlists/"
+    ],
+    "support": {
+      "hints_available": 3,
+      "hint_penalty": 0.05,
+      "mentor_support": true
+    }
+  },
+  "phases": [
+    {
+      "name": "reconnaissance",
+      "duration": 600,
+      "description": "Perform network and target reconnaissance",
+      "objectives": ["map_network", "identify_targets", "enumerate_services"],
+      "expected_tools": ["nmap", "dirb", "gobuster"]
+    },
+    {
+      "name": "vulnerability_assessment",
+      "duration": 900,
+      "description": "Identify and validate vulnerabilities",
+      "objectives": ["scan_vulnerabilities", "validate_findings", "prioritize_targets"],
+      "expected_tools": ["nessus", "nikto", "sqlmap"]
+    },
+    {
+      "name": "exploitation",
+      "duration": 1200,
+      "description": "Exploit identified vulnerabilities",
+      "objectives": ["gain_access", "escalate_privileges", "establish_foothold"],
+      "expected_tools": ["metasploit", "custom_exploits", "payload_generators"]
+    },
+    {
+      "name": "post_exploitation",
+      "duration": 900,
+      "description": "Maintain access and achieve objectives",
+      "objectives": ["lateral_movement", "data_exfiltration", "persistence"],
+      "expected_tools": ["mimikatz", "powershell_scripts", "custom_tools"]
+    }
+  ],
+  "rules_of_engagement": {
+    "allowed_actions": [
+      "reconnaissance",
+      "vulnerability_scanning", 
+      "exploitation",
+      "privilege_escalation",
+      "lateral_movement",
+      "data_access",
+      "persistence_mechanisms"
+    ],
+    "prohibited_actions": [
+      "data_destruction",
+      "denial_of_service",
+      "altering_security_configs",
+      "accessing_sensitive_pii",
+      "disabling_security_tools"
+    ],
+    "reporting_requirements": [
+      "document_all_activities",
+      "report_successful_exploits",
+      "note_detection_events",
+      "capture_evidence"
+    ]
+  },
+  "learning_objectives": [
+    "Apply systematic reconnaissance methodologies",
+    "Identify and validate common vulnerability classes",
+    "Demonstrate safe exploitation techniques",
+    "Practice privilege escalation strategies",
+    "Implement stealth and evasion techniques",
+    "Document findings professionally"
+  ],
+  "debrief_questions": [
+    "What reconnaissance techniques were most effective?",
+    "How were vulnerabilities prioritized for exploitation?",
+    "What challenges were encountered during exploitation?",
+    "How was stealth maintained throughout the exercise?",
+    "What could be improved in the approach?",
+    "What new techniques were learned or applied?"
+  ]
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS MAFIA - Scenario Management</title>
+    <link rel="stylesheet" href="css/ats-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:wght@400;600&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="ats-theme">
+    <!-- Navigation Header -->
+    <header class="ats-header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <i class="fas fa-crown"></i>
+                <span class="brand-text">ATS MAFIA</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-th"></i>
+                        <span>Don's Office</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="profiles.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Profiles</span>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Scenarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="training.html" class="nav-link">
+                        <i class="fas fa-chess"></i>
+                        <span>Situation Room</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        <span>After-Action</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="nav-controls">
+                <button class="voice-control-btn" id="voiceControlBtn">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <div class="user-profile">
+                    <img src="assets/images/default-avatar.png" alt="User" class="user-avatar">
+                    <span class="user-name">Don Corleone</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="ats-main">
+        <div class="page-header">
+            <h1 class="page-title">Scenario Management</h1>
+            <p class="page-subtitle">Design and manage training scenarios</p>
+            <div class="header-actions">
+                <button class="ats-btn btn-primary" id="createScenarioBtn">
+                    <i class="fas fa-plus"></i>
+                    Create Scenario
+                </button>
+                <button class="ats-btn btn-secondary" id="importScenarioBtn">
+                    <i class="fas fa-upload"></i>
+                    Import Scenario
+                </button>
+            </div>
+        </div>
+
+        <!-- Scenario Filters -->
+        <div class="filters-section">
+            <div class="filter-group">
+                <label class="filter-label">Search:</label>
+                <input type="text" class="ats-form-input" id="scenarioSearch" placeholder="Search scenarios...">
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Difficulty:</label>
+                <select class="ats-form-select" id="difficultyFilter">
+                    <option value="">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                    <option value="expert">Expert</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Category:</label>
+                <select class="ats-form-select" id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="penetration_testing">Penetration Testing</option>
+                    <option value="social_engineering">Social Engineering</option>
+                    <option value="defense">Defense</option>
+                    <option value="forensics">Forensics</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Scenarios Grid -->
+        <div class="scenarios-grid" id="scenariosGrid">
+            <!-- Scenario cards will be dynamically loaded here -->
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state" id="loadingState" style="display: none;">
+            <div class="ats-spinner"></div>
+            <p>Loading scenarios...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <i class="fas fa-gamepad"></i>
+            <h3>No Scenarios Found</h3>
+            <p>Create your first training scenario to get started.</p>
+            <button class="ats-btn btn-primary" onclick="document.getElementById('createScenarioBtn').click()">
+                <i class="fas fa-plus"></i>
+                Create Scenario
+            </button>
+        </div>
+    </main>
+
+    <!-- Scenario Creation Modal -->
+    <div id="scenarioModal" class="modal-overlay">
+        <div class="modal-container modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Scenario</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form class="ats-form" id="scenarioForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="ats-form-label">Scenario Name *</label>
+                            <input type="text" class="ats-form-input" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="ats-form-label">Category *</label>
+                            <select class="ats-form-select" name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="penetration_testing">Penetration Testing</option>
+                                <option value="social_engineering">Social Engineering</option>
+                                <option value="defense">Defense</option>
+                                <option value="forensics">Forensics</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="ats-form-label">Difficulty *</label>
+                            <select class="ats-form-select" name="difficulty" required>
+                                <option value="">Select Difficulty</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="ats-form-label">Duration (minutes)</label>
+                            <input type="number" class="ats-form-input" name="duration" min="1" value="60">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Description</label>
+                        <textarea class="ats-form-textarea" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Learning Objectives</label>
+                        <textarea class="ats-form-textarea" name="learning_objectives" rows="3" placeholder="Enter learning objectives, one per line..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Prerequisites</label>
+                        <textarea class="ats-form-textarea" name="prerequisites" rows="2" placeholder="Enter prerequisites, one per line..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="ats-form-label">Scenario Configuration</label>
+                        <textarea class="ats-form-textarea" name="configuration" rows="8" placeholder="JSON configuration..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="ats-btn btn-secondary modal-close">Cancel</button>
+                        <button type="submit" class="ats-btn btn-primary">Create Scenario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scenario Details Modal -->
+    <div id="scenarioDetailsModal" class="modal-overlay">
+        <div class="modal-container modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title">Scenario Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content" id="scenarioDetailsContent">
+                <!-- Scenario details will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="ats-footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ATS MAFIA - Advanced Training Simulation</p>
+            <p>Classified Training System - Authorized Personnel Only</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/api-client.js"></script>
+    <script src="js/websocket-client.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/scenarios.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

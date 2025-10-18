@@ -1,0 +1,398 @@
+{
+  "id": "pretexting_executive",
+  "name": "Executive Impersonation - C-Level Pretexting Attack",
+  "description": "Impersonate a C-level executive to manipulate employees into granting access or divulging sensitive information. Use authority bias and organizational hierarchy to bypass security controls through sophisticated pretexting.",
+  "type": "social_engineering",
+  "difficulty": "intermediate",
+  "estimated_duration_minutes": 80,
+  "required_profiles": ["puppet_master"],
+  "required_tools": ["email_spoofing", "pretext_generator", "osint_tools"],
+  "optional_profiles": [],
+  "optional_tools": ["voice_modulation", "deepfake_generator"],
+  "prerequisites": [],
+  "learning_objectives": [
+    "Leverage authority bias and organizational hierarchy",
+    "Create convincing executive personas and communication styles",
+    "Execute multi-channel social engineering attacks",
+    "Exploit trust relationships within organizations",
+    "Understand CEO fraud and business email compromise",
+    "Recognize and counter executive impersonation defenses"
+  ],
+  "tags": ["social_engineering", "pretexting", "executive", "authority", "intermediate"],
+  "phases": [
+    {
+      "id": "phase-1-executive-profiling",
+      "name": "Executive Reconnaissance and Profiling",
+      "description": "Research target executive and organizational dynamics for impersonation",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Profile target executive (communication style, relationships, authority)",
+          "success_criteria": {
+            "type": "executive_profiling",
+            "parameters": {
+              "executive_identified": true,
+              "communication_style_analyzed": true,
+              "authority_scope_mapped": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Map organizational hierarchy and reporting relationships",
+          "success_criteria": {
+            "type": "org_mapping",
+            "parameters": {
+              "hierarchy_documented": true,
+              "key_relationships_identified": true,
+              "influence_patterns_analyzed": true
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Identify potential victim targets and their vulnerabilities",
+          "success_criteria": {
+            "type": "victim_identification",
+            "parameters": {
+              "targets_selected": 3,
+              "vulnerabilities_assessed": true,
+              "leverage_points_identified": true
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 10,
+          "hint": "Study executive's social media posts and public statements for communication patterns",
+          "penalty_points": 25
+        },
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Target assistants and junior employees who are most likely to comply with authority",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 20
+    },
+    {
+      "id": "phase-2-persona-development",
+      "name": "Executive Persona Creation",
+      "description": "Develop convincing executive persona and communication materials",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Create executive email signature and templates",
+          "success_criteria": {
+            "type": "communication_creation",
+            "parameters": {
+              "email_signature": "authentic",
+              "templates_created": 3,
+              "style_matching": "accurate"
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Develop urgent business scenarios requiring immediate action",
+          "success_criteria": {
+            "type": "scenario_development",
+            "parameters": {
+              "scenarios_created": 3,
+              "urgency_established": true,
+              "plausibility_verified": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Prepare authority language and executive tone",
+          "success_criteria": {
+            "type": "tone_preparation",
+            "parameters": {
+              "language_patterns": "matched",
+              "authority_markers": "included",
+              "authenticity_tested": true
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Use phrases like 'I need this handled discretely' to create urgency and secrecy",
+          "penalty_points": 30
+        },
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Executives often delegate unusual requests to trusted assistants during travel",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 25
+    },
+    {
+      "id": "phase-3-technical-setup",
+      "name": "Technical Infrastructure Setup",
+      "description": "Set up email spoofing and supporting technical infrastructure",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Configure email spoofing or look-alike domain",
+          "success_criteria": {
+            "type": "email_setup",
+            "parameters": {
+              "spoofing_configured": true,
+              "domain_similarity": "high",
+              "authentication_bypassed": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Create supporting fake credentials and documentation",
+          "success_criteria": {
+            "type": "documentation_prep",
+            "parameters": {
+              "credentials_created": true,
+              "documentation_authentic": true,
+              "verification_bypass": "planned"
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Test communication channels and deliverability",
+          "success_criteria": {
+            "type": "testing_complete",
+            "parameters": {
+              "deliverability_verified": true,
+              "spam_filters_bypassed": true,
+              "formatting_correct": true
+            }
+          },
+          "points": 150,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use typosquatting domains that look similar to the real domain",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 20
+    },
+    {
+      "id": "phase-4-initial-contact",
+      "name": "Initial Contact and Trust Building",
+      "description": "Make initial contact to establish credibility and build trust",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Send initial non-malicious contact to establish presence",
+          "success_criteria": {
+            "type": "initial_contact",
+            "parameters": {
+              "contact_sent": true,
+              "response_received": true,
+              "suspicion_avoided": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Build rapport and establish communication pattern",
+          "success_criteria": {
+            "type": "rapport_building",
+            "parameters": {
+              "exchanges_completed": 2,
+              "trust_established": true,
+              "natural_flow": "maintained"
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Gauge target's susceptibility and compliance level",
+          "success_criteria": {
+            "type": "assessment_complete",
+            "parameters": {
+              "compliance_level": "assessed",
+              "vulnerabilities_identified": true,
+              "approach_adjusted": true
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 12,
+          "hint": "Start with simple, verifiable requests to build credibility",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 25
+    },
+    {
+      "id": "phase-5-exploitation",
+      "name": "Request Execution and Information Extraction",
+      "description": "Execute the main attack to extract information or gain access",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Make urgent request requiring immediate action",
+          "success_criteria": {
+            "type": "request_execution",
+            "parameters": {
+              "request_made": true,
+              "urgency_conveyed": true,
+              "compliance_obtained": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Extract sensitive information or gain access credentials",
+          "success_criteria": {
+            "type": "information_extraction",
+            "parameters": {
+              "sensitive_data_obtained": true,
+              "credentials_harvested": true,
+              "access_granted": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Maintain pretext throughout interaction",
+          "success_criteria": {
+            "type": "pretext_maintenance",
+            "parameters": {
+              "consistency_maintained": true,
+              "questions_handled": true,
+              "suspicion_managed": true
+            }
+          },
+          "points": 300,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use time pressure and confidentiality to discourage verification",
+          "penalty_points": 50
+        },
+        {
+          "trigger_after_minutes": 25,
+          "hint": "If challenged, pivot to different request or target",
+          "penalty_points": 60
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-6-analysis",
+      "name": "Attack Analysis and Countermeasures",
+      "description": "Analyze attack effectiveness and develop defensive recommendations",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Document attack timeline and effectiveness",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "timeline_documented": true,
+              "success_factors_analyzed": true,
+              "victim_responses_recorded": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Identify defensive gaps and security awareness failures",
+          "success_criteria": {
+            "type": "gap_analysis",
+            "parameters": {
+              "gaps_identified": true,
+              "training_needs": "documented",
+              "policy_weaknesses": "highlighted"
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Create recommendations for prevention and detection",
+          "success_criteria": {
+            "type": "recommendations_created",
+            "parameters": {
+              "technical_controls": "specified",
+              "process_improvements": "documented",
+              "training_program": "designed"
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 10,
+          "hint": "Recommend out-of-band verification for unusual executive requests",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 20
+    }
+  ],
+  "scoring": {
+    "max_points": 4200,
+    "time_bonus_multiplier": 1.4,
+    "stealth_bonus": 400,
+    "deductions_per_mistake": 60,
+    "deductions_per_hint": 35,
+    "completion_bonus": 800
+  },
+  "metadata": {
+    "attack_type": "ceo_fraud_bec",
+    "primary_vector": "email",
+    "psychological_principle": "authority_bias",
+    "real_world_relevance": "very_high",
+    "requires_consent": true
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

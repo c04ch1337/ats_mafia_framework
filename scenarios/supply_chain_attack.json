@@ -1,0 +1,375 @@
+{
+  "id": "supply_chain_attack",
+  "name": "Supply Chain Attack - Vendor Compromise",
+  "description": "Execute a sophisticated supply chain attack by compromising a software vendor to reach the ultimate target organization. Navigate through multiple security boundaries and pivot from vendor to customer environments.",
+  "type": "red_team",
+  "difficulty": "expert",
+  "estimated_duration_minutes": 240,
+  "required_profiles": ["phantom", "red_team_operator", "malware_specialist"],
+  "required_tools": ["network_scanner", "exploitation_framework", "code_injection_tools"],
+  "optional_profiles": ["social_engineer"],
+  "optional_tools": ["packet_analyzer", "reverse_engineering_tools"],
+  "prerequisites": ["corporate_network_breach"],
+  "learning_objectives": [
+    "Understand supply chain attack vectors and methodologies",
+    "Compromise vendor infrastructure as initial access point",
+    "Inject malicious code into software distribution pipeline",
+    "Pivot from vendor to customer environments",
+    "Maintain long-term persistence across environments",
+    "Execute targeted attacks on downstream customers"
+  ],
+  "tags": ["red_team", "supply_chain", "apt", "multi_stage", "expert"],
+  "phases": [
+    {
+      "id": "phase-1-vendor-recon",
+      "name": "Vendor Reconnaissance",
+      "description": "Identify and research the target software vendor, their products, and distribution channels",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Identify software vendor infrastructure and services",
+          "success_criteria": {
+            "type": "intelligence_gathering",
+            "parameters": {
+              "required_data": ["vendor_domains", "distribution_servers", "update_mechanisms"]
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Map vendor's customer relationships and software distribution model",
+          "success_criteria": {
+            "type": "intelligence_gathering",
+            "parameters": {
+              "required_data": ["customer_list", "distribution_method", "update_frequency"]
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Identify vulnerabilities in vendor's development/build pipeline",
+          "success_criteria": {
+            "type": "vulnerability_identification",
+            "parameters": {
+              "target": "ci_cd_pipeline",
+              "minimum_findings": 2
+            }
+          },
+          "points": 250,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Look for exposed CI/CD systems, code repositories, and build servers",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-2-vendor-compromise",
+      "name": "Initial Vendor Compromise",
+      "description": "Compromise the vendor's infrastructure to gain access to development and distribution systems",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Gain initial access to vendor network",
+          "success_criteria": {
+            "type": "exploitation_success",
+            "parameters": {
+              "target_type": "vendor_infrastructure",
+              "required_access": "shell"
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Escalate privileges to developer/build system access",
+          "success_criteria": {
+            "type": "privilege_escalation",
+            "parameters": {
+              "target_system": "development_environment",
+              "required_level": "developer"
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Access code repository and build systems",
+          "success_criteria": {
+            "type": "system_access",
+            "parameters": {
+              "targets": ["code_repository", "build_server"],
+              "access_type": "read_write"
+            }
+          },
+          "points": 600,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 30,
+          "hint": "Development systems often have weaker security than production",
+          "penalty_points": 60
+        },
+        {
+          "trigger_after_minutes": 50,
+          "hint": "Look for developer credentials in configuration files and environment variables",
+          "penalty_points": 80
+        }
+      ],
+      "time_limit_minutes": 70
+    },
+    {
+      "id": "phase-3-backdoor-injection",
+      "name": "Malicious Code Injection",
+      "description": "Inject malicious code into the vendor's software distribution pipeline",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Develop stealthy backdoor code compatible with vendor software",
+          "success_criteria": {
+            "type": "code_development",
+            "parameters": {
+              "code_type": "backdoor",
+              "stealth_features": ["obfuscation", "encrypted_comms"],
+              "compatibility_verified": true
+            }
+          },
+          "points": 700,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Inject backdoor into software build process",
+          "success_criteria": {
+            "type": "code_injection",
+            "parameters": {
+              "injection_point": "build_pipeline",
+              "detection_avoided": true
+            }
+          },
+          "points": 800,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Verify backdoor survives compilation and is present in distribution",
+          "success_criteria": {
+            "type": "code_verification",
+            "parameters": {
+              "verification_type": "runtime_test",
+              "backdoor_functional": true
+            }
+          },
+          "points": 600,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Inject at the dependency level or in commonly used library functions",
+          "penalty_points": 90
+        },
+        {
+          "trigger_after_minutes": 55,
+          "hint": "Use code signing certificates if available to avoid detection",
+          "penalty_points": 100
+        }
+      ],
+      "time_limit_minutes": 75
+    },
+    {
+      "id": "phase-4-distribution",
+      "name": "Backdoor Distribution",
+      "description": "Ensure the backdoored software is distributed to target customers through legitimate update channels",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Deploy backdoored software to distribution servers",
+          "success_criteria": {
+            "type": "deployment_success",
+            "parameters": {
+              "target": "distribution_server",
+              "package_signed": true,
+              "version_incremented": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Monitor distribution and customer installations",
+          "success_criteria": {
+            "type": "monitoring_active",
+            "parameters": {
+              "metrics_tracked": ["download_count", "installation_count", "callback_received"]
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Receive at least 3 callbacks from installed backdoors",
+          "success_criteria": {
+            "type": "callback_received",
+            "parameters": {
+              "minimum_callbacks": 3,
+              "unique_targets": true
+            }
+          },
+          "points": 600,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Ensure version numbering and metadata match expected patterns",
+          "penalty_points": 70
+        }
+      ],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-5-customer-pivot",
+      "name": "Customer Environment Pivot",
+      "description": "Pivot from the backdoor in customer environments to achieve objectives in target organization",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Activate backdoor in target customer environment",
+          "success_criteria": {
+            "type": "backdoor_activation",
+            "parameters": {
+              "target_customer": "primary_target",
+              "control_established": true
+            }
+          },
+          "points": 700,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Perform reconnaissance in customer network",
+          "success_criteria": {
+            "type": "network_enumeration",
+            "parameters": {
+              "scope": "customer_internal",
+              "data_collected": ["network_topology", "critical_systems", "data_stores"]
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Achieve lateral movement in customer environment",
+          "success_criteria": {
+            "type": "lateral_movement",
+            "parameters": {
+              "minimum_systems": 3,
+              "critical_system_accessed": true
+            }
+          },
+          "points": 800,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 30,
+          "hint": "Use legitimate software behavior to blend in with normal operations",
+          "penalty_points": 85
+        }
+      ],
+      "time_limit_minutes": 65
+    },
+    {
+      "id": "phase-6-objective-completion",
+      "name": "Objective Achievement and Cleanup",
+      "description": "Complete mission objectives in target environment and cover tracks",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Exfiltrate high-value data from target customer",
+          "success_criteria": {
+            "type": "data_exfiltration",
+            "parameters": {
+              "data_classification": "high_value",
+              "method": "covert",
+              "volume": "significant"
+            }
+          },
+          "points": 1000,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Maintain persistent access across vendor and customer",
+          "success_criteria": {
+            "type": "persistence_verified",
+            "parameters": {
+              "locations": ["vendor_infrastructure", "customer_network"],
+              "redundancy": "multiple_mechanisms"
+            }
+          },
+          "points": 600,
+          "required": false
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Remove evidence and sanitize logs",
+          "success_criteria": {
+            "type": "cleanup_complete",
+            "parameters": {
+              "logs_sanitized": true,
+              "forensic_artifacts_minimized": true
+            }
+          },
+          "points": 400,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Use the compromised vendor's legitimate update mechanism for data exfiltration",
+          "penalty_points": 95
+        }
+      ],
+      "time_limit_minutes": 60
+    }
+  ],
+  "scoring": {
+    "max_points": 8950,
+    "time_bonus_multiplier": 2.0,
+    "stealth_bonus": 1000,
+    "deductions_per_mistake": 100,
+    "deductions_per_hint": 50,
+    "completion_bonus": 2000
+  },
+  "metadata": {
+    "attack_complexity": "very_high",
+    "target_environment": "supply_chain",
+    "attack_duration": "long_term",
+    "detection_difficulty": "very_hard",
+    "real_world_relevance": "very_high"
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

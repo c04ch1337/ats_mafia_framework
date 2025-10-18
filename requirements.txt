@@ -1,0 +1,62 @@
+# Core dependencies
+pydantic>=1.8.0
+PyYAML>=5.4.0
+typing-extensions>=3.10.0
+
+# Data handling
+pandas>=1.3.0
+numpy>=1.21.0
+
+# Configuration management
+python-dotenv>=0.19.0
+
+# Logging and monitoring
+structlog>=21.1.0
+colorama>=0.4.4
+
+# Networking and communication
+aiohttp>=3.7.0
+websockets>=9.0
+
+# Security and cryptography
+cryptography>=3.4.0
+
+# JSON handling
+jsonschema>=3.2.0
+
+# Date and time handling
+python-dateutil>=2.8.0
+
+# File handling
+pathlib2>=2.3.0
+
+# Voice processing (required for Personal Assistant)
+speechrecognition>=3.8
+pyttsx3>=2.90
+pyaudio>=0.2.11
+
+# Phone providers for Personal Assistant
+twilio>=8.0.0
+plivo>=4.0.0
+
+# Optional: UI components (install with pip install -e .[ui])
+# streamlit>=1.0
+# plotly>=5.0
+
+# Development dependencies (install with pip install -e .[dev])
+# pytest>=6.0
+# pytest-asyncio>=0.18
+# pytest-cov>=2.12
+# black>=21.0
+# flake8>=3.9
+# mypy>=0.910
+# pre-commit>=2.15
+
+# Flask for webhook server (Personal Assistant phone integration)
+flask>=2.0.0
+flask-cors>=3.0.0
+
+# Documentation dependencies (install with pip install -e .[docs])
+# sphinx>=4.0
+# sphinx-rtd-theme>=1.0
+# myst-parser>=0.15

@@ -1,0 +1,377 @@
+{
+  "id": "ransomware_deployment",
+  "name": "Ransomware Deployment Simulation",
+  "description": "Controlled ransomware deployment exercise in an isolated environment. Learn ransomware tactics, techniques, and procedures including deployment, encryption, and recovery mechanisms while understanding defender perspectives.",
+  "type": "red_team",
+  "difficulty": "intermediate",
+  "estimated_duration_minutes": 120,
+  "required_profiles": ["phantom", "malware_specialist"],
+  "required_tools": ["exploitation_framework", "encryption_tools", "lateral_movement_tools"],
+  "optional_profiles": ["red_team_operator"],
+  "optional_tools": ["password_cracker"],
+  "prerequisites": ["basic_penetration_test"],
+  "learning_objectives": [
+    "Understand ransomware deployment methodologies",
+    "Practice safe ransomware simulation techniques",
+    "Learn encryption key management for recovery",
+    "Understand impact assessment and data protection",
+    "Learn defender detection and response strategies",
+    "Practice ethical ransomware research methods"
+  ],
+  "tags": ["red_team", "ransomware", "malware", "intermediate", "simulation"],
+  "phases": [
+    {
+      "id": "phase-1-preparation",
+      "name": "Ransomware Preparation",
+      "description": "Set up controlled environment and prepare ransomware simulation tools with safety mechanisms",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Configure isolated test environment with backups",
+          "success_criteria": {
+            "type": "environment_setup",
+            "parameters": {
+              "isolation_verified": true,
+              "backups_created": true,
+              "recovery_tested": true
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Prepare ransomware payload with kill switch and recovery key",
+          "success_criteria": {
+            "type": "payload_preparation",
+            "parameters": {
+              "kill_switch_implemented": true,
+              "recovery_mechanism": "key_based",
+              "safety_verified": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Document scope and establish rollback procedures",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "scope_documented": true,
+              "rollback_plan": "detailed",
+              "approval_obtained": true
+            }
+          },
+          "points": 100,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Always implement multiple recovery mechanisms - never rely on just one",
+          "penalty_points": 20
+        }
+      ],
+      "time_limit_minutes": 30
+    },
+    {
+      "id": "phase-2-initial-access",
+      "name": "Initial Access and Reconnaissance",
+      "description": "Gain initial access to target systems and perform reconnaissance for ransomware deployment",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Compromise initial target system",
+          "success_criteria": {
+            "type": "system_compromise",
+            "parameters": {
+              "access_level": "user",
+              "method": ["phishing_simulation", "vulnerability_exploit"]
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Enumerate network and identify high-value targets",
+          "success_criteria": {
+            "type": "network_enumeration",
+            "parameters": {
+              "targets_identified": ["file_servers", "databases", "backup_systems"],
+              "minimum_hosts": 5
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Map data locations and assess encryption impact",
+          "success_criteria": {
+            "type": "data_mapping",
+            "parameters": {
+              "data_locations": "documented",
+              "impact_assessed": true,
+              "critical_systems_identified": true
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Focus on file servers and shared network drives for maximum impact",
+          "penalty_points": 30
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-3-privilege-escalation",
+      "name": "Privilege Escalation",
+      "description": "Escalate privileges to gain domain admin or system-level access for widespread deployment",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Escalate to local administrator privileges",
+          "success_criteria": {
+            "type": "privilege_escalation",
+            "parameters": {
+              "target_level": "administrator",
+              "persistence_established": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Obtain domain credentials or domain admin access",
+          "success_criteria": {
+            "type": "credential_harvest",
+            "parameters": {
+              "credential_type": "domain_admin",
+              "method": ["mimikatz", "kerberoasting", "credential_dump"]
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Verify access to critical systems and backups",
+          "success_criteria": {
+            "type": "access_verification",
+            "parameters": {
+              "systems_accessed": ["domain_controller", "backup_server"],
+              "write_access_confirmed": true
+            }
+          },
+          "points": 200,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Domain admin credentials are often cached on workstations and servers",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-4-pre-encryption",
+      "name": "Pre-Encryption Activities",
+      "description": "Perform reconnaissance and data exfiltration before encryption to maximize leverage",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Exfiltrate sensitive data for double extortion",
+          "success_criteria": {
+            "type": "data_exfiltration",
+            "parameters": {
+              "data_types": ["financial", "pii", "proprietary"],
+              "minimum_size_mb": 100,
+              "method": "covert"
+            }
+          },
+          "points": 300,
+          "required": false
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Disable or sabotage backup systems",
+          "success_criteria": {
+            "type": "backup_disruption",
+            "parameters": {
+              "backups_disabled": true,
+              "shadow_copies_deleted": true,
+              "reversible": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Establish multiple persistence mechanisms",
+          "success_criteria": {
+            "type": "persistence_established",
+            "parameters": {
+              "mechanisms": ["scheduled_task", "service", "registry"],
+              "redundancy": "multiple"
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "VSS (Volume Shadow Copy) deletion is a common ransomware tactic",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-5-deployment",
+      "name": "Ransomware Deployment",
+      "description": "Deploy ransomware across target systems in controlled manner with safety checks",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Deploy ransomware to target systems",
+          "success_criteria": {
+            "type": "malware_deployment",
+            "parameters": {
+              "deployment_method": ["psexec", "wmi", "gpo"],
+              "target_count": 5,
+              "kill_switch_active": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Execute encryption process on non-critical test data",
+          "success_criteria": {
+            "type": "encryption_executed",
+            "parameters": {
+              "data_encrypted": true,
+              "critical_systems_protected": true,
+              "recovery_key_secured": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Deploy ransom notes and establish contact mechanism",
+          "success_criteria": {
+            "type": "ransom_note_deployed",
+            "parameters": {
+              "note_visible": true,
+              "contact_method": "established",
+              "payment_instructions": "clear"
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Use GPO or scheduled tasks for simultaneous deployment across multiple systems",
+          "penalty_points": 45
+        }
+      ],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-6-recovery",
+      "name": "Recovery and Analysis",
+      "description": "Demonstrate recovery procedures and analyze the attack from defender perspective",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Successfully decrypt all encrypted data using recovery keys",
+          "success_criteria": {
+            "type": "data_recovery",
+            "parameters": {
+              "decryption_successful": true,
+              "data_integrity_verified": true,
+              "recovery_time_documented": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Restore systems to pre-encryption state",
+          "success_criteria": {
+            "type": "system_restoration",
+            "parameters": {
+              "all_systems_restored": true,
+              "functionality_verified": true,
+              "cleanup_complete": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Document IOCs and create detection signatures",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "iocs_documented": true,
+              "detection_rules_created": true,
+              "lessons_learned": "comprehensive"
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Document all forensic artifacts for blue team training purposes",
+          "penalty_points": 30
+        }
+      ],
+      "time_limit_minutes": 45
+    }
+  ],
+  "scoring": {
+    "max_points": 4100,
+    "time_bonus_multiplier": 1.5,
+    "stealth_bonus": 300,
+    "deductions_per_mistake": 60,
+    "deductions_per_hint": 25,
+    "completion_bonus": 800
+  },
+  "metadata": {
+    "environment_type": "isolated_lab",
+    "safety_level": "maximum",
+    "reversibility": "required",
+    "educational_focus": ["ransomware_tactics", "recovery_procedures", "detection_methods"],
+    "real_world_applicability": "high"
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

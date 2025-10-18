@@ -1,0 +1,398 @@
+{
+  "id": "active_intrusion_response",
+  "name": "Active Intrusion Response - Real-Time Breach Detection",
+  "description": "Respond to an active network intrusion in real-time. Detect malicious activity, contain the threat, preserve evidence, and eradicate the attacker while minimizing business impact.",
+  "type": "blue_team",
+  "difficulty": "advanced",
+  "estimated_duration_minutes": 120,
+  "required_profiles": ["watcher", "incident_responder"],
+  "required_tools": ["siem", "network_monitor", "forensic_tools"],
+  "optional_profiles": ["threat_hunter"],
+  "optional_tools": ["edr_platform", "sandbox"],
+  "prerequisites": [],
+  "learning_objectives": [
+    "Detect and identify active intrusion indicators",
+    "Perform rapid threat assessment and triage",
+    "Execute containment strategies without alerting attackers",
+    "Preserve forensic evidence during active incidents",
+    "Coordinate multi-team incident response",
+    "Eradicate threats while maintaining business continuity"
+  ],
+  "tags": ["blue_team", "incident_response", "detection", "containment", "advanced"],
+  "phases": [
+    {
+      "id": "phase-1-detection",
+      "name": "Threat Detection and Alert Triage",
+      "description": "Detect the ongoing intrusion through monitoring systems and triage initial alerts",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Identify initial compromise indicators from SIEM alerts",
+          "success_criteria": {
+            "type": "alert_analysis",
+            "parameters": {
+              "alerts_reviewed": 10,
+              "true_positives_identified": 3,
+              "false_positives_dismissed": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Determine scope and severity of the intrusion",
+          "success_criteria": {
+            "type": "threat_assessment",
+            "parameters": {
+              "affected_systems_identified": true,
+              "attack_vector_determined": true,
+              "severity_level_assigned": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Escalate to incident response team with detailed findings",
+          "success_criteria": {
+            "type": "escalation_complete",
+            "parameters": {
+              "ir_team_notified": true,
+              "initial_report_submitted": true,
+              "timeline_documented": true
+            }
+          },
+          "points": 150,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 10,
+          "hint": "Look for anomalous network connections and unusual authentication patterns",
+          "penalty_points": 30
+        },
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Correlate alerts across multiple data sources for accurate threat assessment",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 25
+    },
+    {
+      "id": "phase-2-investigation",
+      "name": "Forensic Investigation",
+      "description": "Conduct detailed forensic investigation to understand attack timeline and techniques",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Identify initial access vector and timeline",
+          "success_criteria": {
+            "type": "forensic_analysis",
+            "parameters": {
+              "entry_point_identified": true,
+              "timeline_established": true,
+              "evidence_collected": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Map attacker's lateral movement and compromised systems",
+          "success_criteria": {
+            "type": "attack_mapping",
+            "parameters": {
+              "compromised_hosts": "documented",
+              "lateral_movement_tracked": true,
+              "minimum_hosts_identified": 5
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Identify attacker tools, techniques, and procedures (TTPs)",
+          "success_criteria": {
+            "type": "ttp_identification",
+            "parameters": {
+              "tools_identified": true,
+              "mitre_attack_mapping": true,
+              "iocs_extracted": 10
+            }
+          },
+          "points": 300,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Check PowerShell logs, Windows Event Logs, and network traffic captures",
+          "penalty_points": 45
+        },
+        {
+          "trigger_after_minutes": 28,
+          "hint": "Use memory forensics to identify running malware and injected code",
+          "penalty_points": 55
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-3-containment",
+      "name": "Threat Containment",
+      "description": "Contain the threat without alerting the attacker or disrupting business operations",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Isolate compromised systems from network",
+          "success_criteria": {
+            "type": "network_isolation",
+            "parameters": {
+              "systems_isolated": true,
+              "business_impact_minimized": true,
+              "attacker_unaware": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Block attacker command and control communications",
+          "success_criteria": {
+            "type": "c2_blocking",
+            "parameters": {
+              "c2_channels_identified": true,
+              "blocking_rules_implemented": true,
+              "effectiveness_verified": true
+            }
+          },
+          "points": 450,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Disable compromised accounts and reset credentials",
+          "success_criteria": {
+            "type": "credential_management",
+            "parameters": {
+              "compromised_accounts_disabled": true,
+              "credentials_reset": true,
+              "mfa_enforced": true
+            }
+          },
+          "points": 300,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 18,
+          "hint": "Use firewall rules and network segmentation for surgical isolation",
+          "penalty_points": 60
+        },
+        {
+          "trigger_after_minutes": 30,
+          "hint": "Monitor for attacker's response to containment actions",
+          "penalty_points": 70
+        }
+      ],
+      "time_limit_minutes": 40
+    },
+    {
+      "id": "phase-4-eradication",
+      "name": "Threat Eradication",
+      "description": "Remove all traces of attacker presence and eliminate persistence mechanisms",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Remove malware and attacker tools from all systems",
+          "success_criteria": {
+            "type": "malware_removal",
+            "parameters": {
+              "malware_removed": true,
+              "all_systems_cleaned": true,
+              "persistence_eliminated": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Eliminate all backdoors and persistence mechanisms",
+          "success_criteria": {
+            "type": "persistence_removal",
+            "parameters": {
+              "backdoors_removed": true,
+              "scheduled_tasks_cleaned": true,
+              "registry_entries_removed": true
+            }
+          },
+          "points": 450,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Verify complete eradication through monitoring",
+          "success_criteria": {
+            "type": "eradication_verification",
+            "parameters": {
+              "monitoring_period_hours": 24,
+              "no_reinfection": true,
+              "clean_scans": true
+            }
+          },
+          "points": 350,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Rebuild compromised systems from known-good images when possible",
+          "penalty_points": 65
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-5-recovery",
+      "name": "System Recovery and Restoration",
+      "description": "Restore normal business operations while maintaining security posture",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Restore systems and services to normal operation",
+          "success_criteria": {
+            "type": "service_restoration",
+            "parameters": {
+              "critical_services_restored": true,
+              "functionality_verified": true,
+              "security_controls_active": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Implement additional security controls and monitoring",
+          "success_criteria": {
+            "type": "security_hardening",
+            "parameters": {
+              "new_controls_deployed": true,
+              "monitoring_enhanced": true,
+              "detection_rules_updated": true
+            }
+          },
+          "points": 350,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Validate security posture and business continuity",
+          "success_criteria": {
+            "type": "validation_complete",
+            "parameters": {
+              "security_assessment_passed": true,
+              "business_operations_normal": true,
+              "stakeholders_informed": true
+            }
+          },
+          "points": 250,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Prioritize restoration of critical business services first",
+          "penalty_points": 50
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-6-lessons-learned",
+      "name": "Post-Incident Analysis",
+      "description": "Conduct thorough post-incident review and improve security posture",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Complete comprehensive incident report",
+          "success_criteria": {
+            "type": "report_complete",
+            "parameters": {
+              "timeline_documented": true,
+              "impact_assessed": true,
+              "response_evaluated": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Identify and implement security improvements",
+          "success_criteria": {
+            "type": "improvements_implemented",
+            "parameters": {
+              "vulnerabilities_patched": true,
+              "controls_enhanced": true,
+              "policies_updated": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Update detection rules and response procedures",
+          "success_criteria": {
+            "type": "procedures_updated",
+            "parameters": {
+              "detection_rules_created": true,
+              "playbooks_updated": true,
+              "team_trained": true
+            }
+          },
+          "points": 250,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Document what worked well and what needs improvement for future incidents",
+          "penalty_points": 35
+        }
+      ],
+      "time_limit_minutes": 30
+    }
+  ],
+  "scoring": {
+    "max_points": 5300,
+    "time_bonus_multiplier": 1.6,
+    "stealth_bonus": 400,
+    "deductions_per_mistake": 70,
+    "deductions_per_hint": 35,
+    "completion_bonus": 1000
+  },
+  "metadata": {
+    "response_type": "active_incident",
+    "time_pressure": "high",
+    "business_impact": "critical",
+    "coordination_required": "multi_team",
+    "skill_emphasis": ["detection", "containment", "forensics", "communication"]
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}

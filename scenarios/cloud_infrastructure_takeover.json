@@ -1,0 +1,402 @@
+{
+  "id": "cloud_infrastructure_takeover",
+  "name": "Cloud Infrastructure Takeover - AWS/Azure Compromise",
+  "description": "Execute a comprehensive cloud infrastructure compromise targeting AWS or Azure environments. Progress from initial access through misconfigured services to full control of cloud resources and data.",
+  "type": "red_team",
+  "difficulty": "advanced",
+  "estimated_duration_minutes": 150,
+  "required_profiles": ["phantom", "cloud_specialist"],
+  "required_tools": ["cloud_enumeration_tools", "iam_exploitation_tools", "api_tools"],
+  "optional_profiles": ["red_team_operator"],
+  "optional_tools": ["container_exploitation_tools"],
+  "prerequisites": ["basic_penetration_test"],
+  "learning_objectives": [
+    "Understand cloud-specific attack vectors and misconfigurations",
+    "Exploit IAM and permission misconfigurations",
+    "Perform cloud resource enumeration and pivoting",
+    "Compromise cloud storage and compute resources",
+    "Escalate privileges within cloud environments",
+    "Exfiltrate data from cloud services"
+  ],
+  "tags": ["red_team", "cloud", "aws", "azure", "advanced", "iam"],
+  "phases": [
+    {
+      "id": "phase-1-cloud-recon",
+      "name": "Cloud Infrastructure Reconnaissance",
+      "description": "Identify and enumerate cloud resources, services, and potential attack vectors",
+      "objectives": [
+        {
+          "id": "obj-1-1",
+          "description": "Identify cloud service provider and exposed services",
+          "success_criteria": {
+            "type": "cloud_enumeration",
+            "parameters": {
+              "provider_identified": true,
+              "services_discovered": ["s3_buckets", "ec2_instances", "lambda_functions"],
+              "minimum_resources": 5
+            }
+          },
+          "points": 150,
+          "required": true
+        },
+        {
+          "id": "obj-1-2",
+          "description": "Enumerate public cloud storage buckets and containers",
+          "success_criteria": {
+            "type": "storage_enumeration",
+            "parameters": {
+              "public_buckets_found": true,
+              "permissions_tested": true,
+              "sensitive_data_identified": true
+            }
+          },
+          "points": 200,
+          "required": true
+        },
+        {
+          "id": "obj-1-3",
+          "description": "Identify misconfigured cloud resources and services",
+          "success_criteria": {
+            "type": "misconfiguration_discovery",
+            "parameters": {
+              "misconfigurations_found": ["public_snapshots", "open_databases", "exposed_secrets"],
+              "minimum_issues": 3
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 15,
+          "hint": "Use tools like ScoutSuite or Prowler for automated cloud security assessment",
+          "penalty_points": 30
+        },
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Check for publicly accessible S3 buckets using common naming patterns",
+          "penalty_points": 40
+        }
+      ],
+      "time_limit_minutes": 35
+    },
+    {
+      "id": "phase-2-initial-access",
+      "name": "Initial Cloud Access",
+      "description": "Gain initial access to cloud environment through compromised credentials or misconfigured services",
+      "objectives": [
+        {
+          "id": "obj-2-1",
+          "description": "Obtain cloud credentials or access keys",
+          "success_criteria": {
+            "type": "credential_acquisition",
+            "parameters": {
+              "credential_type": ["access_keys", "service_account", "temporary_credentials"],
+              "validity_verified": true
+            }
+          },
+          "points": 300,
+          "required": true
+        },
+        {
+          "id": "obj-2-2",
+          "description": "Access cloud management console or API",
+          "success_criteria": {
+            "type": "console_access",
+            "parameters": {
+              "access_method": ["console", "cli", "api"],
+              "permissions_enumerated": true
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-2-3",
+          "description": "Enumerate IAM policies and permissions",
+          "success_criteria": {
+            "type": "iam_enumeration",
+            "parameters": {
+              "users_enumerated": true,
+              "roles_discovered": true,
+              "policies_analyzed": true
+            }
+          },
+          "points": 200,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Look for hardcoded credentials in public repositories and exposed metadata services",
+          "penalty_points": 45
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "EC2 instance metadata service (169.254.169.254) often contains temporary credentials",
+          "penalty_points": 55
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-3-privilege-escalation",
+      "name": "Cloud Privilege Escalation",
+      "description": "Escalate privileges within the cloud environment to gain administrative access",
+      "objectives": [
+        {
+          "id": "obj-3-1",
+          "description": "Identify privilege escalation paths in IAM",
+          "success_criteria": {
+            "type": "escalation_path_discovery",
+            "parameters": {
+              "paths_identified": ["iam_policy_creation", "role_assumption", "lambda_privilege_escalation"],
+              "minimum_paths": 2
+            }
+          },
+          "points": 250,
+          "required": true
+        },
+        {
+          "id": "obj-3-2",
+          "description": "Escalate to administrative privileges",
+          "success_criteria": {
+            "type": "privilege_escalation",
+            "parameters": {
+              "target_level": "administrator",
+              "method_documented": true
+            }
+          },
+          "points": 500,
+          "required": true
+        },
+        {
+          "id": "obj-3-3",
+          "description": "Create backdoor IAM user or role for persistence",
+          "success_criteria": {
+            "type": "persistence_established",
+            "parameters": {
+              "persistence_type": "iam_entity",
+              "admin_privileges": true,
+              "stealthy": true
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Look for policies with iam:PutUserPolicy or iam:AttachUserPolicy permissions",
+          "penalty_points": 50
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Lambda functions with IAM role assumption can be powerful escalation vectors",
+          "penalty_points": 60
+        }
+      ],
+      "time_limit_minutes": 50
+    },
+    {
+      "id": "phase-4-lateral-movement",
+      "name": "Cloud Resource Pivoting",
+      "description": "Move laterally through cloud resources and compromise additional services",
+      "objectives": [
+        {
+          "id": "obj-4-1",
+          "description": "Access and compromise EC2/VM instances",
+          "success_criteria": {
+            "type": "instance_compromise",
+            "parameters": {
+              "instances_accessed": 3,
+              "shell_obtained": true,
+              "data_discovered": true
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-4-2",
+          "description": "Compromise cloud databases and data stores",
+          "success_criteria": {
+            "type": "database_access",
+            "parameters": {
+              "databases_accessed": ["rds", "dynamodb", "cosmosdb"],
+              "data_extracted": true
+            }
+          },
+          "points": 450,
+          "required": true
+        },
+        {
+          "id": "obj-4-3",
+          "description": "Access secrets from key vaults and secret managers",
+          "success_criteria": {
+            "type": "secrets_access",
+            "parameters": {
+              "secrets_retrieved": true,
+              "credentials_found": true,
+              "minimum_secrets": 5
+            }
+          },
+          "points": 350,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 25,
+          "hint": "Use SSM Session Manager or Serial Console for EC2 access without SSH",
+          "penalty_points": 55
+        },
+        {
+          "trigger_after_minutes": 40,
+          "hint": "Check environment variables and parameter stores for sensitive data",
+          "penalty_points": 65
+        }
+      ],
+      "time_limit_minutes": 55
+    },
+    {
+      "id": "phase-5-data-exfiltration",
+      "name": "Cloud Data Exfiltration",
+      "description": "Exfiltrate sensitive data from cloud storage and services",
+      "objectives": [
+        {
+          "id": "obj-5-1",
+          "description": "Exfiltrate data from cloud storage (S3/Blob)",
+          "success_criteria": {
+            "type": "data_exfiltration",
+            "parameters": {
+              "storage_types": ["object_storage", "file_storage"],
+              "data_volume_mb": 500,
+              "method": "api_transfer"
+            }
+          },
+          "points": 400,
+          "required": true
+        },
+        {
+          "id": "obj-5-2",
+          "description": "Extract data from cloud databases",
+          "success_criteria": {
+            "type": "database_exfiltration",
+            "parameters": {
+              "tables_exported": true,
+              "pii_data_extracted": true,
+              "covert_method": true
+            }
+          },
+          "points": 450,
+          "required": true
+        },
+        {
+          "id": "obj-5-3",
+          "description": "Create snapshots of volumes and instances for offline analysis",
+          "success_criteria": {
+            "type": "snapshot_creation",
+            "parameters": {
+              "snapshots_created": 3,
+              "shared_to_attacker_account": true,
+              "original_data_preserved": true
+            }
+          },
+          "points": 300,
+          "required": false
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Use CloudTrail logs to identify high-value data locations",
+          "penalty_points": 60
+        },
+        {
+          "trigger_after_minutes": 35,
+          "hint": "Transfer data to attacker-controlled cloud account to avoid detection",
+          "penalty_points": 70
+        }
+      ],
+      "time_limit_minutes": 45
+    },
+    {
+      "id": "phase-6-persistence-cleanup",
+      "name": "Persistence and Evidence Removal",
+      "description": "Establish long-term persistence and remove evidence of compromise",
+      "objectives": [
+        {
+          "id": "obj-6-1",
+          "description": "Establish multiple persistence mechanisms",
+          "success_criteria": {
+            "type": "persistence_established",
+            "parameters": {
+              "mechanisms": ["backdoor_lambda", "iam_user", "modified_security_group"],
+              "redundancy": "multiple",
+              "detection_difficulty": "high"
+            }
+          },
+          "points": 400,
+          "required": false
+        },
+        {
+          "id": "obj-6-2",
+          "description": "Modify or delete CloudTrail logs",
+          "success_criteria": {
+            "type": "log_manipulation",
+            "parameters": {
+              "logs_modified": true,
+              "attacker_actions_hidden": true,
+              "reversible": true
+            }
+          },
+          "points": 350,
+          "required": false
+        },
+        {
+          "id": "obj-6-3",
+          "description": "Document attack path and create remediation report",
+          "success_criteria": {
+            "type": "documentation_complete",
+            "parameters": {
+              "attack_path_documented": true,
+              "vulnerabilities_listed": true,
+              "remediation_steps": "detailed"
+            }
+          },
+          "points": 250,
+          "required": true
+        }
+      ],
+      "hints": [
+        {
+          "trigger_after_minutes": 20,
+          "hint": "Lambda functions with CloudWatch triggers provide stealthy persistence",
+          "penalty_points": 65
+        }
+      ],
+      "time_limit_minutes": 40
+    }
+  ],
+  "scoring": {
+    "max_points": 5850,
+    "time_bonus_multiplier": 1.7,
+    "stealth_bonus": 600,
+    "deductions_per_mistake": 80,
+    "deductions_per_hint": 40,
+    "completion_bonus": 1200
+  },
+  "metadata": {
+    "cloud_provider": ["aws", "azure"],
+    "environment_type": "cloud_native",
+    "attack_surface": "cloud_services",
+    "detection_difficulty": "medium",
+    "real_world_relevance": "very_high"
+  },
+  "version": "1.0.0",
+  "author": "ATS MAFIA Framework"
+}
