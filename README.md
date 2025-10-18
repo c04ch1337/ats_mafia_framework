@@ -870,3 +870,56 @@ If you encounter issues not covered here:
 **ATS MAFIA Framework** - *Advanced Training System for Multi-Agent Interactive Framework*
 
 *Empowering the next generation of cybersecurity professionals through intelligent training simulations.*
+---
+## Enabling the Kali Sandbox via Docker Compose Profiles
+
+Kali is an optional service gated behind Docker Compose profiles so the default stack stays lean. The Kali service declares its profiles in [docker-compose.yml](docker-compose.yml:525-528). By default, it is not started unless you enable one of the profiles it belongs to (full or sandbox).
+
+Start Kali on demand
+- Windows cmd.exe:
+  - set "COMPOSE_PROFILES=full" &amp;&amp; docker compose up -d kali-sandbox
+- Windows PowerShell:
+  - $env:COMPOSE_PROFILES = "full"; docker compose up -d kali-sandbox
+- Linux/macOS bash/zsh:
+  - COMPOSE_PROFILES=full docker compose up -d kali-sandbox
+- Cross-shell alternative (no env var needed):
+  - docker compose --profile full up -d kali-sandbox
+
+Start the full framework with Kali enabled
+- Windows cmd.exe:
+  - set "COMPOSE_PROFILES=full" &amp;&amp; docker compose up -d
+- Windows PowerShell:
+  - $env:COMPOSE_PROFILES = "full"; docker compose up -d
+- Linux/macOS:
+  - COMPOSE_PROFILES=full docker compose up -d
+- Alternative:
+  - docker compose --profile full up -d
+
+Make Kali start by default on every run
+- Place the following line into a .env file at the repository root:
+  - COMPOSE_PROFILES=full
+- Then run:
+  - docker compose up -d
+Notes:
+- Docker Compose automatically reads .env in the project root and honors COMPOSE_PROFILES for profile activation.
+- To set a persistent Windows user environment variable instead of .env:
+  - setx COMPOSE_PROFILES full
+  - Open a new terminal for it to take effect.
+
+Verify that Kali is running
+- docker compose ps kali-sandbox
+  - Expect “Up” (no Healthy state is defined for Kali). First boot may be slow due to tool installation inside the container.
+
+Troubleshooting: Kali restarts in a loop
+- If you see Restarting (100), check logs:
+  - docker compose logs --tail=100 kali-sandbox
+- The Kali service is hardened with capability drops and no-new-privileges as defined in [docker-compose.yml](docker-compose.yml:501-509). On some hosts, apt-get may fail due to blocked privilege transitions, causing restarts.
+- Options:
+  1) Re-run the start command; transient apt mirror issues can resolve on retry.
+  2) Temporarily relax the hardening in your local copy of [docker-compose.yml](docker-compose.yml:501-509) and re-up if your environment blocks apt’s privilege changes.
+  3) Build a custom Kali image that pre-installs tools and uses a simpler CMD, then reference it in an override compose file.
+
+Conceptual model recap
+- Services without profiles are always included in the default stack.
+- Services with profiles (like Kali in [docker-compose.yml](docker-compose.yml:482-528)) are included only when a matching profile is activated via COMPOSE_PROFILES or --profile.
+---
