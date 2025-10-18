@@ -58,13 +58,58 @@ ats_mafia_framework/
 
 ## 🛠️ Installation
 
+> **📦 RECOMMENDED: Use Docker for deployment** - Docker handles all system dependencies automatically, including portaudio19-dev for audio processing. See the [Docker Setup](#-docker-setup) section below for the easiest installation method.
+
 ### Prerequisites
 
 - Python 3.8 or higher
 - pip package manager
-- Optional: Docker for containerized deployment
+- **System dependencies** (for local installation):
+  - Ubuntu/Debian: `portaudio19-dev`, `python3-pyaudio`, `espeak`
+  - Other platforms: equivalent audio and speech synthesis libraries
+- **Recommended**: Docker and Docker Compose for containerized deployment
 
-### Setup
+### Local Installation
+
+> ⚠️ **Warning**: Local installation requires manual installation of system dependencies. System dependencies (like portaudio19-dev) must be installed separately before pip dependencies.
+
+1. **Install system dependencies** (Ubuntu/Debian)
+   ```bash
+   sudo apt-get update
+   sudo apt-get install portaudio19-dev python3-pyaudio espeak
+   ```
+
+2. **Clone the repository**
+   ```bash
+   git clone https://github.com/atsmafia/framework.git
+   cd ats_mafia_framework
+   ```
+
+3. **Install Python dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install the framework**
+   ```bash
+   pip install -e .
+   ```
+
+5. **Verify installation**
+   ```bash
+   python -c "import ats_mafia_framework; print('Installation successful!')"
+   ```
+
+## 🐳 Docker Setup
+
+Docker is the **recommended deployment method** as it handles all system dependencies automatically, including portaudio19-dev for pyaudio and other audio processing requirements.
+
+### Prerequisites
+
+- [Docker](https://docs.docker.com/get-docker/) (20.10 or higher)
+- [Docker Compose](https://docs.docker.com/compose/install/) (2.0 or higher)
+
+### Step-by-Step Docker Setup
 
 1. **Clone the repository**
    ```bash
@@ -72,22 +117,113 @@ ats_mafia_framework/
    cd ats_mafia_framework
    ```
 
-2. **Install dependencies**
+2. **Configure environment variables**
    ```bash
-   pip install -r requirements.txt
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env with your preferred settings
+   # At minimum, configure:
+   # - FRAMEWORK_ENV (development/production)
+   # - LOG_LEVEL (INFO/DEBUG)
+   # - PHONE_PROVIDER (mock/twilio/plivo)
+   ```
+   
+   See the [`.env.example`](.env.example) file for all available configuration options.
+
+3. **Build the Docker image**
+   ```bash
+   docker-compose -f docker-compose.personal-assistant.yml build
    ```
 
-3. **Install the framework**
+4. **Start the services**
    ```bash
-   pip install -e .
+   # Start in detached mode (background)
+   docker-compose -f docker-compose.personal-assistant.yml up -d
+   
+   # Or start with logs visible (foreground)
+   docker-compose -f docker-compose.personal-assistant.yml up
    ```
 
-4. **Verify installation**
+5. **Verify the services are running**
    ```bash
-   python -c "import ats_mafia_framework; print('Installation successful!')"
+   docker-compose -f docker-compose.personal-assistant.yml ps
    ```
+
+### Accessing Services
+
+Once Docker containers are running, you can access:
+
+- **API Server**: http://localhost:5000
+- **WebSocket Server**: ws://localhost:8080
+- **UI Dashboard**: http://localhost:8501
+
+### Managing Docker Containers
+
+**View logs:**
+```bash
+# View all logs
+docker-compose -f docker-compose.personal-assistant.yml logs
+
+# View logs for specific service
+docker logs ats-mafia-personal-assistant
+
+# Follow logs in real-time
+docker logs -f ats-mafia-personal-assistant
+```
+
+**Stop containers:**
+```bash
+docker-compose -f docker-compose.personal-assistant.yml down
+```
+
+**Restart containers:**
+```bash
+docker-compose -f docker-compose.personal-assistant.yml restart
+```
+
+**Stop and remove all data:**
+```bash
+docker-compose -f docker-compose.personal-assistant.yml down -v
+```
+
+**Rebuild after code changes:**
+```bash
+docker-compose -f docker-compose.personal-assistant.yml up -d --build
+```
+
+### Docker Advantages
+
+✅ **No manual system dependency installation** - Docker image includes portaudio19-dev, espeak, and all required libraries
+✅ **Consistent environment** - Same setup across development, staging, and production
+✅ **Easy updates** - Simply rebuild the image to apply changes
+✅ **Isolated execution** - Framework runs in its own container environment
+✅ **Resource management** - Built-in resource limits and monitoring
 
 ## 🚀 Quick Start
+
+### Quick Start with Docker (Recommended)
+
+The fastest way to get started with the ATS MAFIA Framework:
+
+```bash
+# 1. Copy and configure environment file
+cp .env.example .env
+# Edit .env with your settings (at minimum: FRAMEWORK_ENV, PHONE_PROVIDER)
+
+# 2. Build and start services
+docker-compose -f docker-compose.personal-assistant.yml up -d
+
+# 3. View logs to confirm startup
+docker logs -f ats-mafia-personal-assistant
+
+# 4. Access the services
+# - API: http://localhost:5000
+# - WebSocket: ws://localhost:8080
+# - UI: http://localhost:8501
+```
+
+That's it! The framework is now running with all dependencies configured.
 
 ### Basic Usage
 
@@ -277,10 +413,26 @@ class CustomScenarioRunner(ScenarioRunner):
 
 ## 📚 Documentation
 
+### Core Documentation
+
+- [Personal Assistant Docker Guide](docs/PERSONAL_ASSISTANT_DOCKER_GUIDE.md) - Complete Docker deployment guide for Personal Assistant
+- [Personal Assistant Phone Provider Guide](docs/PERSONAL_ASSISTANT_PHONE_PROVIDER_GUIDE.md) - Configure Twilio, Plivo, or mock phone providers
+- [Phase 4 Analytics README](docs/PHASE4_ANALYTICS_README.md) - Analytics and attack tracking features
+
+### Configuration
+
+- [`.env.example`](.env.example) - Complete environment configuration reference with all available variables
+- [`config/default.yaml`](config/default.yaml) - Default YAML configuration file
+- [Configuration Guide](docs/configuration.md) - Detailed configuration options
+
+### Additional Resources
+
 - [User Guide](docs/user_guide.md) - Comprehensive user documentation
 - [API Reference](docs/api_reference.md) - Complete API documentation
 - [Developer Guide](docs/developer_guide.md) - Development and extension guide
-- [Configuration Guide](docs/configuration.md) - Detailed configuration options
+- [Knowledge Base README](knowledge/README.md) - Attack framework and knowledge base
+- [Sandbox README](sandbox/README.md) - Container and sandbox management
+- [Tools README](tools/README.md) - Tool system and extensions
 
 ## 🧪 Testing
 
@@ -318,6 +470,100 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 ## 📄 License
 
 This project is licensed under the ATS MAFIA Proprietary License. See the [LICENSE](LICENSE) file for details.
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+**Issue: `ModuleNotFoundError: No module named 'docker'`**
+```bash
+# Solution: Install docker Python module
+pip install docker
+```
+
+**Issue: PyAudio installation fails with "portaudio.h not found"**
+```bash
+# Solution 1 (Recommended): Use Docker - it includes all system dependencies
+docker-compose -f docker-compose.personal-assistant.yml up -d
+
+# Solution 2 (Local): Install system dependencies first
+# Ubuntu/Debian:
+sudo apt-get install portaudio19-dev python3-pyaudio espeak
+pip install pyaudio
+
+# macOS:
+brew install portaudio
+pip install pyaudio
+```
+
+**Issue: Container fails to start**
+```bash
+# Check container logs
+docker logs ats-mafia-personal-assistant
+
+# Check container status
+docker-compose -f docker-compose.personal-assistant.yml ps
+
+# Rebuild the container
+docker-compose -f docker-compose.personal-assistant.yml up -d --build
+```
+
+**Issue: Port already in use (5000, 8080, or 8501)**
+```bash
+# Find what's using the port (example for port 5000)
+# Linux/Mac:
+lsof -i :5000
+# Windows:
+netstat -ano | findstr :5000
+
+# Either stop the conflicting service or change ports in .env file:
+# API_PORT=5001
+# COMMUNICATION_PORT=8081
+# UI_PORT=8502
+```
+
+**Issue: Changes not reflected after code update**
+```bash
+# Rebuild Docker containers after code changes
+docker-compose -f docker-compose.personal-assistant.yml up -d --build
+
+# For local installation, reinstall the package
+pip install -e .
+```
+
+**Issue: Permission denied when running Docker commands**
+```bash
+# Linux: Add user to docker group
+sudo usermod -aG docker $USER
+# Log out and back in for changes to take effect
+
+# Or run with sudo (not recommended for regular use)
+sudo docker-compose -f docker-compose.personal-assistant.yml up -d
+```
+
+**Issue: Container health check failures**
+```bash
+# Check container health
+docker inspect --format='{{.State.Health.Status}}' ats-mafia-personal-assistant
+
+# View detailed health check logs
+docker inspect ats-mafia-personal-assistant | grep -A 10 Health
+
+# Restart unhealthy containers
+docker-compose -f docker-compose.personal-assistant.yml restart
+```
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. Check the logs: `docker logs ats-mafia-personal-assistant` or `logs/ats_mafia.log`
+2. Review the [documentation](docs/) for your specific feature
+3. Search [GitHub Issues](https://github.com/atsmafia/framework/issues)
+4. Open a new issue with:
+   - Error messages and logs
+   - Steps to reproduce
+   - Environment details (OS, Docker version, Python version)
 
 ## 🆘 Support
 

@@ -17,6 +17,9 @@ colorama>=0.4.4
 # Networking and communication
 aiohttp>=3.7.0
 websockets>=9.0
+# Container management
+docker>=6.0.0
+
 
 # Security and cryptography
 cryptography>=3.4.0
