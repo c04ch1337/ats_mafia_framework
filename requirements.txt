@@ -42,9 +42,9 @@ pyaudio>=0.2.11
 twilio>=8.0.0
 plivo>=4.0.0
 
-# Optional: UI components (install with pip install -e .[ui])
-# streamlit>=1.0
-# plotly>=5.0
+# UI components (required for Web Dashboard)
+streamlit>=1.0
+plotly>=5.0
 
 # Development dependencies (install with pip install -e .[dev])
 # pytest>=6.0
