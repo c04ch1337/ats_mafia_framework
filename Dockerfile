@@ -41,6 +41,9 @@ RUN pip install --upgrade pip && \
 # Copy the framework files
 COPY . /app/ats_mafia_framework/
 
+# Copy tools separately to ensure they're available at /app/tools/
+COPY ./tools /app/tools
+
 # Install the framework in development mode
 RUN cd /app/ats_mafia_framework && pip install -e .
 
@@ -70,5 +73,5 @@ EXPOSE 8080 8501 5000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5000/health || exit 1
 
-# Default command - run the framework server
-CMD ["python", "-m", "ats_mafia_framework.cli"]
+# Default command - run the FastAPI container management server
+CMD ["uvicorn", "ats_mafia_framework.api.container_app_example:app", "--host", "0.0.0.0", "--port", "5000"]

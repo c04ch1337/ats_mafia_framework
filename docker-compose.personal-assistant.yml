@@ -1,5 +1,4 @@
 # Docker Compose for ATS MAFIA Framework with Personal Assistant
-version: '3.8'
 
 services:
   ats-mafia:
@@ -113,29 +112,6 @@ networks:
 
 volumes:
   recordings:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/recordings
-  
   transcripts:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/transcripts
-  
   task_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/data
-  
   logs:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: ./volumes/logs
