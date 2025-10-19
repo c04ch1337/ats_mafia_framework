@@ -27,14 +27,17 @@ class ATSComponents {
     setupModals() {
         // Modal close buttons
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-close')) {
-                this.closeModal(e.target.closest('.modal-overlay'));
+            if (e.target && e.target.classList && e.target.classList.contains('modal-close')) {
+                const modal = e.target.closest('.modal-overlay');
+                if (modal) {
+                    this.closeModal(modal);
+                }
             }
         });
 
         // Click outside to close
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
+            if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) {
                 this.closeModal(e.target);
             }
         });
@@ -131,16 +134,20 @@ class ATSComponents {
      */
     setupTooltips() {
         document.addEventListener('mouseenter', (e) => {
-            const target = e.target.closest('[data-tooltip]');
-            if (target) {
-                this.showTooltip(target);
+            if (e.target && e.target.closest) {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) {
+                    this.showTooltip(target);
+                }
             }
         }, true);
 
         document.addEventListener('mouseleave', (e) => {
-            const target = e.target.closest('[data-tooltip]');
-            if (target) {
-                this.hideTooltip(target);
+            if (e.target && e.target.closest) {
+                const target = e.target.closest('[data-tooltip]');
+                if (target) {
+                    this.hideTooltip(target);
+                }
             }
         }, true);
     }
@@ -305,7 +312,7 @@ class ATSComponents {
     setupFormValidation() {
         document.addEventListener('submit', (e) => {
             const form = e.target;
-            if (form.classList.contains('ats-form')) {
+            if (form && form.classList && form.classList.contains('ats-form')) {
                 if (!this.validateForm(form)) {
                     e.preventDefault();
                 }
@@ -314,7 +321,7 @@ class ATSComponents {
 
         // Real-time validation
         document.addEventListener('blur', (e) => {
-            if (e.target.classList.contains('ats-form-input')) {
+            if (e.target && e.target.classList && e.target.classList.contains('ats-form-input')) {
                 this.validateField(e.target);
             }
         }, true);
