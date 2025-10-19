@@ -7,17 +7,26 @@ class ATSAPIClient {
     constructor(baseURL = '/api/v1') {
         this.baseURL = baseURL;
 
+        try {
+            if (typeof window !== 'undefined' && window.ATS_CONFIG && typeof window.ATS_CONFIG.apiBaseURL === 'string') {
+                const cfg = window.ATS_CONFIG.apiBaseURL;
+                if (/^https?:/i.test(cfg)) {
+                    this.baseURL = cfg.replace(/\/+$/, '');
+                } else if (cfg.startsWith('/')) {
+                    this.baseURL = cfg;
+                }
+            }
+        } catch (_) {}
+
         // Normalize base URL for local dev when UI is served from a different origin/port or file://
         try {
             if (typeof window !== 'undefined') {
-                const isAbsolute = typeof this.baseURL === 'string' && /^https?:/i.test(this.baseURL);
-                const isRelative = typeof this.baseURL === 'string' && this.baseURL.startsWith('/');
                 const servedFromHttp = window.location.protocol.startsWith('http');
                 const differentPort = servedFromHttp && window.location.port && window.location.port !== '8000';
                 const fromFile = window.location.protocol === 'file:';
-                
-                if ((!isAbsolute && isRelative && (differentPort || fromFile)) || (fromFile && !isAbsolute)) {
-                    // Use current hostname instead of hardcoded localhost for network accessibility
+                const isAbsoluteNow = typeof this.baseURL === 'string' && /^https?:/i.test(this.baseURL);
+                const isRelative = typeof this.baseURL === 'string' && this.baseURL.startsWith('/');
+                if (!isAbsoluteNow && ((isRelative && (differentPort || fromFile)) || (fromFile && !isAbsoluteNow))) {
                     const apiHost = (servedFromHttp && window.location.hostname) ? window.location.hostname : 'localhost';
                     const apiPort = '8000';
                     this.baseURL = `http://${apiHost}:${apiPort}${this.baseURL}`;

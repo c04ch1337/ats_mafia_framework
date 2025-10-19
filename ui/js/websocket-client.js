@@ -26,9 +26,21 @@ class ATSWebSocketClient {
      * Get WebSocket URL based on current location
      */
     getWebSocketURL() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const host = window.location.host;
-        return `${protocol}//${host}/ws`;
+        try {
+            if (typeof window !== 'undefined' && window.ATS_CONFIG && window.ATS_CONFIG.websocketURL) {
+                return window.ATS_CONFIG.websocketURL;
+            }
+            const host = (typeof window !== 'undefined') ? window.location.host : '';
+            if (host) {
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                return `${protocol}//${host}/ws`;
+            }
+            if (typeof window !== 'undefined' && window.ENV && window.ENV.WEBSOCKET_HOST && window.ENV.WEBSOCKET_PORT) {
+                const p = (window.ENV.WEBSOCKET_PROTOCOL || 'ws') + ':';
+                return `${p}//${window.ENV.WEBSOCKET_HOST}:${window.ENV.WEBSOCKET_PORT}/ws`;
+            }
+        } catch (_) {}
+        return 'ws://localhost:8080/ws';
     }
 
     /**

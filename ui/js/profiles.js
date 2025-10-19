@@ -23,13 +23,16 @@ class ATSProfiles {
         try {
             if (typeof window !== 'undefined' && window.atsAPI && typeof window.atsAPI.baseURL === 'string') {
                 const b = window.atsAPI.baseURL || '';
-                const isAbsolute = /^https?:/i.test(b);
                 const isRelative = b.startsWith('/');
                 const servedFromHttp = window.location.protocol.startsWith('http');
                 const differentPort = servedFromHttp && window.location.port && window.location.port !== '8000';
                 const fromFile = window.location.protocol === 'file:';
                 
-                if (!isAbsolute || (differentPort && isRelative) || fromFile) {
+                const cfg = (typeof window !== 'undefined' && window.ATS_CONFIG) ? window.ATS_CONFIG.apiBaseURL : null;
+                const cfgAbsolute = typeof cfg === 'string' && /^https?:/i.test(cfg);
+                const alreadyAbsolute = typeof b === 'string' && /^https?:/i.test(b);
+                
+                if (!cfgAbsolute && !alreadyAbsolute && ((isRelative && differentPort) || fromFile)) {
                     // Use current hostname for network accessibility (not hardcoded localhost)
                     const apiHost = (servedFromHttp && window.location.hostname) ? window.location.hostname : 'localhost';
                     const apiPort = '8000';

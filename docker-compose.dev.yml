@@ -262,7 +262,7 @@ services:
     container_name: ats-mafia-ui-dev
     hostname: ats-ui-dev
     
-    command: sh -c "cd /app/ats_mafia_framework/ui && python -m http.server 8501 --bind 0.0.0.0"
+    command: sh -c "sh /app/ats_mafia_framework/ui/env-inject.sh && cd /app/ats_mafia_framework/ui && python -m http.server 8501 --bind 0.0.0.0"
     
     ports:
       - "8501:8501"  # Streamlit UI

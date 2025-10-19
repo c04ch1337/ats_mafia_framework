@@ -336,7 +336,7 @@ services:
       - DATABASE_PASSWORD=${DATABASE_PASSWORD:-ats_secure_password_change_me}
     
     volumes:
-      - ./ui:/app/ats_mafia_framework/ui:ro
+      - ./ui:/app/ats_mafia_framework/ui:rw
       - logs:/app/logs
     
     networks:
