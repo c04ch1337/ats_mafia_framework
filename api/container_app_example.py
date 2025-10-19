@@ -37,10 +37,11 @@ app = FastAPI(
 )
 
 # Configure CORS
+# Note: allow_credentials is False for local file:// origins and broad dev support.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Configure appropriately for production
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

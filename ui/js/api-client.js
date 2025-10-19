@@ -6,6 +6,22 @@
 class ATSAPIClient {
     constructor(baseURL = '/api/v1') {
         this.baseURL = baseURL;
+
+        // Normalize base URL for local dev when UI is served from a different origin/port or file://
+        try {
+            if (typeof window !== 'undefined') {
+                const isAbsolute = typeof this.baseURL === 'string' && /^https?:/i.test(this.baseURL);
+                const isRelative = typeof this.baseURL === 'string' && this.baseURL.startsWith('/');
+                const servedFromHttp = window.location.protocol.startsWith('http');
+                const differentPort = servedFromHttp && window.location.port && window.location.port !== '8000';
+                const fromFile = window.location.protocol === 'file:';
+                if ((!isAbsolute && isRelative && (differentPort || fromFile)) || (fromFile && !isAbsolute)) {
+                    this.baseURL = 'http://localhost:8000' + this.baseURL;
+                    try { console.log('ATSAPIClient: normalized baseURL to', this.baseURL); } catch (_) {}
+                }
+            }
+        } catch (_) {}
+
         this.token = localStorage.getItem('ats_token');
         this.refreshToken = localStorage.getItem('ats_refresh_token');
     }
@@ -34,7 +50,9 @@ class ATSAPIClient {
      * Make API request with authentication
      */
     async request(endpoint, options = {}) {
-        const url = `${this.baseURL}${endpoint}`;
+        // Ensure endpoint always concatenates correctly (leading slash)
+        const path = (typeof endpoint === 'string' && endpoint.startsWith('/')) ? endpoint : `/${endpoint}`;
+        const url = `${this.baseURL}${path}`;
         const headers = {
             'Content-Type': 'application/json',
             ...options.headers,

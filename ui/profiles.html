@@ -226,7 +226,15 @@
     <script src="js/api-client.js"></script>
     <script src="js/websocket-client.js"></script>
     <script src="js/components.js"></script>
-    <script src="js/profiles.js"></script>
+    <!-- Ensure baseURL is set before profiles logic runs -->
     <script src="js/main.js"></script>
-</body>
+    <script>
+      // Fallback for local file:// viewing: force API base URL to local server
+      if (typeof window !== 'undefined' && window.location.protocol === 'file:' && window.atsAPI) {
+        window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+        console.log('ATS API baseURL set to', window.atsAPI.baseURL);
+      }
+    </script>
+    <script src="js/profiles.js"></script>
+  </body>
 </html>

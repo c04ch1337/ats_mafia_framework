@@ -19,6 +19,30 @@ class ATSProfiles {
     init() {
         console.log('Initializing ATS Profiles...');
         
+        // Ensure API baseURL when running from file:// (avoid relative /api/v1 resolving to file:///)
+        try {
+            if (typeof window !== 'undefined' && window.location.protocol === 'file:' && window.atsAPI && typeof window.atsAPI.baseURL === 'string') {
+                if (!/^https?:/i.test(window.atsAPI.baseURL)) {
+                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+                    console.log('ATS Profiles: forced API baseURL to', window.atsAPI.baseURL);
+                }
+            }
+        } catch (_) {}
+
+        // Also ensure absolute API base for non-8000 origins during dev (e.g., http://192.168.1.100:8501)
+        try {
+            if (typeof window !== 'undefined' && window.atsAPI && typeof window.atsAPI.baseURL === 'string') {
+                const b = window.atsAPI.baseURL || '';
+                const isAbsolute = /^https?:/i.test(b);
+                const isRelative = b.startsWith('/');
+                const servedFromDifferentPort = window.location.protocol.startsWith('http') && window.location.port && window.location.port !== '8000';
+                if (!isAbsolute || (servedFromDifferentPort && isRelative)) {
+                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+                    console.log('ATS Profiles: normalized API baseURL to', window.atsAPI.baseURL);
+                }
+            }
+        } catch (_) {}
+
         // Set up event listeners
         this.setupEventListeners();
         
@@ -100,6 +124,18 @@ class ATSProfiles {
      * Load profiles from API
      */
     async loadProfiles() {
+        // Normalize base URL if needed (served from :8501 or relative base)
+        try {
+            if (typeof window !== 'undefined' && window.atsAPI) {
+                const b = window.atsAPI.baseURL || '';
+                const isAbsolute = /^https?:/i.test(b);
+                const isRelative = b.startsWith('/');
+                if (!isAbsolute || (window.location.port && window.location.port !== '8000' && isRelative)) {
+                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+                }
+            }
+        } catch (_) {}
+
         this.setLoadingState(true);
         
         try {
@@ -361,16 +397,55 @@ class ATSProfiles {
         const formData = new FormData(form);
         const mode = form.dataset.mode;
         const profileId = form.dataset.profileId;
-        
+
+        // Basic required field validation
+        const name = (formData.get('name') || '').toString().trim();
+        const type = (formData.get('type') || '').toString().trim();
+        if (!name || !type) {
+            this.showError('Name and Type are required');
+            return;
+        }
+
+        // Parse configuration safely
+        let configuration = {};
+        const cfgRaw = formData.get('configuration');
+        if (cfgRaw && cfgRaw.toString().trim().length > 0) {
+            try {
+                configuration = JSON.parse(cfgRaw);
+            } catch (parseErr) {
+                console.error('Invalid configuration JSON:', parseErr);
+                this.showError('Configuration must be valid JSON');
+                return;
+            }
+        }
+
+        // Normalize API baseURL for local dev (file:// or different origin like :8501)
+        try {
+            if (typeof window !== 'undefined' && window.atsAPI) {
+                const b = window.atsAPI.baseURL || '';
+                const isAbsolute = /^https?:/i.test(b);
+                const isRelative = b.startsWith('/');
+                const servedFromDifferentPort = window.location.protocol.startsWith('http') && window.location.port && window.location.port !== '8000';
+                if (!isAbsolute || (servedFromDifferentPort && isRelative)) {
+                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+                    console.log('ATS Profiles: normalized API baseURL to', window.atsAPI.baseURL);
+                }
+            }
+        } catch (_) {}
+
         try {
             const profileData = {
-                name: formData.get('name'),
-                type: formData.get('type'),
+                name,
+                type,
                 description: formData.get('description'),
                 skill_level: formData.get('skill_level'),
                 specialization: formData.get('specialization'),
-                configuration: formData.get('configuration') ? JSON.parse(formData.get('configuration')) : {}
+                configuration
             };
+
+            // Disable submit to prevent double submissions
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
             if (mode === 'create') {
                 await window.atsAPI.createProfile(profileData);
@@ -382,10 +457,13 @@ class ATSProfiles {
 
             this.closeModal(document.getElementById('profileModal'));
             await this.loadProfiles();
-            
         } catch (error) {
             console.error('Failed to save profile:', error);
-            this.showError('Failed to save profile');
+            const msg = (error && error.message) ? error.message : 'Failed to save profile';
+            this.showError(msg);
+        } finally {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) submitBtn.disabled = false;
         }
     }
 
