@@ -1,0 +1,5 @@
+# Placeholder favicon.ico - Replace with actual favicon file
+# This is a text placeholder. In a real implementation, you would:
+# 1. Create or obtain a favicon.ico file (16x16, 32x32, 48x48 icons)
+# 2. Place it in the ui/ directory
+# 3. The HTML link tag will reference it as "favicon.ico"

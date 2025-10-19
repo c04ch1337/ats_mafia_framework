@@ -199,8 +199,8 @@ services:
       dockerfile: Dockerfile
     container_name: ats-mafia-websocket-dev
     hostname: ats-websocket-dev
-    
-    command: python -m ats_mafia_framework.api.websocket_server
+
+    command: uvicorn ats_mafia_framework.api.websocket_server:app --host 0.0.0.0 --port 8080 --reload
     
     ports:
       - "8080:8080"  # WebSocket

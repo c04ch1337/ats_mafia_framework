@@ -398,10 +398,10 @@ if __name__ == "__main__":
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
-    
+
     # Run the WebSocket server
     uvicorn.run(
-        "websocket_server:app",
+        "ats_mafia_framework.api.websocket_server:app",
         host="0.0.0.0",
         port=8080,
         reload=False,
