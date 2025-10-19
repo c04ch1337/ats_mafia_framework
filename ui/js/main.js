@@ -8,15 +8,21 @@ class ATSApplication {
         this.version = '1.0.0';
         this.isInitialized = false;
         this.modules = new Map();
+        
+        // Load config from window.ATS_CONFIG (set by config.js from env.js) with fallbacks
+        const baseConfig = (typeof window !== 'undefined' && window.ATS_CONFIG) ? window.ATS_CONFIG : {};
+        
         this.config = {
-            apiBaseURL: 'http://localhost:8000/api/v1',
-            websocketURL: 'ws://localhost:8080/ws',
-            autoRefresh: true,
-            refreshInterval: 30000,
-            enableVoiceControl: true,
-            enableNotifications: true,
-            theme: 'dark'
+            apiBaseURL: baseConfig.apiBaseURL || 'http://localhost:8000/api/v1',
+            websocketURL: baseConfig.websocketURL || 'ws://localhost:8080/ws',
+            autoRefresh: baseConfig.autoRefresh !== undefined ? baseConfig.autoRefresh : true,
+            refreshInterval: baseConfig.refreshInterval || 30000,
+            enableVoiceControl: baseConfig.enableVoiceControl !== undefined ? baseConfig.enableVoiceControl : true,
+            enableNotifications: baseConfig.enableNotifications !== undefined ? baseConfig.enableNotifications : true,
+            theme: baseConfig.theme || 'dark'
         };
+        
+        console.log('ATSApplication: loaded config with apiBaseURL =', this.config.apiBaseURL);
         
         this.init();
     }

@@ -3,6 +3,18 @@
 **Advanced Training System for Multi-Agent Interactive Framework**
 
 A comprehensive framework for creating, managing, and training specialized agent profiles for various security scenarios including red team, blue team, and social engineering simulations.
+## ⚠️ Network Access Configuration
+
+**If you're accessing the UI from a different machine** (e.g., `http://192.168.1.100:8501`), you must configure the Docker host IP:
+
+1. Copy `.env.example` to `.env`
+2. Set `DOCKER_HOST_IP` to your Docker host's IP address (e.g., `192.168.1.100`)
+3. Restart: `docker-compose down && docker-compose up -d`
+
+**See:** [Network Deployment Guide](docs/NETWORK_DEPLOYMENT_GUIDE.md) for complete setup instructions.
+
+---
+
 
 ## 🎯 Overview
 

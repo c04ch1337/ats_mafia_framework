@@ -19,25 +19,22 @@ class ATSProfiles {
     init() {
         console.log('Initializing ATS Profiles...');
         
-        // Ensure API baseURL when running from file:// (avoid relative /api/v1 resolving to file:///)
-        try {
-            if (typeof window !== 'undefined' && window.location.protocol === 'file:' && window.atsAPI && typeof window.atsAPI.baseURL === 'string') {
-                if (!/^https?:/i.test(window.atsAPI.baseURL)) {
-                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
-                    console.log('ATS Profiles: forced API baseURL to', window.atsAPI.baseURL);
-                }
-            }
-        } catch (_) {}
-
-        // Also ensure absolute API base for non-8000 origins during dev (e.g., http://192.168.1.100:8501)
+        // Ensure API baseURL is absolute with correct hostname for network accessibility
         try {
             if (typeof window !== 'undefined' && window.atsAPI && typeof window.atsAPI.baseURL === 'string') {
                 const b = window.atsAPI.baseURL || '';
                 const isAbsolute = /^https?:/i.test(b);
                 const isRelative = b.startsWith('/');
-                const servedFromDifferentPort = window.location.protocol.startsWith('http') && window.location.port && window.location.port !== '8000';
-                if (!isAbsolute || (servedFromDifferentPort && isRelative)) {
-                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
+                const servedFromHttp = window.location.protocol.startsWith('http');
+                const differentPort = servedFromHttp && window.location.port && window.location.port !== '8000';
+                const fromFile = window.location.protocol === 'file:';
+                
+                if (!isAbsolute || (differentPort && isRelative) || fromFile) {
+                    // Use current hostname for network accessibility (not hardcoded localhost)
+                    const apiHost = (servedFromHttp && window.location.hostname) ? window.location.hostname : 'localhost';
+                    const apiPort = '8000';
+                    const basePath = isRelative ? b : '/api/v1';
+                    window.atsAPI.baseURL = `http://${apiHost}:${apiPort}${basePath}`;
                     console.log('ATS Profiles: normalized API baseURL to', window.atsAPI.baseURL);
                 }
             }
@@ -124,18 +121,6 @@ class ATSProfiles {
      * Load profiles from API
      */
     async loadProfiles() {
-        // Normalize base URL if needed (served from :8501 or relative base)
-        try {
-            if (typeof window !== 'undefined' && window.atsAPI) {
-                const b = window.atsAPI.baseURL || '';
-                const isAbsolute = /^https?:/i.test(b);
-                const isRelative = b.startsWith('/');
-                if (!isAbsolute || (window.location.port && window.location.port !== '8000' && isRelative)) {
-                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
-                }
-            }
-        } catch (_) {}
-
         this.setLoadingState(true);
         
         try {
@@ -144,7 +129,7 @@ class ATSProfiles {
             this.renderProfiles();
         } catch (error) {
             console.error('Failed to load profiles:', error);
-            this.showError('Failed to load profiles');
+            this.showError('Failed to load profiles. Ensure backend is running on ' + (window.atsAPI ? window.atsAPI.baseURL : 'port 8000'));
         } finally {
             this.setLoadingState(false);
         }
@@ -419,17 +404,10 @@ class ATSProfiles {
             }
         }
 
-        // Normalize API baseURL for local dev (file:// or different origin like :8501)
+        // Log final base URL before submission for debugging
         try {
             if (typeof window !== 'undefined' && window.atsAPI) {
-                const b = window.atsAPI.baseURL || '';
-                const isAbsolute = /^https?:/i.test(b);
-                const isRelative = b.startsWith('/');
-                const servedFromDifferentPort = window.location.protocol.startsWith('http') && window.location.port && window.location.port !== '8000';
-                if (!isAbsolute || (servedFromDifferentPort && isRelative)) {
-                    window.atsAPI.baseURL = 'http://localhost:8000/api/v1';
-                    console.log('ATS Profiles: normalized API baseURL to', window.atsAPI.baseURL);
-                }
+                console.log('ATS Profiles: submitting to API at', window.atsAPI.baseURL);
             }
         } catch (_) {}
 

@@ -301,7 +301,7 @@ services:
     container_name: ats-mafia-ui
     hostname: ats-ui
     
-    command: sh -c "cd /app/ats_mafia_framework/ui && python -m http.server 8501 --bind 0.0.0.0"
+    command: sh -c "sh /app/ats_mafia_framework/ui/env-inject.sh && cd /app/ats_mafia_framework/ui && python -m http.server 8501 --bind 0.0.0.0"
     
     ports:
       - "8501:8501"  # Streamlit UI
@@ -319,11 +319,13 @@ services:
       - UI_DEBUG=false
       - UI_AUTO_REFRESH=true
       
-      # API Connection
-      - API_HOST=ats-mafia-api
+      # API Connection (use DOCKER_HOST_IP from .env or default to container name)
+      - API_HOST=${DOCKER_HOST_IP:-ats-mafia-api}
       - API_PORT=8000
-      - WEBSOCKET_HOST=ats-mafia-websocket
+      - API_PROTOCOL=http
+      - WEBSOCKET_HOST=${DOCKER_HOST_IP:-ats-mafia-websocket}
       - WEBSOCKET_PORT=8080
+      - WEBSOCKET_PROTOCOL=ws
       
       # Database Configuration (for direct queries)
       - DATABASE_TYPE=postgresql

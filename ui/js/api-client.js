@@ -15,8 +15,12 @@ class ATSAPIClient {
                 const servedFromHttp = window.location.protocol.startsWith('http');
                 const differentPort = servedFromHttp && window.location.port && window.location.port !== '8000';
                 const fromFile = window.location.protocol === 'file:';
+                
                 if ((!isAbsolute && isRelative && (differentPort || fromFile)) || (fromFile && !isAbsolute)) {
-                    this.baseURL = 'http://localhost:8000' + this.baseURL;
+                    // Use current hostname instead of hardcoded localhost for network accessibility
+                    const apiHost = (servedFromHttp && window.location.hostname) ? window.location.hostname : 'localhost';
+                    const apiPort = '8000';
+                    this.baseURL = `http://${apiHost}:${apiPort}${this.baseURL}`;
                     try { console.log('ATSAPIClient: normalized baseURL to', this.baseURL); } catch (_) {}
                 }
             }
