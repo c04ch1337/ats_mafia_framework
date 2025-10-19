@@ -109,10 +109,44 @@ class ATSProfiles {
             });
         }
 
+        // Profile action button delegation
+        document.addEventListener('click', (e) => {
+            const target = e.target;
+            if (!target) return;
+
+            // Find actual button (might click icon inside button)
+            const button = target.closest('button');
+            if (!button) return;
+
+            // View profile
+            if (button.classList.contains('profile-view-btn')) {
+                const profileId = button.dataset.profileId;
+                if (profileId) this.viewProfile(profileId);
+            }
+            // Edit profile
+            else if (button.classList.contains('profile-edit-btn')) {
+                const profileId = button.dataset.profileId;
+                if (profileId) this.editProfile(profileId);
+            }
+            // Toggle status
+            else if (button.classList.contains('profile-toggle-btn')) {
+                const profileId = button.dataset.profileId;
+                if (profileId) this.toggleProfileStatus(profileId);
+            }
+            // Delete profile
+            else if (button.classList.contains('profile-delete-btn')) {
+                const profileId = button.dataset.profileId;
+                if (profileId) this.deleteProfile(profileId);
+            }
+        });
+
         // Modal close buttons
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-close')) {
-                this.closeModal(e.target.closest('.modal-overlay'));
+            if (e.target && e.target.classList && e.target.classList.contains('modal-close')) {
+                const modal = e.target.closest('.modal-overlay');
+                if (modal) {
+                    this.closeModal(modal);
+                }
             }
         });
     }
@@ -167,6 +201,7 @@ class ATSProfiles {
     createProfileCard(profile) {
         const card = document.createElement('div');
         card.className = 'profile-card';
+        card.dataset.profileId = profile.id;
         card.innerHTML = `
             <div class="profile-header">
                 <div class="profile-avatar">
@@ -192,20 +227,20 @@ class ATSProfiles {
                 </div>
             </div>
             <div class="profile-actions">
-                <button class="ats-btn btn-sm btn-primary" onclick="atsProfiles.viewProfile('${profile.id}')">
+                <button class="ats-btn btn-sm btn-primary profile-view-btn" data-profile-id="${profile.id}">
                     <i class="fas fa-eye"></i>
                     View
                 </button>
-                <button class="ats-btn btn-sm btn-secondary" onclick="atsProfiles.editProfile('${profile.id}')">
+                <button class="ats-btn btn-sm btn-secondary profile-edit-btn" data-profile-id="${profile.id}">
                     <i class="fas fa-edit"></i>
                     Edit
                 </button>
-                <button class="ats-btn btn-sm ${profile.status === 'active' ? 'btn-danger' : 'btn-success'}" 
-                        onclick="atsProfiles.toggleProfileStatus('${profile.id}')">
+                <button class="ats-btn btn-sm ${profile.status === 'active' ? 'btn-danger' : 'btn-success'} profile-toggle-btn"
+                        data-profile-id="${profile.id}" data-current-status="${profile.status}">
                     <i class="fas ${profile.status === 'active' ? 'fa-stop' : 'fa-play'}"></i>
                     ${profile.status === 'active' ? 'Stop' : 'Start'}
                 </button>
-                <button class="ats-btn btn-sm btn-danger" onclick="atsProfiles.deleteProfile('${profile.id}')">
+                <button class="ats-btn btn-sm btn-danger profile-delete-btn" data-profile-id="${profile.id}">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>

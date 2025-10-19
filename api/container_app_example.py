@@ -19,6 +19,8 @@ import logging
 
 from .container_endpoints import router as container_router, get_container_orchestrator
 from .profile_endpoints import router as profiles_router
+from .scenario_endpoints import router as scenarios_router
+from .sandbox_endpoints import router as sandbox_router
 
 # Configure logging
 logging.basicConfig(
@@ -50,6 +52,10 @@ app.add_middleware(
 app.include_router(container_router)
 # Include profiles endpoints
 app.include_router(profiles_router)
+# Include scenarios endpoints
+app.include_router(scenarios_router)
+# Include sandbox endpoints
+app.include_router(sandbox_router)
 
 @app.on_event("startup")
 async def startup_event():

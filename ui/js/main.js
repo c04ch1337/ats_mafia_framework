@@ -85,9 +85,17 @@ class ATSApplication {
                 }
             }
             
-            // Update API client configuration
+            // Update API client configuration - preserve hostname-detected baseURL if already absolute
             if (window.atsAPI) {
-                window.atsAPI.baseURL = this.config.apiBaseURL;
+                const currentBase = window.atsAPI.baseURL || '';
+                const isAbsolute = /^https?:/i.test(currentBase);
+                // Only override if config has absolute URL or current is still relative
+                if (/^https?:/i.test(this.config.apiBaseURL) || !isAbsolute) {
+                    window.atsAPI.baseURL = this.config.apiBaseURL;
+                } else {
+                    // Keep the hostname-detected absolute URL
+                    console.log('ATSApplication: preserving hostname-detected baseURL =', window.atsAPI.baseURL);
+                }
             }
             
             // Update WebSocket client configuration
