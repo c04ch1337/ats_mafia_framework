@@ -8,6 +8,12 @@ A comprehensive framework for creating, managing, and training specialized agent
 
 ATS MAFIA Framework is a sophisticated multi-agent training system designed for cybersecurity education, penetration testing practice, and security team coordination. It provides a modular, extensible platform for creating realistic training scenarios with intelligent agents that can simulate various attack and defense techniques.
 
+## 🆕 What's New
+
+- Profiles API added: /api/v1/profiles via [profile_endpoints.router](api/profile_endpoints.py:400), mounted in [container_app_example.py](api/container_app_example.py:51) with development CORS enabled.
+- UI can create agents: Use top menu "Profiles" or Dashboard Quick Action "Launch Profile" to open [ui/profiles.html](ui/profiles.html:1).
+- Architecture and sequence diagrams: see [docs/API_INTERACTIONS.md](docs/API_INTERACTIONS.md:1).
+
 ## 🚀 Key Features
 
 ### Core Components
@@ -55,6 +61,54 @@ ats_mafia_framework/
 │   └── default.yaml
 └── docs/                   # Documentation and guides
 ```
+
+## 🔌 API Overview
+
+- Profiles: /api/v1/profiles via [profile_endpoints.router](api/profile_endpoints.py:400)
+- Containers: /api/v1/containers via [container_endpoints.router](api/container_endpoints.py:114)
+- Scenarios: /api/scenarios via [scenario_endpoints.router](api/scenario_endpoints.py:56)
+- Sandbox: /api/sandbox via [sandbox_endpoints.router](api/sandbox_endpoints.py:19)
+- LLM/Analytics (Flask blueprint): /api/llm via [llm_bp](api/llm_endpoints.py:19)
+- Diagrams: [docs/API_INTERACTIONS.md](docs/API_INTERACTIONS.md:1)
+
+## 🧭 Profiles API Quick Reference
+
+Endpoints:
+- GET /api/v1/profiles → list
+- GET /api/v1/profiles/{id} → get
+- POST /api/v1/profiles → create
+- PUT /api/v1/profiles/{id} → update
+- DELETE /api/v1/profiles/{id} → delete
+- POST /api/v1/profiles/{id}/activate → activate
+- POST /api/v1/profiles/{id}/deactivate → deactivate
+- POST /api/v1/profiles/validate → validate
+- GET /api/v1/profiles/search?q=... → search
+
+Examples:
+
+- Create:
+```bash
+curl -X POST http://localhost:8000/api/v1/profiles \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Agent Zero","type":"red_team","description":"Recon","skill_level":"beginner","specialization":"OSINT","configuration":{"notes":"demo"}}'
+```
+
+- List:
+```bash
+curl http://localhost:8000/api/v1/profiles
+```
+
+- Activate:
+```bash
+curl -X POST http://localhost:8000/api/v1/profiles/PROFILE_ID/activate
+```
+
+- Search:
+```bash
+curl "http://localhost:8000/api/v1/profiles/search?q=agent"
+```
+
+Storage note: Profiles persist under profiles/ as JSON; implemented in [api/profile_endpoints.py](api/profile_endpoints.py:1).
 
 ## 🛠️ Installation
 
@@ -491,6 +545,17 @@ That's it! The framework is now running with all dependencies configured.
 
 For more detailed instructions, see the [Docker Setup](#-docker-setup) section above.
 
+### Create Your First Agent (Profile)
+
+- Run backend (Docker): `docker-compose up` to expose http://localhost:8000.
+- Open [ui/index.html](ui/index.html:1), then use the top menu "Profiles" or Dashboard Quick Action "Launch Profile" to open [ui/profiles.html](ui/profiles.html:1).
+- On [ui/profiles.html](ui/profiles.html:1), click "Create Profile", fill in the fields, and submit to create an agent.
+
+Base URL defaults and overrides:
+- Client default base: [ATSAPIClient()](ui/js/api-client.js:6) = "/api/v1".
+- Runtime override: [ATSApplication.loadConfiguration()](ui/js/main.js:64) sets [window.atsAPI.baseURL](ui/js/main.js:84) from [ATSApplication.config.apiBaseURL](ui/js/main.js:11).
+- Development default: http://localhost:8000/api/v1.
+
 ### Basic Usage
 
 ```python
@@ -604,6 +669,17 @@ communication:
   max_connections: 100
 ```
 
+### UI/API Base URL Configuration
+
+- Default client base in [ATSAPIClient()](ui/js/api-client.js:6) is "/api/v1".
+- Runtime override from [ATSApplication.config.apiBaseURL](ui/js/main.js:11) is applied in [ATSApplication.loadConfiguration()](ui/js/main.js:64), which updates [window.atsAPI.baseURL](ui/js/main.js:84).
+- Set base URL via localStorage for development:
+```js
+localStorage.setItem('ats_config', JSON.stringify({ apiBaseURL: 'http://localhost:8000/api/v1' }));
+location.reload();
+```
+- WebSocket configuration note remains unchanged.
+
 ## 🔧 Customization
 
 ### Creating Custom Profiles
@@ -676,6 +752,14 @@ class CustomScenarioRunner(ScenarioRunner):
         # Custom scenario logic here
         return {"success": True, "score": 85}
 ```
+
+## 🗺️ Diagrams
+
+See [docs/API_INTERACTIONS.md](docs/API_INTERACTIONS.md:1) for Mermaid architecture and sequence diagrams, including:
+- Create Profile
+- List Profiles
+- Container Status
+- LLM Models
 
 ## 📚 Documentation
 
@@ -818,6 +902,17 @@ docker inspect ats-mafia-personal-assistant | grep -A 10 Health
 # Restart unhealthy containers
 docker-compose -f docker-compose.personal-assistant.yml restart
 ```
+
+### UI/API Integration Issues
+
+- 404 on /api/v1/profiles:
+  - Ensure the backend is running and the profiles router is mounted in [api/container_app_example.py](api/container_app_example.py:1).
+- CORS/preflight errors:
+  - Development CORS is enabled in [api/container_app_example.py](api/container_app_example.py:1). If running a different app, enable FastAPI CORSMiddleware similarly.
+- Base URL mismatch:
+  - Confirm [ATSApplication.config.apiBaseURL](ui/js/main.js:11) or the localStorage override matches http://localhost:8000/api/v1.
+- UI “Launch Profile” button:
+  - This opens [ui/profiles.html](ui/profiles.html:1) to create agents (temporary SPA redirect).
 
 ### Getting Help
 

@@ -46,9 +46,12 @@ class ATSDashboard {
         // Navigation
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const page = link.dataset.page;
-                this.navigateToPage(page);
+                if (page) {
+                    e.preventDefault();
+                    this.navigateToPage(page);
+                }
+                // If no data-page attribute, allow the browser to follow the href normally
             });
         });
 
@@ -247,7 +250,8 @@ class ATSDashboard {
     handleQuickAction(action) {
         switch (action) {
             case 'launch-profile':
-                this.showLaunchProfileModal();
+                // TODO: Temporary redirect until SPA profile creation is implemented
+                window.location.href = 'profiles.html';
                 break;
             case 'create-scenario':
                 this.showCreateScenarioModal();
@@ -635,7 +639,61 @@ class ATSDashboard {
      */
     async loadProfilesPage() {
         console.log('Loading profiles page...');
-        // Implement profiles page loading
+        try {
+            const container = document.getElementById('profiles-page');
+            if (container) {
+                if (!container.querySelector('.profiles-grid')) {
+                    container.innerHTML = `
+                        <div class="page-header">
+                            <h1 class="page-title">Profile Management</h1>
+                            <p class="page-subtitle">Manage your specialized training profiles</p>
+                        </div>
+                        <div class="profiles-grid"></div>
+                        <div class="empty-state" style="display:none;">
+                            <i class="fas fa-users"></i>
+                            <h3>No Profiles Found</h3>
+                        </div>
+                    `;
+                }
+            }
+            const profiles = await window.atsAPI.getProfiles();
+            const grid = container ? container.querySelector('.profiles-grid') : null;
+            if (grid) {
+                grid.innerHTML = '';
+                if (!profiles || profiles.length === 0) {
+                    const empty = container.querySelector('.empty-state');
+                    if (empty) empty.style.display = 'block';
+                    grid.style.display = 'none';
+                } else {
+                    const empty = container.querySelector('.empty-state');
+                    if (empty) empty.style.display = 'none';
+                    grid.style.display = 'grid';
+                    profiles.forEach(p => {
+                        const card = document.createElement('div');
+                        card.className = 'profile-card';
+                        card.innerHTML = `
+                            <div class="profile-header">
+                                <div class="profile-avatar">
+                                    <img src="${p.avatar || 'assets/images/default-avatar.png'}" alt="${p.name || ''}">
+                                    <div class="profile-status status-${p.status || 'inactive'}"></div>
+                                </div>
+                                <div class="profile-info">
+                                    <h3 class="profile-name">${p.name || 'Unnamed'}</h3>
+                                    <p class="profile-type">${p.type || ''}</p>
+                                </div>
+                            </div>
+                            <div class="profile-body">
+                                <p class="profile-description">${p.description || ''}</p>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load profiles:', error);
+            this.showNotification('Failed to load profiles', 'error');
+        }
     }
 
     /**
@@ -644,6 +702,16 @@ class ATSDashboard {
     async loadScenariosPage() {
         console.log('Loading scenarios page...');
         try {
+            const container = document.getElementById('scenarios-page');
+            if (container && !container.querySelector('.scenarios-grid')) {
+                container.innerHTML = `
+                    <div class="page-header">
+                        <h1 class="page-title">Scenario Management</h1>
+                        <p class="page-subtitle">Design and manage training scenarios</p>
+                    </div>
+                    <div class="scenarios-grid"></div>
+                `;
+            }
             const scenarios = await window.atsAPI.getScenarios();
             this.renderScenarios(scenarios);
         } catch (error) {
@@ -813,6 +881,16 @@ class ATSDashboard {
     async loadTrainingPage() {
         console.log('Loading training page...');
         try {
+            const container = document.getElementById('training-page');
+            if (container && !container.querySelector('.training-sessions-container')) {
+                container.innerHTML = `
+                    <div class="page-header">
+                        <h1 class="page-title">Situation Room</h1>
+                        <p class="page-subtitle">Live training session monitoring and control</p>
+                    </div>
+                    <div class="training-sessions-container"></div>
+                `;
+            }
             const sessions = await window.atsAPI.getTrainingSessions();
             this.renderTrainingSessions(sessions);
         } catch (error) {
@@ -834,6 +912,16 @@ class ATSDashboard {
     async loadReportsPage() {
         console.log('Loading reports page...');
         try {
+            const container = document.getElementById('reports-page');
+            if (container && !container.querySelector('.reports-container')) {
+                container.innerHTML = `
+                    <div class="page-header">
+                        <h1 class="page-title">After-Action Reports</h1>
+                        <p class="page-subtitle">Training performance analysis and reporting</p>
+                    </div>
+                    <div class="reports-container"></div>
+                `;
+            }
             const reports = await window.atsAPI.getReports();
             this.renderReports(reports);
         } catch (error) {

@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 
 from .container_endpoints import router as container_router, get_container_orchestrator
+from .profile_endpoints import router as profiles_router
 
 # Configure logging
 logging.basicConfig(
@@ -46,6 +47,8 @@ app.add_middleware(
 
 # Include container endpoints
 app.include_router(container_router)
+# Include profiles endpoints
+app.include_router(profiles_router)
 
 @app.on_event("startup")
 async def startup_event():
