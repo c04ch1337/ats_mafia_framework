@@ -262,7 +262,7 @@ services:
     container_name: ats-mafia-ui-dev
     hostname: ats-ui-dev
     
-    command: streamlit run /app/ats_mafia_framework/ui/personal_assistant_ui.py --server.port 8501 --server.address 0.0.0.0 --server.runOnSave true
+    command: sh -c "cd /app/ats_mafia_framework/ui && python -m http.server 8501 --bind 0.0.0.0"
     
     ports:
       - "8501:8501"  # Streamlit UI
@@ -304,7 +304,14 @@ services:
     depends_on:
       - ats-mafia-api
       - ats-mafia-websocket
-    
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/index.html"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      
     restart: unless-stopped
     
     labels:

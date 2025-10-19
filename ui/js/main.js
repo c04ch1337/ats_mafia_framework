@@ -9,8 +9,8 @@ class ATSApplication {
         this.isInitialized = false;
         this.modules = new Map();
         this.config = {
-            apiBaseURL: '/api/v1',
-            websocketURL: null,
+            apiBaseURL: 'http://localhost:8000/api/v1',
+            websocketURL: 'ws://localhost:8080/ws',
             autoRefresh: true,
             refreshInterval: 30000,
             enableVoiceControl: true,
