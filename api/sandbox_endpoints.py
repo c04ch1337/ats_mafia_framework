@@ -5,7 +5,7 @@ REST API for Kali sandbox management and tool execution.
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks
 from pydantic import BaseModel
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 import logging
 
 from ..sandbox.kali_connector import KaliConnector, KaliConnectorError
@@ -51,7 +51,7 @@ class ToolExecutionRequest(BaseModel):
     tool_name: str
     target: str
     user_id: str
-    parameters: Optional[Dict[str, any]] = None
+    parameters: Optional[Dict[str, Any]] = None
 
 
 # Status endpoints

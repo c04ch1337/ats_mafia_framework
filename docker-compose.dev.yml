@@ -95,7 +95,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: development
     container_name: ats-mafia-api-dev
     hostname: ats-api-dev
     
