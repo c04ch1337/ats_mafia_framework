@@ -351,11 +351,26 @@ class FileProfileStorage:
         if status not in ALLOWED_STATUS:
             raise HTTPException(status_code=400, detail=f"Invalid status '{status}'")
         with self.lock:
-            current = self.get_profile(profile_id)
+            logger.info(f"set_status: Looking for profile_id='{profile_id}', base_dir={self.base_dir}")
+            try:
+                current = self.get_profile(profile_id)
+                logger.info(f"set_status: Found profile, current status={current.get('status')}")
+            except Exception as e:
+                logger.error(f"set_status: Failed to get profile '{profile_id}': {e}", exc_info=True)
+                raise
+            
             current["status"] = status
             current["updated_at"] = utc_now_iso()
             path = self._path_for(profile_id)
-            self._atomic_write(path, current)
+            logger.info(f"set_status: Writing to path={path}, path.exists()={path.exists()}")
+            
+            try:
+                self._atomic_write(path, current)
+                logger.info(f"set_status: Successfully wrote profile to {path}")
+            except Exception as e:
+                logger.error(f"set_status: Failed to write profile to '{path}': {e}", exc_info=True)
+                raise
+            
             return current
 
     def validate_payload(self, data: Dict[str, Any]) -> List[str]:
@@ -398,7 +413,16 @@ class FileProfileStorage:
 # -----------------------------------------------------------------------------
 
 router = APIRouter(prefix="/api/v1/profiles", tags=["profiles"])
-_storage = FileProfileStorage(Path("profiles"))
+
+# Use absolute path for profiles directory to work correctly in Docker
+import os
+_profiles_dir = Path(os.getenv("PROFILES_PATH", "/app/profiles"))
+if not _profiles_dir.is_absolute():
+    # Fallback to relative path from current working directory
+    _profiles_dir = Path.cwd() / "profiles"
+
+logger.info(f"Profile storage initialized at: {_profiles_dir}")
+_storage = FileProfileStorage(_profiles_dir)
 
 
 @router.get("/", response_model=List[ProfileOut])
@@ -562,12 +586,16 @@ async def activate_profile(profile_id: str):
         ProfileOut: The updated profile.
     """
     try:
-        return _storage.set_status(profile_id, "active")
-    except HTTPException:
+        logger.info(f"Attempting to activate profile: {profile_id}")
+        result = _storage.set_status(profile_id, "active")
+        logger.info(f"Successfully activated profile: {profile_id}")
+        return result
+    except HTTPException as he:
+        logger.error(f"HTTP error activating profile '{profile_id}': {he.status_code} - {he.detail}")
         raise
     except Exception as e:
-        logger.error(f"Error activating profile '{profile_id}': {e}")
-        raise HTTPException(status_code=500, detail="Failed to activate profile")
+        logger.error(f"Error activating profile '{profile_id}': {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to activate profile: {str(e)}")
 
 
 @router.post("/{profile_id}/deactivate", response_model=ProfileOut)
